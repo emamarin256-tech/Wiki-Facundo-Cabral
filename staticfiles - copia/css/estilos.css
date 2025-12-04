@@ -1,0 +1,389 @@
+* {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+body {
+  background-color: rgb(242, 213, 131);
+}
+
+/* #region cabecera */
+header {
+  width: 1000px;
+  height: 140px;
+  background-color: #724500;
+  margin: 0px auto;
+  border-left: 1px solid rgb(109, 37, 9);
+  border-right: 1px solid rgb(109, 37, 9);
+}
+
+#logo h1 {
+  padding-top: 35px;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  color: rgb(201, 174, 248);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 40px;
+}
+#logo h4{
+  margin: 0;
+  padding-left: 20px;
+  color: rgb(167, 3, 3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: normal;
+  background-color: #826846;
+}
+#logo img {
+  display: block;
+  width: 170px;
+  float: right;
+  margin-top: 10px;
+  margin-right: 40px;
+}
+/* #endregion */
+
+/* #region navegación */
+nav {
+  width: 1025px;
+  margin: 0 auto;
+  background-color: #604d34;
+  border: 1px solid rgb(109, 37, 9);
+  position: relative;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 10px;
+  background: #503c28;
+
+  clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
+
+  z-index: -1; /* lo manda detrás del nav */
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nav ul li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  height: 40px;
+  padding: 0 15px;
+  color: rgb(255, 176, 189);
+  text-decoration: none;
+}
+
+nav ul li span {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 15px;
+  color: rgb(249, 136, 155);
+  text-decoration: none;
+  text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17); ;
+}
+
+
+nav ul li:hover {
+  background-color: #826846;
+  box-shadow: 0px 0px 5px rgb(245, 119, 140) inset;
+}
+
+.actual {
+  color:rgb(249, 136, 155);
+  text-decoration: none;
+  text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17); ;
+}
+
+.menu_desplegable {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  width: 100%;
+}
+.menu_desplegable li{
+  width:auto;
+  
+  position: relative;
+  justify-content: center;
+  text-align: center;
+  background-color: #826846;
+  border: 3px solid #341a00;
+  border-bottom: none;
+  color: rgb(255, 176, 189);
+  text-decoration: none;
+  height: min-content;
+  }
+.menu_desplegable li a {
+  display: flex;           
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 5px 15px;
+  
+  white-space: normal;   
+  width: auto;
+  height: max-content;  
+}
+
+.menu_desplegable li:last-child{
+  border-bottom: 3px solid #341a00;
+}
+
+nav ul li:hover .menu_desplegable {
+  display: flex;
+}
+
+.menu_desplegable li:hover{
+  border: 3px solid #341a00;
+  border-color: #ff9999;
+}
+/* #endregion */
+
+/* #region lista */
+
+#contenido {
+  background-color: rgb(135, 98, 53);
+  width: 960px;
+  min-height: 930px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  margin-top: 40px;
+  border-radius: 1.5%;
+}
+
+.caja {
+  background: rgb(188, 159, 78);
+  width: 900px;
+  min-height: 930px;
+  padding: 20px;
+  padding-top: 15px;
+  border: 1px solid #ddd;
+}
+
+.titulo {
+  color: rgb(45, 45, 45);
+  letter-spacing: 1px;
+  font-size: 30px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+
+.art_item {
+  display: flex;
+  align-items: stretch; /* alinea texto e imagen arriba */
+  gap: 10px; /* espacio entre texto e imagen */
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgb(249, 224, 155);
+  border-bottom: 1px solid rgb(181, 133, 2);
+  border-radius: 8px; /* opcional */
+}
+.art_img {
+  max-width: 200px;
+  width: 100%;
+  height: 100%;
+  float: right;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.art_img img {
+  max-width: 200px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* recorta sin deformar */
+  display: block;
+}
+
+.art_datos {
+  flex: 1;
+  padding-left: 15px;
+  display: flex; /* lo hacemos flex */
+  flex-direction: column;
+}
+
+
+.art_datos h2,
+p {
+  margin: 0;
+  width: fit-content;
+}
+.art_categorias{
+  display: flex;
+  flex-direction: row;
+  
+}
+.subcategoria {
+  font-size: 30px;
+  text-decoration: none;
+  color:inherit;
+  margin-bottom: 5px;
+  transition: 0.3s;
+}
+
+.subcategoria:hover{
+  text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17);
+  text-decoration-line: underline;    
+  text-decoration-color: red;         
+  text-decoration-style: solid;        
+  text-decoration-thickness: 3px;     
+  text-underline-offset: 10px
+}
+
+.art-item span.date {
+  display: block;
+  font-size: 15px;
+  color: gray;
+  margin-bottom: 16px;
+}
+.eliminar_btn {
+  margin-top: auto;
+  padding: 5px;
+  align-self: flex-end;
+  width: fit-content;
+  background: red;
+  color: white;
+  text-decoration: none;
+  float: inline-end;
+}
+
+/* #endregion */
+
+footer {
+  width: 1000px;
+  background-color: #775b31;
+  border: 1px solid #826846;
+  color: pink;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0px 0px 20px rgb(188, 159, 78);
+}
+
+/* #region formulario */
+.caja form {
+  width: 100%;
+  background-color: rgb(242, 213, 131);
+  padding: 8px 5px;
+}
+.django-ckeditor-widget {
+    border: 2px solid #3498db; /* azul, puedes cambiar el color */
+    border-radius: 5px;   
+    width: 100%;      /* opcional, bordes redondeados */
+}
+
+.caja form input,
+.caja form label {
+  display: block;
+  padding: 5px;
+  padding-left: 0px;
+}
+
+.caja form input,
+.caja form textarea {
+  width: 95%;
+  margin-bottom: 10px;
+}
+
+.caja form select {
+  width: 100px;
+  padding: 5px;
+}
+
+.caja form button {
+  padding: 10px;
+  margin-top: 5px;
+  background-color: rgb(116, 91, 91);
+  color: rosybrown;
+  border: 0.5px solid rgb(109, 37, 9);
+  border-radius: 1rem;
+  transition: 0.3s all;
+}
+
+.caja form button:hover {
+  cursor: pointer;
+  background-color: rgb(85, 65, 65);
+  color: rgb(233, 178, 178);
+}
+
+.rojo {
+  color: rgb(239, 83, 83);
+  padding: 0px 4px;
+  text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17);
+  display: inline-block;
+  background-color: rgb(249, 224, 155);
+  border: 3px solid brown;
+  border-radius: 0.3rem;
+  font-size: 22px;
+}
+
+.errorlist {
+  margin: 2px;
+  padding-left: 20px;
+}
+
+.del_formulario div label {
+  padding: 0;
+  padding-bottom: 3px;
+}
+.del_formulario div textarea,
+.del_formulario div input {
+  margin-bottom: 1px;
+}
+
+.del_formulario div {
+  padding: 5px;
+}
+
+/* #endregion */
+
+
+/* #region pagina */
+
+.fecha {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  color: rgb(0, 0, 0);
+}
+
+
+.cont{
+  line-height: 20px;
+}
+
+#tablaf{
+  width: fit-content;
+}
+
+
+
+
+/* #endregion */
+
+/* #region ckeditor */ 
+
+
+/* #endregion */
