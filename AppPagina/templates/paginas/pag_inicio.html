@@ -1,0 +1,10 @@
+{% extends "layouts/layout.html" %}
+{% block titulo %}
+    {{ titulo }}
+{% endblock titulo %}
+{% block contenido %}
+
+    <h1 class="titulo">{{ pag.titulo }}</h1>
+    <span class="fecha">Hecho el {{ pag.creacion }}</span>
+    <div class="conte">{{ pag.contenido|safe }}</div>
+{% endblock contenido %}
