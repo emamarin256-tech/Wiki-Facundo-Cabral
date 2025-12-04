@@ -1,0 +1,54 @@
+{% extends "layouts/layout.html" %}
+{% load filtro %}
+{% block contenido %}
+    {% if Modelo == None %}
+        <h1>No se encontró el modelo</h1>
+    {% else %}
+        <div class="volver-header">
+            <h1 class="titulo">Crear {{ Modelo }}</h1>
+            <a href="{% url 'N_mantenimiento' %}" class="volver volver-top">← Volver</a>
+        </div>
+        <h4>{{ descripcion_modelo }}</h4>
+        {% if form.non_field_errors %}
+            <div class="mensaje">
+                {% for error in form.non_field_errors %}<div class="error">{{ error }}</div>{% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" class="form-editar">
+            {% csrf_token %}
+            {{ form.media }}
+            {% for campo in form %}
+                {% if campo.errors %}
+                    {% for error in campo.errors %}<div class="mensaje">{{ error }}</div>{% endfor %}
+                {% endif %}
+                <div class="campo-form">
+                    {{ campo.label_tag }}
+                    {# Manejo similar a mantenimientoC.html: botones Crear / Ver para FK & M2M #}
+                    {% if campo|es_manytomany %}
+                        <div class="manytomany-campo">
+                            {{ campo }}
+                            <a href="{% url 'N_crear' campo|modelo_relacionado %}"
+                               class="boton-crear">Crear {{ campo|modelo_relacionado|capfirst }} +</a>
+                        </div>
+                    {% elif campo|es_foreignkey %}
+                        <div class="foreignkey-campo">
+                            {{ campo }}
+                            <a href="{% url 'N_crear' campo|modelo_relacionado %}"
+                               class="boton-crear">Crear {{ campo|modelo_relacionado|capfirst }} +</a>
+                        </div>
+                    {% elif campo.name == 'desc' or campo.name == 'contenido' %}
+                        <div class="editor-ck">{{ campo }}</div>
+                    {% else %}
+                        {{ campo }}
+                        {% if campo.help_text %}<small class="help-text">{{ campo.help_text|safe }}</small>{% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="acciones-form">
+                <button type="submit" name="accion" value="guardar">Guardar</button>
+                <button type="submit" name="accion" value="guardaryseguir">Guardar y crear otro</button>
+                <a href="{% url 'N_mantenimiento' %}" class="encima cancelar">Cancelar</a>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

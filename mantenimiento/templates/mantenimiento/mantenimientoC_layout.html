@@ -1,0 +1,87 @@
+{% extends "layouts/layout.html" %}
+{% load filtro %}
+{% block contenido %}
+  <h1>Editar {{ modelo }}: {{ instancia.nombre }}</h1>
+  <form method="post" enctype="multipart/form-data" class="form-editar">
+    {% csrf_token %}
+    {{ form.media }}
+    {% for campo in form %}
+      <div class="campo-form">
+        {{ campo.label_tag }}
+        {% if campo.name == "logo" %}
+          {% if instancia.logo %}
+            <div class="logo-preview">
+              <div class="imagen_layout">
+                <span>Actualmente:</span>
+                <a href="{{ instancia.logo.url }}" target="_blank" rel="noopener">
+                  <img src="{{ instancia.logo.url }}"
+                       alt="Logo actual de {{ instancia.nombre }}">
+                </a>
+              </div>
+              <div class="limpiar">
+                <p>Para borrar el logo, tilde la opción limpiar y guarde los cambios</p>
+                <br>
+                <div class="logo-acciones columna">
+                  <label for="{{ campo.name }}-clear_id">Limpiar:</label>
+                  <input type="checkbox"
+                         name="{{ campo.name }}-clear"
+                         id="{{ campo.name }}-clear_id">
+                </div>
+              </div>
+              <div class="contenedor-modificar">
+                <p>Para cambiarlo borre el logo, luego cargue un archivo desde "Modificar" y guarde los cambios</p>
+                <br>
+                <div class="modificar">
+                  <label for="{{ campo.id_for_label }}">Modificar:</label>
+                  {# <--- etiqueta "Modificar" fija #}
+                  <input type="file"
+                         name="{{ campo.name }}"
+                         id="{{ campo.id_for_label }}"
+                         {% if campo.field.required %}required{% endif %}
+                         accept="image/*">
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="logo-preview">
+              <div class="imagen_layout">
+                <span>Actualmente:</span>
+                <h4>No hay logo cargado</h1>
+              </div>
+              <div class="limpiar">
+                <p>Para borrar el logo, tilde la opción limpiar y guarde los cambios</p>
+                <br>
+                <div class="logo-acciones columna">
+                  <label for="{{ campo.name }}-clear_id">Limpiar:</label>
+                  <input type="checkbox"
+                         name="{{ campo.name }}-clear"
+                         id="{{ campo.name }}-clear_id">
+                </div>
+              </div>
+              <div class="contenedor-modificar">
+                <p>Para cambiarlo cargue un archivo desde "Modificar" y guarde los cambios</p>
+                <br>
+                <div class="modificar">
+                  <label for="{{ campo.id_for_label }}">Modificar:</label>
+                  {# <--- etiqueta "Modificar" fija #}
+                  <input type="file"
+                         name="{{ campo.name }}"
+                         id="{{ campo.id_for_label }}"
+                         {% if campo.field.required %}required{% endif %}
+                         accept="image/*">
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          {{ campo }}
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="acciones-form">
+      <button type="submit" name="accion" value="guardar">Guardar cambios</button>
+      <button type="submit" name="accion" value="guardaryseguir">Guardar y seguir editando</button>
+      <a href="{% url 'N_mantenimiento' %}" class="encima cancelar">Cancelar</a>
+    </div>
+  </form>
+{% endblock contenido %}

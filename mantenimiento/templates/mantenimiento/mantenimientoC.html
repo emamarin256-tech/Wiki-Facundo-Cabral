@@ -1,0 +1,233 @@
+{% extends "layouts/layout.html" %}
+{% load filtro %}
+{% load embed_video_tags %}
+{% block contenido %}
+  {% if modelo == 'Articulo' %}
+    <h1>Editar {{ modelo }}: {{ instancia.titulo }}</h1>
+  {% else %}
+    <h1>Editar {{ modelo }}: {{ instancia.nombre }}</h1>
+  {% endif %}
+  <h4>{{ instancia.descripcion_modelo }}</h4>
+  {% if form.non_field_errors %}
+    <div class="mensaje">
+      {% for error in form.non_field_errors %}<div class="error">{{ error }}</div>{% endfor %}
+    </div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data" class="form-editar">
+    {% csrf_token %}
+    {{ form.media }}
+    {% for campo in form %}
+      {% if campo.errors %}
+        {% for error in campo.errors %}<div class="mensaje">{{ error }}</div>{% endfor %}
+      {% endif %}
+      <div class="campo-form">
+        {{ campo.label_tag }}
+        {% if campo|es_manytomany %}
+          <div class="manytomany-campo">
+            {{ campo }}
+            <a href="{% url 'N_crear' campo|modelo_relacionado %}"
+               class="boton-crear">Crear {{ campo|modelo_relacionado|capfirst }} +</a>
+          </div>
+        {% elif campo|es_foreignkey %}
+          <div class="foreignkey-campo">
+            {{ campo }}
+            <a href="{% url 'N_crear' campo|modelo_relacionado %}"
+               class="boton-crear">Crear {{ campo|modelo_relacionado|capfirst }} +</a>
+
+            {# obtener id seleccionado (si existe) desde el BoundField #}
+            {% with related_id=campo.value %}
+              {% if related_id %}
+                <a href="{% url 'N_mantenimientoC' campo|modelo_relacionado related_id %}"
+                   class="boton-crear">Ver {{ campo|modelo_relacionado|capfirst }}</a>
+              {% endif %}
+            {% endwith %}
+          </div>
+        {% elif campo.name == 'desc' or campo.name == 'contenido' %}
+          <div class="editor-ck">{{ campo }}</div>
+        {% elif campo.name == "video_file" %}
+          {% with file=instancia|attr:campo.name %}
+            {% if file %}
+              <div class="preview-miniatura">
+                <div class="imagen_layout">
+                  <span>Actualmente:</span>
+                  <br>
+                  <div class="video_archivo_e">
+                    <video class="img_man_c" controls preload="metadata">
+                      <source src="{{ file.url }}">
+                      Tu navegador no soporta el elemento <code>video</code>.
+                    </video>
+                    <a href="{{ file.url }}" target="_blank" rel="noopener">
+                      <!-- preview de video -->
+                      {{ file.name }}
+                    </a>
+                  </div>
+                </div>
+                <div class="limpiar">
+                  <p>
+                    Para borrar el video, tildá la opción <strong>Limpiar</strong> y guardá los cambios.
+                  </p>
+                  <div class="logo-acciones columna">
+                    <label for="{{ campo.name }}-clear_id">Limpiar:</label>
+                    <input type="checkbox"
+                           name="{{ campo.name }}-clear"
+                           id="{{ campo.name }}-clear_id">
+                  </div>
+                </div>
+                <div class="contenedor-modificar">
+                  <p>Para cambiarlo: marcá "Limpiar", luego cargá un archivo nuevo en "Modificar" y guardá.</p>
+                  <div class="modificar">
+                    <label for="{{ campo.id_for_label }}">Modificar:</label>
+                    <input type="file"
+                           name="{{ campo.name }}"
+                           id="{{ campo.id_for_label }}"
+                           accept="video/*"
+                           {% if campo.field.required %}required{% endif %}>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="preview-miniatura">
+                <div class="imagen_layout">
+                  <span>Actualmente:</span>
+                  <h4>No hay video cargado</h4>
+                </div>
+                <div class="contenedor-modificar">
+                  <p>Subí un video desde "Modificar" y guardá los cambios.</p>
+                  <div class="modificar">
+                    <label for="{{ campo.id_for_label }}">Modificar:</label>
+                    <input type="file"
+                           name="{{ campo.name }}"
+                           id="{{ campo.id_for_label }}"
+                           accept="video/*"
+                           {% if campo.field.required %}required{% endif %}>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endwith %}
+          {# Manejo especial para campos de imagen/miniatura/logo (incluye fallback a video_url) #}
+        {% elif campo.name == "imagen" or campo.name == "miniatura" or campo.name == "logo" %}
+          {% with file=instancia|attr:campo.name %}
+            {% if file %}
+              <div class="preview-miniatura">
+                <div class="imagen_layout">
+                  <span>Actualmente:</span>
+                  <br>
+                  <a href="{{ file.url }}" target="_blank" rel="noopener">
+                    <img class="img_man_c"
+                         src="{{ file.url }}"
+                         alt="Miniatura de {{ instancia }}">
+                    <br>
+                  </a>
+                </div>
+                <div class="limpiar">
+                  <p>
+                    Para borrar la imagen, tildá la opción <strong>Limpiar</strong> y guardá los cambios.
+                  </p>
+                  <div class="logo-acciones columna">
+                    <label for="{{ campo.name }}-clear_id">Limpiar:</label>
+                    <input type="checkbox"
+                           name="{{ campo.name }}-clear"
+                           id="{{ campo.name }}-clear_id">
+                  </div>
+                </div>
+                <div class="contenedor-modificar">
+                  <p>Para cambiarla: marcá "Limpiar", luego cargá un archivo nuevo en "Modificar" y guardá.</p>
+                  <div class="modificar">
+                    <label for="{{ campo.id_for_label }}">Modificar:</label>
+                    <input type="file"
+                           name="{{ campo.name }}"
+                           id="{{ campo.id_for_label }}"
+                           accept="image/*"
+                           {% if campo.field.required %}required{% endif %}>
+                  </div>
+                </div>
+              </div>
+            {% elif instancia.video_url and instancia.usar_miniatura == True %}
+              {# No hay imagen subida pero sí video_url -> mostramos thumbnail proporcionado por embed_video_tags #}
+              {% video instancia.video_url as my_video %}
+              <div class="preview-miniatura">
+                <div class="imagen_layout">
+                  <span>Actualmente (Miniatura Automatica):</span>
+                  <br>
+                  {% if my_video.thumbnail %}
+                    <a href="{{ my_video.thumbnail }}" target="_blank" rel="noopener">
+                      <img class="img_man_c"
+                           src="{{ my_video.thumbnail }}"
+                           alt="{{ instancia.titulo }}">
+                    </a>
+                  {% else %}
+                    <h4>No se pudo obtener miniatura desde la URL</h4>
+                  {% endif %}
+                </div>
+                <div class="limpiar">
+                  <p>
+                    Para borrar el video, tildá la opción <strong>Limpiar</strong> y guardá los cambios.
+                  </p>
+                  <div class="logo-acciones columna">
+                    <label for="{{ campo.name }}-clear_id">Limpiar:</label>
+                    <input type="checkbox"
+                           name="{{ campo.name }}-clear"
+                           id="{{ campo.name }}-clear_id">
+                  </div>
+                </div>
+                <div class="contenedor-modificar">
+                  <p>Si queres cambiar la miniatura, sube un archivo aqui.</p>
+                  <div class="modificar">
+                    <label for="{{ campo.id_for_label }}">Modificar:</label>
+                    <input type="file"
+                           name="{{ campo.name }}"
+                           id="{{ campo.id_for_label }}"
+                           accept="image/*">
+                  </div>
+                </div>
+              </div>
+            {% endvideo %}
+          {% else %}
+            <div class="preview-miniatura">
+              <div class="imagen_layout">
+                <span>Actualmente:</span>
+                <h4>No hay imagen cargada</h4>
+              </div>
+              <div class="contenedor-modificar">
+                <p>Subí una imagen desde "Modificar" y guardá los cambios.</p>
+                <div class="modificar">
+                  <label for="{{ campo.id_for_label }}">Modificar:</label>
+                  <input type="file"
+                         name="{{ campo.name }}"
+                         id="{{ campo.id_for_label }}"
+                         accept="image/*"
+                         {% if campo.field.required %}required{% endif %}>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+        {# Resto de campos normales #}
+      {% else %}
+        {{ campo }}
+        {% if campo.help_text %}<small class="help-text">{{ campo.help_text|safe }}</small>{% endif %}
+      {% endif %}
+    </div>
+  {% endfor %}
+  <div class="acciones-form">
+    <button type="submit" name="accion" value="guardar">Guardar cambios</button>
+    <button type="submit" name="accion" value="guardaryseguir">Guardar y seguir editando</button>
+    <button type="submit" name="accion" value="eliminar" class="rojo">Eliminar</button>
+    <a href="{% url 'N_mantenimientoB' modelo %}" class="encima cancelar">Cancelar</a>
+  </div>
+</form>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const btnEliminar = document.querySelector('button[name="accion"][value="eliminar"]');
+  if (btnEliminar) {
+    btnEliminar.addEventListener("click", function(event) {
+      const confirmado = confirm("¿Estás seguro que querés eliminar este artículo?");
+      if (!confirmado) {
+        event.preventDefault(); // cancela el envío del formulario
+      }
+    });
+  }
+});
+</script>
+{% endblock contenido %}

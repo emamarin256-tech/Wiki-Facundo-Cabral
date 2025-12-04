@@ -1,0 +1,23 @@
+{% extends "layouts/layout.html" %}
+{% block contenido %}
+    <h1 class="titulo">Panel de gestión</h1>
+    <h2 class="subtitulo">
+        Edita el elementos en <span class="azul">"Ver Elemento"</span>
+    </h2>
+    <h2 class="subtitulo">
+        Agrega elementos con el " <i class="fa-solid fa-add crear-link-b"></i> "
+    </h2>
+    <ul class="lista-modelos">
+        <li class="modelo-item">
+            <a class="modelo-link" href="{% url 'N_mantenimientoC' layo layo.id %}">Ver {{ layo }}</a>
+        </li>
+        {% for modelo in lista_modelos %}
+            <li class="modelo-item">
+                <a class="modelo-link" href="{% url 'N_mantenimientoB' modelo %}">Ver {{ modelo }}s</a>
+                <a class="crear-link" href="{% url 'N_crear' modelo %}">
+                    <i class="fa-solid fa-add"></i>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock contenido %}

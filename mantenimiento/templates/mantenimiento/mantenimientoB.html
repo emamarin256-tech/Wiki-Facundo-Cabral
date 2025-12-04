@@ -1,0 +1,104 @@
+{% extends "layouts/layout.html" %}
+{% load filtro %}
+{% block contenido %}
+    <div class="volver-header">
+        <h1 class="titulo">Gestionar {{ modelo }}s</h1>
+        <a href="{% url 'N_mantenimiento' %}" class="volver volver-top">← Volver</a>
+    </div>
+    <div class="buscador-ordenador">
+        <form method="get" class="buscador-form">
+            <div class="Buscar">
+                <label for="sort">Buscar (titulo u nombre):</label>
+                <input type="text"
+                       name="q"
+                       placeholder="Buscar (ej: E...)"
+                       value="{{ search_query|default:'' }}">
+            </div>
+            <div class="ordenar">
+                <div class="ordenar-b">
+                    <label for="sort">Ordenar por:</label>
+                    <div class="elecciones">
+                        <select name="sort" id="sort">
+                            <option value="">-- Sin orden --</option>
+                            {% for campo in campos %}
+                                <option value="{{ campo.name }}"
+                                        {% if campo.name == sort_field %}selected{% endif %}>
+                                    {{ campo.verbose|capfirst }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <select name="order" id="order">
+                            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascendente</option>
+                            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descendente</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit">Aplicar</button>
+            </div>
+        </form>
+    </div>
+    <form method="post" action="{% url 'N_eliminar_varios' modelo %}">
+        {% csrf_token %}
+        <h2 class="subtitulo">
+            Edita con el " <i class="azul fa-solid fa-pen-to-square"></i> " al lado del elemento
+        </h2>
+        <div class="agregar-bloque">
+            <h3 class="subtitulo">
+                Agregar {{ modelo }} →
+                <a href="{% url 'N_crear' modelo %}"
+                   class="crear-link"
+                   title="Agregar {{ modelo }}">
+                    <i class="fa-solid fa-add"></i>
+                </a>
+                / Elminar seleccionados →
+                <button type="submit"
+                        class="btn-eliminar"
+                        onclick="return confirmarEliminacion()">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </h3>
+            {% if campo_mostrado_verbose %}<p>Orden: {{ campo_mostrado_verbose|capfirst }}</p>{% endif %}
+        </div>
+        <ul class="lista-modelos">
+            {% for instancia in instancias %}
+                <li class="modelo-item modelo-item-b">
+                    <div class="linea">
+                        <a href="{% url 'N_mantenimientoC' modelo instancia.id %}"
+                           class="modelo-link"
+                           title="Editar {{ instancia }}">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <input type="checkbox"
+                               name="seleccionados"
+                               value="{{ instancia.id }}"
+                               class="check-modelo">
+                        <span class="modelo-nombre">{{ instancia }}</span>
+                    </div>
+                    {% if campo_mostrado %}
+                        {% if campo_mostrado != "titulo" and campo_mostrado != "nombre" %}
+                            {% if campo_mostrado == "orden" %}
+                                <span class="modelo-extra">{{ instancia.orden }}</span>
+                            {% else %}
+
+                            {% with valor=instancia|attr:campo_mostrado %}
+                                {% if valor %}<span class="modelo-extra">{{ valor|prer }}</span>{% else %}<span class="modelo-extra"><i class="fa-solid fa-xmark"></i></span>{% endif %}
+                            {% endwith %}
+
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="modelo-item vacio">No hay {{ modelo }} disponibles.</li>
+            {% endfor %}
+        </ul>
+    </form>
+    <div class="izq volver-container">
+        <a href="{% url 'N_mantenimiento' %}" class="volver">← Volver</a>
+    </div>
+    <script>
+function confirmarEliminacion() {
+    return confirm("¿Estás seguro que querés eliminar los elementos seleccionados?");
+}
+    </script>
+{% endblock contenido %}
