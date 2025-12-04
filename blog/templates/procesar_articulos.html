@@ -1,0 +1,32 @@
+{% for art in lista_art %}
+    <article class="art_item">
+        {% if art.usar_miniatura %}
+            <div class="art_img">
+                <a href="{% url "N_articulo" request.resolver_match.kwargs.Pagina_slug art.id %}">
+                    {% if art.imagen %}
+                        <img src="{{ art.imagen.url }}" alt="{{ art.titulo }}">
+                    {% elif art.video_url %}
+                        {% load embed_video_tags %}
+                        {% video art.video_url as my_video %}
+                        <img src="{{ my_video.thumbnail }}" alt="{{ art.titulo }}">
+                    {% endvideo %}
+                {% endif %}
+            </a>
+        </div>
+    {% endif %}
+    <div class="art_datos">
+        <div class="enlace">
+            <p>{{ art.tipo }}:</p>
+            <a href="{% url "N_articulo" request.resolver_match.kwargs.Pagina_slug art.id %}">{{ art.titulo }}</a>
+        </div>
+        <div class="art_categorias">
+            {% for categoria in art.categorias.all %}
+                <a href="#">{{ categoria }}</a>
+                {% if not forloop.last %}<span>-</span>{% endif %}
+            {% endfor %}
+        </div>
+        <span>{{ art.creacion }}</span>
+        <br>
+    </div>
+</article>
+{% endfor %}

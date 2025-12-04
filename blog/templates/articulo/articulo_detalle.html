@@ -1,0 +1,46 @@
+{% extends "layouts/layout.html" %}
+{% load embed_video_tags %}
+{% load filtro_yt %}
+{% block titulo %}
+    {{ v_articulo.tipo }}: {{ v_articulo.titulo }}
+{% endblock titulo %}
+{% block contenido %}
+    <div class="art_1">
+        <div class="art_1_info">
+            <h1 class="titulo">{{ v_articulo.titulo }}</h1>
+            {% if v_articulo.subcategoria %}
+                <a href="{% url "N_subcategoria" request.resolver_match.kwargs.Pagina_slug v_articulo.subcategoria.slug %}">{{ v_articulo.subcategoria.nombre }}</a>
+            {% else %}
+                <a href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_articulo.categoria.id %}">{{ v_articulo.categoria.nombre }}</a>
+            {% endif %}
+            <span class="fecha">Subido el {{ v_articulo.creacion }}</span>
+        </div>
+        {% if v_articulo.video_url %}
+            <div class="video-container video-articulo">
+                <div class="video-box video-box-articulo">
+                    <iframe width="480"
+                            height="360"
+                            src="https://www.youtube.com/embed/{{ v_articulo.video_url|youtube_id }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        {% elif v_articulo.video_file %}
+            <div class="video-container-a">
+                <video class="video-articulo-a"
+                       width="480"
+                       height="360"
+                       controls
+                       preload="metadata">
+                    <source src="{{ v_articulo.video_file.url }}" type="video/mp4">
+                    Tu navegador no soporta la reproducción de video.
+                </video>
+            </div>
+        {% endif %}
+        <br>
+    </div>
+    <div class="cont">{{ v_articulo.contenido|safe }}</div>
+{% endblock contenido %}

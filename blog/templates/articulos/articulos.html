@@ -1,0 +1,25 @@
+{% extends "layouts/layout.html" %}
+{% block titulo %}Listado de articulos{% endblock %}
+{% block contenido %}
+    <h1 class="titulo">Listado de articulos</h1>
+    {% for art in lista_art %}
+        <article class="art_item">
+            {% if art.imagen != 'null' and art.imagen.url|length >= 1 %}
+                <div class="art_img">
+                    <img src="{{ art.imagen.url }}">
+                </div>
+            {% endif %}
+            <div class="art_datos">
+                <h2>{{art.nombre}}</h2>
+                <div class="art_categorias">
+                    {% for categoria in art.categorias.all %}
+                        <a href="#">{{categoria}}</a>
+                        {% if not forloop.last %}<span>-</span>{% endif %}
+                    {% endfor %}
+                </div>
+                <span>{{ art.creacion }}</span>
+                <p>{{ art.contenido|safe }}</p>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock %}

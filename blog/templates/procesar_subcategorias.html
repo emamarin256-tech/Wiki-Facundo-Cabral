@@ -1,0 +1,38 @@
+{% for art in lista_art %}
+<article class="art_item">
+    {% if art.usar_miniatura %}
+        <div class="art_img">
+            {% if art.categoria %}
+                {% for pb in art.categoria.paginas.all %}
+                    {% if pb.slug == request.resolver_match.kwargs.Pagina_slug %}
+                        <a href="{% url 'N_subcategoria' pb.slug art.slug %}">
+                            {% if art.imagen %}
+                                <img src="{{ art.imagen.url }}" alt="{{ art.titulo }}">
+                            {% elif art.video_url %}
+                                {% load embed_video_tags %}
+                                {% video art.video_url as my_video %}
+                                    <img src="{{ my_video.thumbnail }}" alt="{{ art.titulo }}">
+                                {% endvideo %}
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="art_datos">
+        {% if art.categoria %}
+            {% for pb in art.categoria.paginas.all %}
+                {% if pb.slug == request.resolver_match.kwargs.Pagina_slug %}
+                    <a class="subcategoria"
+                       href="{% url 'N_subcategoria' pb.slug art.slug %}">{{ art.nombre }}</a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <span>{{ art.creacion }}</span>
+        <p>{{ art.contenido|safe }}</p>
+    </div>
+</article>
+{% endfor %}
+

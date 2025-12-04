@@ -1,0 +1,57 @@
+{% extends "layouts/layout.html" %}
+{% load filtro_yt %}
+{% block titulo %}{{ v_Pagina_Nombre }} - {{ v_subcategoriaaa.nombre }}{% endblock %}
+{% block contenido %}
+  <div class="video-container">
+    <div class="video-info">
+      <h1 class="titulo">{{ v_subcategoriaaa.nombre }}</h1>
+      {% if v_subcategoriaaa.creacion %}<p class="fecha">{{ v_subcategoriaaa.creacion }}</p>{% endif %}
+      {% if v_subcategoriaaa.desc %}<p class="descrip">{{ v_subcategoriaaa.desc }}</p>{% endif %}
+    </div>
+    {% if v_subcategoriaaa.video_url %}
+      <div class="video-box">
+        <iframe width="480"
+                height="360"
+                src="https://www.youtube.com/embed/{{ v_subcategoriaaa.video_url|youtube_id }}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+        </iframe>
+      </div>
+    {% elif v_subcategoriaaa.video_file %}
+      <div class="video-container-a">
+        <video class="video-articulo-a"
+               width="480"
+               height="360"
+               controls
+               preload="metadata">
+          <source src="{{ v_subcategoriaaa.video_file.url }}" type="video/mp4">
+          Tu navegador no soporta la reproducción de video.
+        </video>
+      </div>
+    {% endif %}
+  </div>
+  {% if v_sart %}
+    <div class="volver-header">
+      <h2>{{ v_Pagina_Nombre }} en {{ v_subcategoriaaa.nombre }}</h2>
+      {% if v_subcategoriaaa.categoria %}
+        <a class="volver volver-top-b"
+           href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoriaaa.categoria.id %}">
+          ← Volver a {{ v_subcategoriaaa.categoria.nombre }}
+        </a>
+      {% endif %}
+    </div>
+    {% include "procesar_articulos.html" with lista_art=v_sart %}
+  {% else %}
+    <br>
+  {% endif %}
+  <div class="art_categorias">
+    {% if v_subcategoriaaa.categoria %}
+      <a class="volver"
+         href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoriaaa.categoria.id %}">
+        ← Volver a {{ v_subcategoriaaa.categoria.nombre }}
+      </a>
+    {% endif %}
+  </div>
+{% endblock contenido %}
