@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      {% block titulo %}
+      {% endblock titulo %}
+    </title>
+    {% load static %}
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+          rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    $('select').select2();
+  });
+    </script>
+  </head>
+  <body>
+    <header>
+      {% if l_logo %}<img src="{{ l_logo.url }}">{% endif %}
+      {% if l_titulo %}<h1>{{ l_titulo }}</h1>{% endif %}
+      {% if request.resolver_match.url_name in "N_mantenimiento N_mantenimientoB N_mantenimientoC N_crear" %}
+        <h4>Modo Mantenimiento Usuario: {{ user }}</h4>
+      {% endif %}
+    </header>
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">
+            <span class="close-msg"><i class="fa-solid fa-xmark"></i></span>
+            <p>{{ message }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% load contiene_cat %}
+    <nav>
+      <ul>
+        {% if v_categoria.nombre %}
+          <li>
+            <span>{{ v_pagina }} en {{ v_categoria.nombre }}</span>
+          </li>
+        {% elif v_subcategoriaaa.nombre %}
+          <li>
+            <span>{{ v_Pagina_Nombre }} en {{ v_subcategoriaaa.nombre }}</span>
+          </li>
+        {% elif v_articulo.nombre %}
+          <li>
+            <span>{{ v_articulo.tipo }}: {{ v_articulo.nombre }}</span>
+          </li>
+        {% elif v_articulo.titulo %}
+          <li>
+            <span>{{ v_articulo.tipo }}: {{ v_articulo.titulo }}</span>
+          </li>
+        {% endif %}
+        {% for p in pags %}
+          <li>
+            {% if p.2 == "" %}
+              {% if pag_inicio %}
+                <a class="actual" href="{% url 'N_inicio' %}">{{ p.1 }}</a>
+              {% else %}
+                <a href="{% url 'N_inicio' %}">{{ p.1 }}</a>
+              {% endif %}
+            {% else %}
+              {% if p.4 == "" %}
+                {% if V_categorias|contiene_categoria:p.1 %}
+                  <a class="solo_vista">{{ p.1 }}▼</a>
+                {% else %}
+                  <a class="solo_vista">{{ p.1 }}</a>
+                {% endif %}
+                {% if V_categorias|contiene_categoria:p.1 %}
+                  <ul class="menu_desplegable">
+                    {% for cat in V_categorias %}
+                      {% if cat.2 == p.1 %}
+                        {% if v_categoria.nombre == cat.1 and v_pagina == p.1 %}
+                          <li>
+                            <a class="actual" href="{% url "N_categoria" p.2 cat.0 %}">{{ cat.1 }}</a>
+                          </li>
+                        {% else %}
+                          <li>
+                            <a href="{% url "N_categoria" p.2 cat.0 %}">{{ cat.1 }}</a>
+                          </li>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              {% else %}
+                {% if p.2 == request.resolver_match.kwargs.slug %}
+                  {% if V_categorias|contiene_categoria:p.1 %}
+                    <a class="actual" href="{% url 'N_pagina' p.2 %}">{{ p.1 }}▼</a>
+                  {% else %}
+                    <a class="actual" href="{% url 'N_pagina' p.2 %}">{{ p.1 }}</a>
+                  {% endif %}
+                {% else %}
+                  {% if V_categorias|contiene_categoria:p.1 %}
+                    <a href="{% url 'N_pagina' p.2 %}">{{ p.1 }}▼</a>
+                  {% else %}
+                    <a href="{% url 'N_pagina' p.2 %}">{{ p.1 }}</a>
+                  {% endif %}
+                {% endif %}
+                {% if V_categorias|contiene_categoria:p.1 %}
+                  <ul class="menu_desplegable">
+                    {% for cat in V_categorias %}
+                      {% if cat.2 == p.1 %}
+                        {% if v_categoria.nombre == cat.1 and v_pagina == p.1 %}
+                          <li>
+                            <a class="actual" href="{% url "N_categoria" p.2 cat.0 %}">{{ cat.1 }}</a>
+                          </li>
+                        {% else %}
+                          <li>
+                            <a href="{% url "N_categoria" p.2 cat.0 %}">{{ cat.1 }}</a>
+                          </li>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+            </li>
+          {% endfor %}
+          <li>
+            {% if request.resolver_match.url_name == "N_usuario" %}
+              <a class="actual" href="{% url 'N_usuario' %}">Usuario</a>
+            {% else %}
+              <a href="{% url 'N_usuario' %}">Usuario</a>
+            {% endif %}
+            <ul class="menu_desplegable">
+              {% if not user.email %}
+                <li>
+                  {% if request.resolver_match.url_name == "N_registro" %}
+                    <a class="actual" href="{% url "N_registro" %}">Registro</a>
+                  {% else %}
+                    <a href="{% url "N_registro" %}">Registro</a>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if request.resolver_match.url_name == "N_inicio_sesion" %}
+                    <a class="actual" href="{% url "N_inicio_sesion" %}">Iniciar Sesion</a>
+                  {% else %}
+                    <a href="{% url "N_inicio_sesion" %}">Iniciar Sesion</a>
+                  {% endif %}
+                </li>
+              {% endif %}
+              {% if request.user.is_authenticated %}
+                {% if request.user.groups.all.0.name == "Usuarios" or request.user.is_superuser %}
+                  <li>
+                    <a href="{% url "N_mantenimiento" %}">Mantenimiento</a>
+                  </li>
+                  <li>
+                    <a style="white-space: nowrap;" href="{% url "N_cerrar_sesion" %}">Cerrar sesión</a>
+                  </li>
+                {% else %}
+                  <li>
+                    <a style="white-space: nowrap;" href="{% url "N_cerrar_sesion" %}">Cerrar sesión</a>
+                  </li>
+                {% endif %}
+              {% endif %}
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div id="contenido">
+        <div class="caja">
+          {% block contenido %}{% endblock %}
+        </div>
+      </div>
+      <hr class="abajo" />
+      <footer>
+        Página web hecha con Django por &copy; Emanuel Marin - {% now "d/m/Y" %}
+      </footer>
+      <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Autodesvanecer después de 3s
+    document.querySelectorAll(".message").forEach(msg => {
+      setTimeout(() => {
+        msg.style.transition = "opacity 0.8s ease";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 800);
+      }, 5000);
+    });
+
+    // Cerrar manualmente al hacer clic en la cruz
+    document.querySelectorAll(".close-msg").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const msg = e.target.closest(".message");
+        msg.style.transition = "opacity 0.3s ease";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 300);
+      });
+    });
+  });
+      </script>
+    </body>
+  </html>

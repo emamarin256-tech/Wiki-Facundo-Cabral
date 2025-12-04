@@ -1,0 +1,1759 @@
+* {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+body {
+  background-color: rgb(242, 213, 131);
+}
+
+/* #region cabecera */
+header {
+  width: 1000px;
+  height: 140px;
+  background-color: #724500;
+  margin: 0px auto;
+  border-left: 1px solid rgb(109, 37, 9);
+  border-right: 1px solid rgb(109, 37, 9);
+}
+
+header h1 {
+  padding-top: 10px;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  color: rgb(201, 174, 248);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 40px;
+}
+header h4 {
+  margin: 0;
+  padding-left: 20px;
+  color: rgb(167, 3, 3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: normal;
+  background-color: #826846;
+}
+header img {
+  display: block;
+  max-height: 140px;
+  float: right;
+  margin-top: 10px;
+  margin-right: 40px;
+  border: 2px solid #826846;
+  border-radius: 1px;
+}
+/* #endregion */
+
+/* #region navegación */
+nav {
+  width: 1025px;
+  margin: 0 auto;
+  background-color: #604d34;
+  border: 1px solid rgb(109, 37, 9);
+  position: relative;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 10px;
+  background: #503c28;
+
+  clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
+
+  z-index: -1; /* lo manda detrás del nav */
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nav ul li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  height: 40px;
+  padding: 0 15px;
+  color: rgb(255, 176, 189);
+  text-decoration: none;
+}
+
+nav ul li span {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 15px;
+  color: rgb(249, 136, 155);
+  text-decoration: none;
+  text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17);
+  cursor: default;
+}
+
+nav ul li:hover {
+  background-color: #826846;
+  box-shadow: 0px 0px 5px rgb(245, 119, 140) inset;
+}
+
+.actual {
+  color: rgb(249, 136, 155);
+  text-decoration: none;
+  text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17);
+}
+
+.menu_desplegable {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  width: 100%;
+}
+.menu_desplegable li {
+  width: auto;
+
+  position: relative;
+  justify-content: center;
+  text-align: center;
+  background-color: #826846;
+  border: 3px solid #341a00;
+  border-bottom: none;
+  color: rgb(255, 176, 189);
+  text-decoration: none;
+  height: min-content;
+}
+.menu_desplegable li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 5px 15px;
+
+  white-space: normal;
+  width: auto;
+  height: max-content;
+}
+
+.menu_desplegable li:last-child {
+  border-bottom: 3px solid #341a00;
+}
+
+nav ul li:hover .menu_desplegable {
+  display: flex;
+}
+
+.menu_desplegable li:hover {
+  border: 3px solid #341a00;
+  border-color: #ff9999;
+}
+.solo_vista {
+  cursor: default;
+}
+/* #endregion */
+
+/* #region lista */
+
+#contenido {
+  background-color: rgb(135, 98, 53);
+  width: 960px;
+  height: fit-content;
+  flex: 1;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  margin-top: 40px;
+  border-radius: 1.5%;
+}
+
+.caja {
+  background: rgb(188, 159, 78);
+  min-height: 300px;
+  width: 900px;
+  height: fit-content;
+  padding: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border: 1px solid #ddd;
+}
+
+.titulo {
+  color: rgb(45, 45, 45);
+  letter-spacing: 1px;
+  font-size: 30px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+  cursor: default;
+}
+
+.art_item {
+  display: flex;
+  align-items: center; /* alinea texto e imagen arriba */
+  gap: 10px; /* espacio entre texto e imagen */
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgb(249, 224, 155);
+  border-bottom: 1px solid rgb(181, 133, 2);
+  border-radius: 8px; /* opcional */
+  height: fit-content;
+}
+.art_img {
+  max-width: 150px;
+  width: 100%;
+  height: 80%;
+  float: right;
+  overflow: hidden;
+  border-radius: 5px;
+  transition: 0.5s;
+}
+
+.art_img img {
+  max-width: 150px;
+  width: 100%;
+  height: 80%;
+  object-fit: cover; /* recorta sin deformar */
+  display: block;
+  
+}
+.art_img:hover{
+  transform:scale(1.05);
+}
+.art_datos {
+  flex: 1;
+  padding-left: 15px;
+  display: flex; /* lo hacemos flex */
+  flex-direction: column;
+}
+video,
+video:focus,
+video:active,
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-enclosure,
+video::-webkit-media-controls-enclosure {
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.enlace {
+  display: inline-flex;
+}
+.enlace a {
+  font-size: 30px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 5px;
+  text-decoration-color: #ff9999;
+  transition: 0.3s;
+}
+.enlace p {
+  font-size: 30px;
+  margin-right: 8px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 5px;
+  text-decoration-color: #ff9999;
+  transition: 0.3s;
+}
+.enlace a:hover {
+  text-shadow: 0.5px 0.5px 0px rgb(245, 119, 140);
+  text-decoration-line: underline;
+  text-decoration-color: #ff9999;
+  text-decoration-style: solid;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 10px;
+}
+.art_contenido_p {
+  display: inline-block;
+  width: fit-content;
+}
+.art_contenido_p {
+  background-color: rgb(252, 240, 208);
+}
+.art_datos h2,
+p {
+  margin: 0;
+  width: fit-content;
+}
+
+.art_categorias {
+  display: flex;
+  flex-direction: row;
+
+  justify-self: center;
+}
+.subcategoria {
+  font-size: 30px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 5px;
+  text-decoration-color: #ff9999;
+  transition: 0.3s;
+}
+
+.subcategoria:hover {
+  text-shadow: 0.5px 0.5px 0px rgb(245, 119, 140);
+  text-decoration-line: underline;
+  text-decoration-color: #ff9999;
+  text-decoration-style: solid;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 10px;
+}
+
+.art-item span.date {
+  display: block;
+  font-size: 15px;
+  color: gray;
+  margin-bottom: 16px;
+}
+.eliminar_btn {
+  margin-top: auto;
+  padding: 5px;
+  align-self: flex-end;
+  width: fit-content;
+  background: red;
+  color: white;
+  text-decoration: none;
+  float: inline-end;
+}
+
+/* #endregion */
+
+footer {
+  width: 1000px;
+  background-color: #775b31;
+  border: 1px solid #826846;
+  color: pink;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0px 0px 20px rgb(188, 159, 78);
+}
+
+/* #region formulario */
+.caja form {
+  width: 100%;
+  background-color: rgb(242, 213, 131);
+  padding: 8px 5px;
+  margin: 0px auto;
+  border: 1px solid #fab55b;
+  display: flex;
+  flex-direction: column;
+}
+.formulario_registro form {
+  display: table;
+  width: 80%;
+}
+
+.campos {
+  display: table-row;
+}
+
+.campos label {
+  display: table-cell;
+  padding-right: 10px; /* espacio entre label y campo */
+  font-weight: bold;
+}
+
+.campos input {
+  display: table-cell;
+  width: 100%;
+}
+
+.campos input {
+  flex: 1; /* hace que el input ocupe el resto del espacio */
+  padding: 5px;
+}
+
+.django-ckeditor-widget {
+  border: 2px solid #3498db; /* azul, puedes cambiar el color */
+  border-radius: 5px;
+  width: 100%; /* opcional, bordes redondeados */
+}
+
+.caja form input,
+.caja form label {
+  display: block;
+  padding: 5px;
+  padding-left: 0px;
+}
+
+.caja form input,
+.caja form textarea {
+  width: 95%;
+  margin-bottom: 10px;
+}
+
+.caja form select {
+  width: 130px;
+  
+  padding: 5px;
+}
+
+.caja form button {
+  padding: 10px;
+  margin-top: 5px;
+  background-color: rgb(116, 91, 91);
+  color: rgb(255, 176, 189);
+  border: 0.5px solid rgb(109, 37, 9);
+  border-radius: 1rem;
+  transition: 0.3s all;
+  width: fit-content;
+}
+
+.caja form button:hover {
+  cursor: pointer;
+  background-color: rgb(74, 59, 59);
+  color: rgb(250, 123, 123);
+}
+.caja a {
+  text-decoration: none;
+  color: blue;
+  text-underline-offset: 3px; /* 🔹 separa la línea del texto */
+  text-decoration-thickness: 1.5px; /* 🔹 controla el grosor del subrayado */
+  transition: 0.2s;
+}
+.registro {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: flex-start;
+}
+.info_registro div {
+  justify-content: center;
+  align-items: center;
+  margin: 0px auto;
+}
+.info_registro h1 {
+  margin-top: 5px;
+  padding: 0;
+  align-self: flex-start;
+}
+.inicia_sesion_registro {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.info_registro div p {
+  font-size: 25px;
+  margin: auto 0;
+}
+
+
+
+.errorlist {
+  margin: 2px;
+  padding-left: 20px;
+}
+
+.del_formulario div label {
+  padding: 0;
+  padding-bottom: 3px;
+}
+.del_formulario div textarea,
+.del_formulario div input {
+  margin-bottom: 1px;
+}
+
+.del_formulario div {
+  padding: 5px;
+}
+
+/* #endregion */
+
+/* #region pagina */
+
+.volver {
+  color: lightcoral !important;
+  text-decoration: none;
+
+  background-color: #604d34;
+  padding: 5px;
+  border-radius: 0.3rem;
+}
+
+.fecha {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  color: rgb(0, 0, 0);
+}
+
+.video-container {
+  display: grid;
+  margin: 0;
+  padding: 5px;
+  border-radius: 0.3rem;
+  grid-template-columns: 2fr 1fr;
+
+  align-items: center;
+  height: auto;
+  width: 100%;
+}
+.art_1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.art_1_info {
+  margin: auto 0;
+}
+.art_1_info a {
+  color: lightcoral !important;
+  text-shadow: 1px 1px 0px rgb(48, 26, 17);
+  text-decoration: none;
+  font-size: 18px;
+  background-color: rgba(255, 208, 146, 0.664);
+  padding: 3px;
+  border-radius: 0.3rem;
+  transition: 0.5s;
+}
+.art_1_info a:hover {
+  text-decoration: none;
+  text-shadow: none;
+  background-color: rgb(249, 224, 155);
+}
+
+.cont {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  padding: 10px;
+  background-color: rgb(249, 224, 155);
+  border-bottom: 1px soLid rgb(181, 133, 2);
+  border-radius: 8px;
+  height: fit-content;
+}
+.video-box {
+  flex-shrink: 0; /* Evita que el video se reduzca */
+  width: min-content;
+  height: 300px;
+  align-self: center;
+  padding: 5px;
+  justify-content: center;
+  margin: 0px;
+  background-color: rgb(249, 224, 155);
+}
+
+.video-box iframe {
+  height: 300px;
+}
+.video-box video {
+  margin: 0px;
+  padding: 0px;
+  height: 300px;
+}
+.video-box-articulo {
+  margin-bottom: auto;
+  margin-top: 5px;
+}
+.video-info {
+  display: flex;
+  flex-direction: column;
+  align-items: first baseline;
+  margin-right: auto;
+}
+
+.video-info .descrip {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.video-info .titulo {
+  margin-top: 0px;
+  display: inline-block;
+}
+.video-info .fecha {
+  margin-top: 0px;
+}
+#tablaf {
+  width: fit-content;
+}
+
+/* #endregion */
+
+/* #region ckeditor */
+
+/* #endregion */
+
+/* #region tamaños */
+/* #region caja */
+
+/* #endregion */
+/* #endregion */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: rgb(242, 213, 131);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  /* header, nav, contenido, footer */
+}
+
+#contenido {
+  width: 960px;
+  margin: 40px auto 30px auto;
+  background-color: rgb(135, 98, 53);
+  border-radius: 1.5%;
+}
+
+hr {
+  grid-column: 1 / -1; /* hace que el hr ocupe todo el ancho del grid */
+  display: block;
+  width: 100%; /* tu ancho habitual */
+  margin: 10px auto;
+  border: 1px solid #826846;
+}
+
+/* #region especfico */
+/* #region usuario */
+.p_user {
+  width: fit-content;
+  font-size: 20px;
+}
+.p_info {
+  font-size: 18px;
+}
+.h1_user {
+  margin: 0;
+}
+.h2_user {
+  margin: 0;
+  margin-bottom: 3px;
+}
+/* #endregion */
+/* #region inicio_sesion */
+.inicio_sesion {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  height: 300px;
+  align-items: center;
+  margin: auto;
+}
+.form_inicio_sesion {
+  padding-left: 10px;
+}
+.inicio_sesion form {
+  width: 90%;
+  height: 80%;
+  padding-right: 5px;
+  justify-content: center;
+}
+
+.items_form_inicio_sesion {
+  margin: auto 0px;
+}
+.inicio_sesionA {
+  align-self: flex-start;
+  margin-top: 10px;
+}
+.h2_inicio_sesion {
+  width: fit-content;
+  margin: 0px;
+  margin-right: auto;
+  align-self: center;
+  font-size: 28px;
+  margin-left: 25px;
+}
+.h4_inicio_sesion {
+  width: fit-content;
+  margin: 0px;
+  margin-bottom: 5px;
+  align-self: center;
+  margin-left: 30px;
+}
+/* #endregion */
+/* #region mensajes */
+.messages {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+  max-width: 300px;
+
+}
+
+
+
+
+.message.success {
+  background-color: #28a745;
+} /* Verde */
+.message.error {
+  background-color: #dc3545;
+} /* Rojo */
+.message.warning {
+  background-color: #ffc107;
+  color: #333;
+} /* Amarillo */
+.message.info {
+  background-color: #17a2b8;
+} /* Celeste */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* === Corrección visual de mensajes === */
+.message {
+  position: relative;
+  padding: 12px 36px 12px 16px; /* espacio para la X */
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+  word-break: break-word;
+  width: fit-content;
+  max-width: none; /* 🔹 elimina el límite */
+  display: inline-block; /* 🔹 necesario para que fit-content funcione bien */
+  text-align: left;
+}
+
+.close-msg {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%); /* centra verticalmente */
+  cursor: pointer;
+  color: #fff;
+  font-size: 18px;
+  transition: 0.2s;
+  line-height: 1;
+}
+
+.close-msg:hover {
+  color: #ddd;
+}
+
+.message p {
+  margin: 0;
+  
+  width: fit-content !important;
+  
+  text-align: center;
+}
+
+
+.mensaje ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+  margin: 0;
+}
+
+/* Si quieres que se vean más compactos los errores por campo */
+.campos .errorlist {
+  color: #b80000;
+  background-color: rgba(255, 230, 230, 0.9);
+  border-left: 4px solid #b80000;
+  padding: 5px 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+/* #endregion */
+/* #endregion */
+
+/* #region detalle */
+.art_datos a {
+  width: fit-content;
+  color: lightcoral;
+  text-decoration: none;
+  text-shadow: 1px 0.5px 0px rgb(48, 26, 17);
+}
+
+/* #endregion */
+
+/* #region mantenimiento */
+.gestion-panel {
+  background-color: rgb(188, 159, 78);
+  padding: 20px;
+  border: 1px solid #a67c33;
+  border-radius: 10px;
+  width: 900px;
+  margin: 0 auto 30px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.azul {
+  color: blue;
+  cursor: default;
+}
+.subtitulo {
+  font-size: 24px;
+  margin-bottom: 10px;
+  margin-top: 0;
+  color: rgb(45, 45, 45);
+  cursor: default;
+}
+
+.lista-modelos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.modelo-nombre{
+  font-size: 19px;
+}
+.modelo-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background-color: rgb(249, 224, 155);
+  border: 1px solid rgb(181, 133, 2);
+  border-radius: 6px;
+  transition: 0.3s all;
+  cursor: default;
+  height: fit-content;
+}
+
+.modelo-item:hover {
+  background-color: rgb(245, 200, 100);
+  cursor: default;
+}
+
+.modelo-link {
+  text-decoration: none;
+  color: rgb(45, 45, 45);
+  font-weight: bold;
+  font-size: 18px;
+  height: fit-content;
+  margin: auto 0;
+}
+
+.crear-link i {
+  color: rgb(255, 255, 255);
+  background-color: rgb(116, 91, 91);
+  padding: 5px 8px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.crear-link i:hover {
+  background-color: rgb(85, 65, 65);
+  cursor: pointer;
+}
+.crear-link-b{
+
+  color: rgb(255, 255, 255);
+  background-color: rgb(116, 91, 91);
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: default;
+}
+
+
+.logo-preview img {
+  height: 140px;
+  object-fit: cover;
+  border: 2px solid #826846;
+  border-radius: 10px;
+  background-color: #fff8e1;
+}
+
+.logo-acciones {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f2d583;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #a67c33;
+}
+
+.logo-acciones.columna {
+  flex-direction: row;
+  align-items: flex-start;
+  margin-top: auto;
+}
+#logo-clear_id {
+  margin: auto 0;
+  width: fit-content;
+}
+.modificar-label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* ==== Logo Preview corregido (grid fluido y sin superposición) ==== */
+.logo-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr;
+  gap: 20px;
+  align-items: start;
+  background-color: #fff8e1;
+  border: 1px solid #a67c33;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-top: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  justify-items: center;
+  min-height: max-content;
+}
+
+/* Imagen del logo */
+.logo-preview a {
+  justify-self: center;
+}
+.imagen_layout {
+  display: inline-block;
+}
+.logo-preview img {
+  margin-right: auto;
+  max-height: 140px;
+
+  border: 2px solid #826846;
+  border-radius: 10px;
+  background-color: #fdf6d8;
+}
+
+/* Bloque de texto descriptivo */
+.logo-preview p,
+.logo-preview span {
+  display: block;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgb(45, 45, 45);
+  margin: 3px 0;
+}
+
+.logo-preview span {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* Contenedor derecho (texto + acciones) */
+.logo-preview .columna {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: fit-content;
+}
+
+/* Acciones (limpiar / modificar) */
+.logo-acciones,
+.modificar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  background-color: #f2d583;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #a67c33;
+  margin: auto 0;
+  width: fit-content;
+}
+
+.logo-acciones label,
+.modificar label {
+  font-weight: bold;
+  color: rgb(45, 45, 45);
+}
+
+.modificar input[type="file"] {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  font-size: 14px;
+  margin: auto;
+}
+
+.acciones-form {
+  margin: 0 auto;
+}
+
+.cancelar {
+  margin: auto 0;
+  padding: 10px;
+  margin-top: 5px;
+  background-color: rgb(116, 91, 91);
+  font-size: 14px;
+  color: rgb(255, 176, 189) !important;
+  border-radius: 1rem;
+  transition: 0.3s all;
+  width: fit-content;
+  text-shadow: none;
+}
+.encima:hover {
+  background-color: rgb(74, 59, 59);
+  color: rgb(250, 123, 123) !important;
+}
+
+/* ==== Encabezado con botón Volver arriba ==== */
+.volver-header {
+  display: flex;
+  justify-content: space-between; /* título izquierda - volver derecha */
+  align-items: center;
+  margin-bottom: 5px;
+  
+  
+  
+  
+}
+
+.volver-top {
+  background-color: #604d34;
+  color: rgb(255, 176, 189);
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.volver-top:hover {
+  background-color: #826846;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* ==== Ajuste del botón volver inferior ==== */
+.volver-container {
+  margin-top: 25px;
+  text-align: right;
+}
+
+.volver {
+  background-color: #604d34;
+  color: rgb(255, 176, 189);
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.volver:hover {
+  background-color: #826846;
+  color: #fff;
+  transform: scale(1.05);
+}
+.izq{
+  text-align: left;
+}
+
+
+.btn-eliminar.btn-eliminar{
+  
+  background-color: #e63946;
+  color: white !important;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-eliminar.btn-eliminar:hover {
+  background-color: #b81f2f;
+}
+.check-modelo{  
+  margin: auto 0 !important;
+  width: fit-content !important;
+}
+.p_inf{
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+
+/* ----- CONTENEDOR PRINCIPAL ----- */
+
+
+/* ----- TÍTULO ----- */
+.form-editar h1 {
+  text-align: center;
+  font-size: 1.9rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* ----- CAMPOS DEL FORMULARIO ----- */
+.campo-form {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr;
+  margin-bottom: 1.4rem;
+}
+
+.campo-form label {
+  font-weight: 500;
+  font-size: 18px;
+  color: #34495e;
+  margin: auto 0;
+}
+.campo-form input[type="url"],
+.campo-form input[type="text"],
+.campo-form input[type="email"],
+.campo-form input[type="number"],
+.campo-form input[type="file"],
+.campo-form select,
+.campo-form textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.2s ease;
+}
+
+.campo-form input:focus,
+.campo-form textarea:focus,
+.campo-form select:focus {
+  border-color: #2980b9;
+  box-shadow: 0 0 3px rgba(52, 152, 219, 0.4);
+  outline: none;
+}
+
+/* ----- ENLACES “CREAR” Y “VER” ----- */
+.campo-form a {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+  color: #0077cc;
+  text-decoration: none;
+}
+
+.campo-form a:hover {
+  text-decoration: underline;
+}
+
+/* ----- MENSAJES DE ERROR ----- */
+.mensaje {
+  background-color: #ffecec;
+  color: #c0392b;
+  border-left: 4px solid #e74c3c;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+/* ----- BLOQUES DE LOGO (si los hay) ----- */
+.logo-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.logo-preview img {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: transform 0.2s ease;
+}
+
+.logo-preview img:hover {
+  transform: scale(1.05);
+}
+
+/* ----- ACCIONES (BOTONES) ----- */
+.acciones-form {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.acciones-form button,
+.acciones-form a {
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+/* Botón principal */
+.acciones-form button {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.acciones-form button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+
+
+
+
+
+
+/* Preview miniatura / imagen */
+.preview-miniatura {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+}
+
+.imagen_layout {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.imagen_layout span { 
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.preview-miniatura img {
+  max-width: 180px;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: transform 0.15s ease;
+}
+
+.preview-miniatura img:hover {
+  transform: scale(1.03);
+}
+
+.limpiar p,
+.contenedor-modificar p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.logo-acciones.columna {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.modificar input[type="file"] {
+
+  margin: auto 0;
+}
+.img_man_c{
+  max-height: 140px;
+}
+input[type="checkbox" i]{
+  accent-color: #3498db; /* Cambia el color del check (soportado por Chrome, Edge, Firefox) */
+  width: fit-content !important;
+  transform: scale(1.5);
+  cursor: pointer;
+}
+/* 1) Forzar ancho full del widget (útil al usar form media) */
+.select2-container {
+  width: 200px !important;
+  
+  box-sizing: border-box;
+}
+
+/* 2) Contenedor para selects múltiples (fondo, borde, padding) */
+.select2-container--default .select2-selection--multiple {
+  min-height: 44px;           /* tamaño del campo */
+  padding: 6px 8px;          /* espacio interno */
+  border: 1px solid #d1d5db; /* borde suave */
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 3) Las "pills" (elección seleccionada) */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background: #0ea5a4;       /* color de fondo de la pill */
+  color: white;              /* texto */
+  border: none;
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin: 0 4px 4px 0;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* 4) Botón "x" dentro de la pill */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+  margin-right: 6px;
+  color: rgba(255,255,255,0.9);
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+/* 5) Hover / foco en las pills */
+.select2-container--default .select2-selection--multiple .select2-selection__choice:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  transition: transform .08s linear;
+}
+
+/* 6) Input de búsqueda inline (el textarea que viste) */
+.select2-container .select2-search--inline .select2-search__field {
+  min-width: 10ch;          /* deja espacio para escribir */
+  max-width: 40ch;
+  border: none;
+  outline: none;
+  padding: 4px 6px;
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+/* Quitar el borde por defecto cuando se hace focus en el widget */
+.select2-container--default .select2-selection--multiple:focus,
+.select2-container--default .select2-selection--multiple:focus-within {
+  box-shadow: 0 0 0 3px rgba(14,165,164,0.15);
+  border-color: #0ea5a4;
+}
+
+/* 7) Dropdown (lista de opciones) */
+.select2-container--default .select2-dropdown {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Opción resaltada en el dropdown */
+.select2-container--default .select2-results__option--highlighted {
+  background: #e6fffb;
+  color: #064e47;
+}
+.select2-selection__choice__display{
+  color: black;
+}
+/* 8) Hacer el select simple (single) con altura consistente */
+.select2-container--default .select2-selection--single {
+  height: 44px;
+  line-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* 9) Si querés ocultar la búsqueda en el dropdown (cuando haya pocas opciones) */
+.select2-container--default .select2-search--dropdown {
+  display: none;
+}
+
+/* 10) Estilo específico para el select 'paginas' si querés diferenciarlo */
+#select2-id_paginas-container .select2-selection__choice {
+  background: #6b7280; /* ejemplo: gris oscuro en vez de turquesa */
+}
+#select2-id_paginas-container .select2-selection--multiple {
+  border-color: #9ca3af;
+}
+.help-text {
+  display: block;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+/* Aseguramos que la caja pueda posicionar la flecha en absolute */
+.select2-container .select2-selection--single {
+  position: relative !important;
+  padding-right: 36px !important; /* espacio para la flecha */
+  height: fit-content !important;
+  min-height: auto !important;
+  display: flex !important;
+  align-items: flex-start !important; /* si querés centrar cambia a center */
+  gap: 6px;
+  padding-top: 6px;   /* opcional: da espacio superior si usas varias líneas */
+  padding-bottom: 6px;/* opcional: da espacio inferior si usas varias líneas */
+}
+
+/* Evitamos que el texto sea recortado y permitimos varias líneas */
+.select2-container .select2-selection__rendered {
+  white-space: normal !important;
+  line-height: 1.2 !important;
+  height: auto !important;
+  padding-right: 6px !important; /* separacion interna del texto */
+  margin: 0 auto !important;
+  text-align: center!important;
+}
+
+/* Posicionamos la flecha con absolute y la centramos verticalmente */
+.select2-container .select2-selection__arrow {
+  position: absolute !important;
+  right: 6px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none; /* evita que la flecha bloquee clicks si usas toda la caja */
+}
+
+
+
+/* #endregion */
+/* --- Ajuste para que el editor CKEditor ocupe más espacio --- */
+.editor-ck {
+  grid-column: 1 / -1;          /* si estás dentro de un grid de dos columnas, que ocupe toda la fila */
+  width: 100%;                  /* usar todo el ancho disponible */
+  display: block;               /* asegura que se comporte como bloque */
+}
+
+.editor-ck .django-ckeditor-widget,
+.editor-ck .cke,
+.editor-ck .cke_inner,
+.editor-ck .cke_top,
+.editor-ck .cke_contents,
+.editor-ck .cke_bottom {
+  width: 100% !important;       /* fuerza el ancho completo */
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.editor-ck iframe {
+  width: 100% !important;       /* hace que el área editable del CKEditor se expanda */
+  min-height: 400px;            /* opcional: aumenta la altura inicial */
+  box-sizing: border-box !important;
+}
+
+/* si querés que el contenedor del campo se vea más separado */
+.editor-ck {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+/* Contenedor general: permite varias filas (expandir hacia abajo) */
+#cke_id_contenido .cke_toolbox {
+  display: flex !important;
+  flex-wrap: wrap !important;         /* permite varias filas */
+  align-items: center !important;
+  align-content: flex-start !important; /* apila las filas en la parte superior, sin espacio extra */
+  column-gap: 4px !important;         /* espacio horizontal entre grupos (ajustalo a 0 si querés sin espacios) */
+  row-gap: 2px !important;            /* espacio vertical entre filas (ajustalo si querés) */
+  padding: 2px !important;
+  box-sizing: border-box !important;
+}
+
+/* Cada grupo de botones no se parte internamente y se mantiene inline */
+#cke_id_contenido .cke_toolbox .cke_toolbar {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;          /* no se estira ni reduce automáticamente */
+  margin: 0 !important;
+  white-space: nowrap !important;     /* evita que un mismo grupo salte en varias líneas */
+  padding: 0 !important;
+}
+
+/* Normaliza márgenes/paddings que puedan dejar huecos */
+#cke_id_contenido .cke_toolbox .cke_toolbar,
+#cke_id_contenido .cke_toolbox .cke_toolbar * {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  transition: none !important;        /* quita cambios por hover que muevan todo */
+  transform: none !important;
+}
+
+/* Tamaño más compacto y uniforme para botones, así entran más por fila */
+#cke_id_contenido .cke_toolbox .cke_button {
+  min-width: 22px !important;
+  min-height: 22px !important;
+  padding: 0 4px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Si querés que la toolbar crezca hacia abajo hasta un límite y luego haga scroll vertical */
+#cke_id_contenido .cke_toolbox {
+  max-height: 200px;   /* ajustá según lo que quieras permitir */
+  overflow-y: auto;
+}
+.mi-editor{
+  width: 900px !important;;
+  transform: scale(0.94);
+}
+.video_archivo_e {
+  display: flex;
+  flex-direction: row; /* apila video y enlace */
+  align-items: center;    /* centra ambos horizontalmente */
+  gap: 4px;               /* espacio mínimo entre video y texto */
+}
+
+.video_archivo_e video {
+  max-width: 100%;
+  border-radius: 6px;
+  display: block;
+}
+.video_archivo_e video:hover{
+  transform: scale(1.03);
+} 
+
+.video_archivo_e a {
+  font-size: 0.95rem;
+  color: #0077cc;
+  text-decoration: none;
+  word-break: break-all;  /* por si el nombre es largo */
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.video_archivo_e a:hover {
+  text-decoration: underline;
+}
+
+.video-container-a{
+  
+  background-color: rgb(0, 0, 0);
+  flex-shrink: 0; /* Evita que el video se reduzca */
+  width: min-content;
+  height: 300px;
+  width: 480px;
+  align-self: center;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  border: solid 5px rgb(242, 213, 131);
+}
+
+
+
+.video-articulo-a{
+  height: 300px;
+  width: 480px;
+  
+}
+
+.volver-top-b{
+  font-size: 16px;
+}
+.error-404 {
+    text-align: center;
+    margin-top: 100px;
+}
+.error-404 h1 {
+    font-size: 3rem;
+    color: #444;
+}
+.error-404 p {
+    color: #777;
+    margin: 15px 0 25px;
+}
+.btn-volver {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.btn-volver:hover {
+    background-color: #0056b3;
+}
+.buscador-ordenador{
+  margin: 0 auto;
+}
+.buscador-form.buscador-form.buscador-form {
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  
+  gap: 10px;
+  
+  
+}
+.buscador-form input, .buscador-form select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.buscador-form button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.buscador-form button:hover {
+  background: #0056b3;
+}
+.ordenar{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  
+}
+.elecciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  
+  justify-content: space-between;
+}
+.ordenar-b{
+  display: grid;
+  grid-template-rows: 0.7fr 1fr;
+  
+  
+  justify-content: space-between;
+  
+}
+.elecciones .select2-selection__rendered{
+  padding: 2px 0 !important;
+  padding-left: 1px !important;
+  padding-right: 0 !important;
+}
+.modelo-item-b {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 1fr 0.2fr;
+    padding: 4px 0;
+    gap: 10px;
+}
+
+.modelo-extra {
+    font-size: 0.9em;
+    color: #666;
+    white-space: nowrap;
+    text-align: center;
+}
+.linea{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+.linea:first-child{
+  margin-left: 10px;
+}
+
+
+/* ====== Campos ForeignKey ====== */
+.foreignkey-campo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff6e0;
+  border: 1px solid #d6a85a;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(150, 100, 20, 0.15);
+}
+
+.foreignkey-campo select {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #c9a75f;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 0.95rem;
+}
+
+.foreignkey-campo .boton-crear {
+  background-color: #e2a03f;
+  color: white;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+.foreignkey-campo .boton-crear:hover {
+  background-color: #d18a2b;
+  text-decoration: none;
+}
+
+/* ====== Campos ManyToMany ====== */
+.manytomany-campo {
+  display: flex;
+  flex-direction: column;
+  background-color: #f1f6ff;
+  border: 1px solid #88a5d6;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 5px rgba(80, 100, 180, 0.15);
+}
+
+.manytomany-campo select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #88a5d6;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 0.95rem;
+  height: 120px;
+}
+
+.manytomany-campo .boton-crear {
+  align-self: flex-start;
+  background-color: #4a79d1;
+  color: white;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+.manytomany-campo .boton-crear:hover {
+  background-color: #345cb3;
+  text-decoration: none
+}
+
+/* ====== Etiquetas y textos ====== */
+.campo-form label {
+  display: block;
+  font-weight: 600;
+  color: #3d2b00;
+  margin-bottom: auto;
+
+}
+
+.help-text {
+  display: block;
+  font-size: 0.8rem;
+  color: #5a5a5a;
+  margin-top: 3px;
+}
+
+.cke_combo_open{
+  opacity: 0 !important;
+}

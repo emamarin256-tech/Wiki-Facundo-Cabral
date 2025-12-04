@@ -1,0 +1,35 @@
+{% extends "layouts/layout.html" %}
+{% block titulo %}
+    {{ titulo }}
+{% endblock titulo %}
+{% block contenido %}
+    <div class="inicio_sesion">
+        <div class="inicio_sesionA">
+            <h1 class="titulo">Inicie sesión</h1>
+            <hr>
+            <p class="inicia_sesion_registro">
+                Inicie sesión o Registrese
+                <a href="{% url "N_registro" %}">aquí</a>
+            </p>
+            <br>
+            {{ register_form.errors }}
+        </div>
+        <div class="form_inicio_sesion">
+            <h2 class="h2_inicio_sesion">Ingrese sus datos aquí</h2>
+            <h4 class="h4_inicio_sesion">para ingresar al modo mantenimiento</h4>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="items_form_inicio_sesion">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" name="username" id="username" autocomplete="off" />
+                    <label for="password">Contraseña:</label>
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           autocomplete="new-password" />
+                    <button type="submit" value="login">Iniciar sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock contenido %}

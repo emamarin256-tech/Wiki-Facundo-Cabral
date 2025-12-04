@@ -1,0 +1,37 @@
+{% extends "layouts/layout.html" %}
+{% block titulo %}
+    Registro
+{% endblock titulo %}
+{% block contenido %}
+    <div class="registro">
+        <div class="info_registro">
+            <h1 class="titulo">Registro</h1>
+            <hr>
+            <div class="div_p">
+                <p>Si desea colaborar con el mantenimiento</p>
+                <p>de la pagina registrese completando</p>
+                <p>el formulario</p>
+            </div>
+            <hr>
+            <p class="inicia_sesion_registro">
+                Si ya tiene un usuario inicie sesión <a href="{% url "N_inicio_sesion" %}">aquí</a>
+            </p>
+            {% if register_form.errors %}
+            <h2>Formulario invalido:</h2>
+                {% for er in register_form.errors.values %}<div class="mensaje">{{ er }}</div>{% endfor %}
+            {% endif %}
+        </div>
+        <div class="formulario_registro">
+            <form method="POST" action="">
+                {% csrf_token %}
+                {% for campo in register_form %}
+                    <div class="campos">
+                        <label>{{ campo.label }}:</label>
+                        {{ campo }}
+                    </div>
+                {% endfor %}
+                <button type="submit">Registrarse</button>
+            </form>
+        </div>
+    </div>
+{% endblock contenido %}

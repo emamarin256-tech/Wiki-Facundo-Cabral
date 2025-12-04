@@ -1,0 +1,43 @@
+{% extends "layouts/layout.html" %}
+{% block titulo %}
+    Usuario
+{% endblock titulo %}
+{% block contenido %}
+    <h1 class="h1_user">Usuario</h1>
+    <p class="p_info">Desde esta página puedes ver tu información</p>
+    <hr>
+
+    {% if request.user.is_authenticated %}
+        {% if request.user.is_superuser %}
+            <h2>Super Usuario: {{ request.user.username }}</h2>
+            <hr>
+            <p class="p_user">
+                Como "Super Usuario" tienes todas las cualidades de un usuario normal a nivel página.
+            </p>
+            <p class="p_user">
+                Lo que te hace distinto a un usuario normal es la capacidad de gestionar a los usuarios desde el
+                <a href="/admin/">panel de administración.</a>
+            </p>
+
+        {% elif request.user.groups.all.0.name == "Usuarios" %}
+            <h2 class="h2_user">Nombre de usuario: {{ request.user.username }}</h2>
+            <p class="p_info">Nombre completo: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+            <p class="p_info">{{ request.user.email }}</p>
+            <hr>
+            <p class="p_user">
+                Como "Usuario" tienes la capacidad de editar la estructura de la página desde el modo mantenimiento.
+            </p>
+
+        {% else %}
+            <h2>Ingresante: {{ request.user.username }}</h2>
+            <p class="p_info">
+                Bienvenido, muchas gracias por querer colaborar con nosotros!
+            </p>
+            <hr>
+            <p class="p_user">
+                Como "Ingresante" tendrás que esperar a que algún miembro del staff apruebe tu solicitud para ser un "Usuario". Luego de eso, podrás colaborar con el mantenimiento de la página.
+        {% endif %}
+    {% else %}
+        <h2>No hay usuario</h2>
+    {% endif %}
+{% endblock contenido %}

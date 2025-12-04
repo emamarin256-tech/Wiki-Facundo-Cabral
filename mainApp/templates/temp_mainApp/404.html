@@ -1,0 +1,10 @@
+{% extends "layouts/layout.html" %}
+{% block titulo %}Página no encontrada{% endblock %}
+
+{% block contenido %}
+  <div class="error-404">
+    <h1 class="titulo">🚫 Error 404</h1>
+    <h2 class="subtitulo">La página que buscás no existe o fue movida.</h2>
+    <a href="{% url 'N_inicio' %}" class="volver">Volver al inicio</a>
+  </div>
+{% endblock %}
