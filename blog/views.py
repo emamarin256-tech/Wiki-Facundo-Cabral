@@ -20,8 +20,9 @@ def listar_articulos(request):
 # Validación de subcategoría
 # ------------------------------
 def validacion_subcategoria(subcategoria, pagina):
-    articulos = Articulo.objects.filter(subcategoria__nombre=subcategoria, tipo=pagina.tipo)
+    articulos = Articulo.objects.filter(subcategoria__nombre=subcategoria, tipo=pagina.tipo, publico=True)
     return any([
+        subcategoria.publico,  
         subcategoria.video_file,
         subcategoria.video_url,
         subcategoria.desc,
@@ -40,7 +41,7 @@ def cargar_Pcategorias(request, Pagina_slug, Categoria_id):
         messages.error(request, "No se encontro esa página.")
         return redirect("N_inicio")
 
-    sub_categoriaA = SubCategoria.objects.filter(categoria__id=Categoria_id)
+    sub_categoriaA = SubCategoria.objects.filter(categoria__id=Categoria_id, publico=True)
 
     if sub_categoriaA.exists():
         sub_categoriaB = [sub for sub in sub_categoriaA if validacion_subcategoria(sub, pagina_n)]
@@ -59,7 +60,7 @@ def cargar_Pcategorias(request, Pagina_slug, Categoria_id):
         })
 
     elif Articulo.objects.filter(categoria__id=Categoria_id, tipo=pagina_n.tipo).exists():
-        vb_articulos = Articulo.objects.filter(categoria__id=Categoria_id, tipo=pagina_n.tipo)
+        vb_articulos = Articulo.objects.filter(categoria__id=Categoria_id, tipo=pagina_n.tipo, publico=True)
         return render(request, 'categorias/categoria.html', {
             'v_categoria': categoria,
             'v_pagina': pagina_n.titulo,
@@ -84,7 +85,7 @@ def cargar_Psubcategorias(request, Pagina_slug, SubCategoria_slug):
         messages.error(request, "No se encontro esa página.")
         return redirect("N_inicio")
 
-    articulos = Articulo.objects.filter(subcategoria__slug=SubCategoria_slug, tipo=pagina.tipo)
+    articulos = Articulo.objects.filter(subcategoria__slug=SubCategoria_slug, tipo=pagina.tipo, publico=True)
 
     return render(request, "subcategorias/subcategoria.html", {
         "v_subcategoriaaa": subcategoria,
