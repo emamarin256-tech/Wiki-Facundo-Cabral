@@ -14,6 +14,10 @@ class PaginaAdmin(admin.ModelAdmin):
         if not obj.usuario_id:
             obj.usuario_id = request.user.id
         obj.save()
+    class Media:
+        css = {
+            'all': ('css/estilosAdmin.css',),
+        }
 admin.site.site_header=Titulo
 admin.site.site_title=Titulo
 admin.site.index_title=Subtitulo

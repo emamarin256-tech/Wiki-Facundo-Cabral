@@ -36,6 +36,10 @@ class ArticuloAdmin(admin.ModelAdmin):
         if not obj.usuario_id:
             obj.usuario_id = request.user.id
         obj.save()
+    class Media:
+        css = {
+            'all': ('css/estilosAdmin.css',),
+        }
 
 
 admin.site.register(Categoria, CategoriaAdmin)
