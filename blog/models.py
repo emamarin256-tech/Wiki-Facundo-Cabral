@@ -177,9 +177,16 @@ def crear_miniatura_video(instance):
 
     if ret:
         _, buffer = cv2.imencode('.jpg', frame)
+        # cv2.imencode usually returns a numpy array which has .tobytes(),
+        # but in tests we may mock it to return plain bytes. Handle both.
+        if hasattr(buffer, "tobytes"):
+            data = buffer.tobytes()
+        else:
+            data = buffer
+
         instance.imagen.save(
             f"{instance.pk}_thumb.jpg",
-            ContentFile(buffer.tobytes()),
+            ContentFile(data),
             save=False
         )
         instance.save(update_fields=["imagen"])
