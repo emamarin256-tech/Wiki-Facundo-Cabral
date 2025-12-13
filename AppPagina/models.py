@@ -3,6 +3,18 @@ from ckeditor.fields import RichTextField
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django.db import transaction, IntegrityError
+from django.core.exceptions import ValidationError
+
+
+def _generate_unique_slug(model, base_slug, exclude_pk=None):
+    base = base_slug or "pagina"
+    candidate = base
+    counter = 1
+    while model.objects.filter(slug=candidate).exclude(pk=exclude_pk).exists():
+        candidate = f"{base}-{counter}"
+        counter += 1
+    return candidate
 # Create your models here.
 
 class Pagina(models.Model):
@@ -30,48 +42,53 @@ class Pagina(models.Model):
         ordering = ["orden", "-creacion"]  
 
     def clean(self):
-        # --- Garantizar un solo inicio ---
-        if self.es_inicio:
-            Pagina.objects.exclude(pk=self.pk).update(es_inicio=False)
-            self.slug = ""
-            self.orden = 0
-            counter = 1
-            while Pagina.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
-                paginas = Pagina.objects.filter(slug=self.slug).exclude(pk=self.pk)
-                for pagina in paginas:
-                    base_slug = slugify(pagina.titulo) or "pagina"
-                    slug = f"{base_slug}-{counter}"
-                    counter += 1
-                    pagina.orden += 1 
-                    Pagina.objects.filter(pk=pagina.pk).update(slug=slug , orden=pagina.orden)
-            # Desmarcar otras páginas inicio
-        else:
-            # Evitar títulos duplicados
-            base_titulo = self.titulo
-            counter = 1
-            while Pagina.objects.filter(titulo=self.titulo).exclude(pk=self.pk).exists():
-                self.titulo = f"{base_titulo} ({counter})"
-                counter += 1
+        """Validaciones sin efectos secundarios de BD.
+        No se deben realizar updates sobre otras instancias aquí; esa lógica
+        se mueve a `save()` para evitar efectos inesperados.
+        """
+        # Evitar títulos duplicados: renombrar añadiendo sufijo numérico si hace falta
+        base_titulo = self.titulo
+        counter = 1
+        while Pagina.objects.filter(titulo=self.titulo).exclude(pk=self.pk).exists():
+            self.titulo = f"{base_titulo} ({counter})"
+            counter += 1
 
-            # Generar slug si no existe
-            if not self.slug:
-                base_slug = slugify(self.titulo) or "pagina"
-                slug = base_slug
-                counter = 1
-                while Pagina.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                    slug = f"{base_slug}-{counter}"
-                    counter += 1
-                self.slug = slug
+        # Generar slug candidato único y asignarlo a self (sin tocar otras filas)
+        if self.slug:
+            self.slug = _generate_unique_slug(Pagina, self.slug, exclude_pk=self.pk)
+        else:
+            base_slug = slugify(self.titulo) or "pagina"
+            self.slug = _generate_unique_slug(Pagina, base_slug, exclude_pk=self.pk)
 
     def save(self, *args, **kwargs):
         # llamar clean() aquí para que la lógica aplique también si guardas por código
         self.clean()
 
-        # Si marcamos como inicio, desmarcar otras instancias (por seguridad)
-        if self.es_inicio:
-            Pagina.objects.exclude(pk=self.pk).update(es_inicio=False)
+        # Usar una transacción para evitar condiciones de carrera al reasignar slugs
+        with transaction.atomic():
+            if self.es_inicio:
+                Pagina.objects.exclude(pk=self.pk).update(es_inicio=False)
+                self.slug = ""
+                self.orden = 0
 
-        super().save(*args, **kwargs)
+                # Reasignar slugs a las páginas que tenían slug vacío (excluyendo esta)
+                paginas = Pagina.objects.filter(slug="").exclude(pk=self.pk)
+                for pagina in paginas:
+                    base_slug = slugify(pagina.titulo) or "pagina"
+                    candidate = _generate_unique_slug(Pagina, base_slug, exclude_pk=pagina.pk)
+                    pagina.orden += 1
+                    Pagina.objects.filter(pk=pagina.pk).update(slug=candidate, orden=pagina.orden)
+            else:
+                # Asegurar que `self.slug` ya sea único (clean() normalmente lo dejó así)
+                if not self.slug:
+                    self.slug = _generate_unique_slug(Pagina, slugify(self.titulo) or "pagina", exclude_pk=self.pk)
+
+            try:
+                super().save(*args, **kwargs)
+            except IntegrityError:
+                # Reintentar una vez generando un slug alternativo por seguridad
+                self.slug = _generate_unique_slug(Pagina, slugify(self.titulo) or "pagina", exclude_pk=self.pk)
+                super().save(*args, **kwargs)
 
     def __str__(self):
         return self.titulo or f"Página {self.pk}"
