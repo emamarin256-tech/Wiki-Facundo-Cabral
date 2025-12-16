@@ -27,7 +27,7 @@ except admin.sites.NotRegistered:
 # 🔹 Registrar tu versión personalizada
 @admin.register(User)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'is_active', 'is_staff', 'mostrar_grupos')
+    list_display = ('username', 'email', 'is_active', 'is_staff','is_superuser', 'mostrar_grupos')
     list_filter = ('groups', 'is_staff', 'is_superuser', 'is_active')
     actions = ['aprobar_usuarios']
 
