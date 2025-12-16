@@ -373,3 +373,114 @@ class PaginaAdditionalTests(TestCase):
         self.assertNotEqual(p2.slug, p1.slug, "El segundo objeto terminó con el mismo slug; se esperaba resolución o error.")
         self.assertTrue(p1.slug, "slug-duplicado")
         self.assertTrue(p2.slug, "slug-duplicado-1")
+
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
+
+from blog.models import Tipo
+from AppPagina.models import Pagina
+
+
+class PaginaViewsTest(TestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="tester",
+            password="testpass123"
+        )
+
+        self.tipo = Tipo.objects.create(
+            nombre="general",
+            slug="general"
+        )
+
+        # Página de inicio
+        self.pagina_inicio = Pagina.objects.create(
+            titulo="Inicio",
+            contenido="Contenido inicio",
+            tipo=self.tipo,
+            usuario=self.user,
+            publico=True,
+            es_inicio=True,
+        )
+
+        # Página normal con contenido
+        self.pagina_contenido = Pagina.objects.create(
+            titulo="Página con contenido",
+            contenido="Texto visible",
+            tipo=self.tipo,
+            usuario=self.user,
+            publico=True,
+            es_inicio=False,
+        )
+
+        # Página sin contenido
+        self.pagina_sin_contenido = Pagina.objects.create(
+            titulo="Página vacía",
+            contenido="",
+            tipo=self.tipo,
+            usuario=self.user,
+            publico=True,
+            es_inicio=False,
+        )
+
+    # --------------------------------------------------
+    # Tests vista inicio()
+    # --------------------------------------------------
+
+    def test_vista_inicio_responde_200(self):
+        url = reverse("N_inicio")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_vista_inicio_usa_template_correcto(self):
+        url = reverse("N_inicio")
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "paginas/pag_inicio.html")
+
+    def test_vista_inicio_envia_contexto_correcto(self):
+        url = reverse("N_inicio")
+        response = self.client.get(url)
+
+        self.assertEqual(response.context["pag"], self.pagina_inicio)
+        self.assertEqual(response.context["titulo"], "Inicio")
+        self.assertTrue(response.context["pag_inicio"])
+
+    # --------------------------------------------------
+    # Tests vista cargar_url()
+    # --------------------------------------------------
+
+    def test_cargar_url_con_contenido_responde_200(self):
+        url = reverse("N_pagina", args=[self.pagina_contenido.slug])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_cargar_url_con_contenido_usa_template_correcto(self):
+        url = reverse("N_pagina", args=[self.pagina_contenido.slug])
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "paginas/pagina.html")
+
+    def test_cargar_url_con_contenido_muestra_texto(self):
+        url = reverse("N_pagina", args=[self.pagina_contenido.slug])
+        response = self.client.get(url)
+        self.assertContains(response, "Texto visible")
+
+    def test_cargar_url_sin_contenido_redirige_a_inicio(self):
+        url = reverse("N_pagina", args=[self.pagina_sin_contenido.slug])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("N_inicio"))
+
+    def test_cargar_url_sin_contenido_muestra_mensaje_error(self):
+        url = reverse("N_pagina", args=[self.pagina_sin_contenido.slug])
+        response = self.client.get(url, follow=True)
+
+        mensajes = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(mensajes), 1)
+        self.assertIn("no tiene contenido cargado", mensajes[0].message)
+
+    def test_cargar_url_slug_inexistente_devuelve_404(self):
+        url = reverse("N_pagina", args=["slug-inexistente"])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
