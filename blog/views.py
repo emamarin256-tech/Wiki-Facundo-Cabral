@@ -20,12 +20,12 @@ def listar_articulos(request):
 # Validación de subcategoría
 # ------------------------------
 def validacion_subcategoria(subcategoria, pagina):
-    articulos = Articulo.objects.filter(subcategoria__nombre=subcategoria, tipo=pagina.tipo, publico=True)
+    articulos = Articulo.objects.filter(subcategoria=subcategoria, tipo=pagina.tipo, publico=True)
     return any([
-        subcategoria.publico,  
-        subcategoria.video_file,
-        subcategoria.video_url,
-        subcategoria.desc,
+        bool(subcategoria.publico),
+        bool(subcategoria.video_file),
+        bool(subcategoria.video_url),
+        bool(subcategoria.desc),
         articulos.exists()
     ])
 
@@ -48,6 +48,7 @@ def cargar_Pcategorias(request, Pagina_slug, Categoria_id):
 
         if not sub_categoriaB:
             if pagina_n.contenido:
+                messages.error(request, f"No se han cargado elementos en {categoria.nombre}")             
                 return redirect("N_pagina", pagina_n.slug)
             else:
                 messages.error(request, f"No se han cargado elementos en {categoria.nombre}")

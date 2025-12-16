@@ -228,5 +228,235 @@ class ArticuloModelTest(TestCase):
         self.assertEqual(articulos[1].titulo, "A1")
 
 
+from django.test import TestCase, Client
+from django.urls import reverse
+from django.contrib.auth.models import User
+from AppPagina.models import Pagina
+# Asumo que estos modelos están en la misma app que las views (blog)
+from .models import Categoria, SubCategoria, Articulo, Tipo
 
+class BlogViewsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        
+        # 1. Crear Usuario y Tipos
+        self.user = User.objects.create_user(username='testuser', password='password')
+        self.tipo_video = Tipo.objects.create(nombre="Video", slug="video")
+        self.tipo_noticia = Tipo.objects.create(nombre="Noticia", slug="noticia")
+        
+        # 2. Crear Páginas (Una de videos, una de noticias)
+        self.pagina_video = Pagina.objects.create(
+            titulo="Pagina Videos",
+            slug="videos",
+            tipo=self.tipo_video,
+            usuario=self.user,
+            publico=True,
+            es_inicio=False,
+            contenido="Contenido fallback"
+        )
+        
+        self.pagina_noticia = Pagina.objects.create(
+            titulo="Pagina Noticias",
+            slug="noticias",
+            tipo=self.tipo_noticia,
+            usuario=self.user,
+            publico=True,
+            es_inicio=False,
+            contenido=None # Sin contenido para probar redirección a inicio
+        )
+        # Página de inicio necesaria para redirecciones a 'N_inicio' en tests
+        self.pagina_inicio = Pagina.objects.create(
+            titulo="Inicio",
+            slug="",
+            tipo=self.tipo_noticia,
+            usuario=self.user,
+            publico=True,
+            es_inicio=True,
+            contenido="Contenido inicio"
+        )
+
+        # 3. Crear Categoría y Subcategoría
+        self.categoria = Categoria.objects.create(nombre="Categoria General")
+        # Asociar la categoría a la página de videos para que las plantillas puedan enlazarla
+        self.categoria.paginas.add(self.pagina_video)
+        
+        # Subcategoría PÚBLICA con descripción (para pasar validación)
+        self.subcat_valida = SubCategoria.objects.create(
+            nombre="Subcat Valida",
+            slug="subcat-valida",
+            categoria=self.categoria,
+            publico=True,
+            desc="Descripción existente" 
+        )
+        
+        # Subcategoría PRIVADA
+        self.subcat_privada = SubCategoria.objects.create(
+            nombre="Subcat Privada",
+            slug="subcat-privada",
+            categoria=self.categoria,
+            publico=False,
+            desc="Descripción existente"
+        )
+
+        # 4. Crear Artículos
+        # Artículo que coincide con Pagina Videos y Subcat Valida
+        self.articulo_video = Articulo.objects.create(
+            titulo="Articulo Video",
+            subcategoria=self.subcat_valida,
+            categoria=self.categoria,
+            tipo=self.tipo_video,
+            publico=True,
+            usuario=self.user
+        )
+        
+        # Artículo de tipo diferente (Noticia) en la misma subcategoría
+        self.articulo_noticia = Articulo.objects.create(
+            titulo="Articulo Noticia",
+            subcategoria=self.subcat_valida,
+            categoria=self.categoria,
+            tipo=self.tipo_noticia, # TIPO DIFERENTE A LA PAGINA
+            publico=True,
+            usuario=self.user
+        )
+
+    # ---------------------------------------------------------------
+    # TEST: cargar_Pcategorias (La vista más compleja)
+    # ---------------------------------------------------------------
+    
+    def test_cargar_categorias_con_subcategoria_valida(self):
+        """
+        Debe renderizar la categoría mostrando las subcategorías que pasaron la validación.
+        """
+        url = reverse("N_categoria", args=[self.pagina_video.slug, self.categoria.id])
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'categorias/categoria.html')
+        # Debe contener la subcategoría válida
+        self.assertContains(response, "Subcat Valida")
+        # NO debe contener la privada
+        self.assertNotContains(response, "Subcat Privada")
+
+    def test_cargar_categorias_vacia_redirecciona(self):
+        """
+        Si la categoría no tiene subcategorías ni artículos válidos para ese TIPO de página,
+        debe redirigir a N_pagina (si tiene contenido) o N_inicio.
+        """
+        # Creamos una categoría vacía
+        cat_vacia = Categoria.objects.create(nombre="Vacia")
+        cat_vacia.paginas.add(self.pagina_video)
+        
+        # Caso A: La página tiene contenido -> Redirige a N_pagina
+        url = reverse("N_categoria", args=[self.pagina_video.slug, cat_vacia.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("N_pagina", args=[self.pagina_video.slug]))
+        
+        # Caso B: La página NO tiene contenido -> Redirige a N_inicio con error
+        url_noticia = reverse("N_categoria", args=[self.pagina_noticia.slug, cat_vacia.id])
+        response_noticia = self.client.get(url_noticia, follow=True)
+        self.assertRedirects(response_noticia, reverse("N_inicio"))
+        # Verificar mensaje de error en la respuesta final después de seguir la redirección
+        messages = list(response_noticia.context['messages'])
+        self.assertTrue(any("No se han cargado elementos" in str(m) for m in messages))
+
+    def test_cargar_categorias_sin_subcat_pero_con_articulos(self):
+        """
+        Si no hay subcategorías, pero hay artículos sueltos que coinciden con el tipo de página,
+        debe renderizarlos.
+        """
+        # Crear categoría solo con artículos, sin subcategorías
+        cat_solo_art = Categoria.objects.create(nombre="Solo Articulos")
+        cat_solo_art.paginas.add(self.pagina_video)
+        Articulo.objects.create(
+            titulo="Articulo Suelto",
+            categoria=cat_solo_art,
+            tipo=self.tipo_video, # Coincide con pagina_video
+            publico=True,
+            usuario=self.user
+        )
+        
+        url = reverse("N_categoria", args=[self.pagina_video.slug, cat_solo_art.id])
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Articulo Suelto")
+
+    def test_cargar_categorias_404_datos_incorrectos(self):
+        """Si el slug de página o ID de categoría no existen, redirige a inicio."""
+        url = reverse("N_categoria", args=["slug-falso", 999])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("N_inicio"))
+
+    # ---------------------------------------------------------------
+    # TEST: validacion_subcategoria (Indirecto)
+    # ---------------------------------------------------------------
+    
+    def test_subcategoria_valida_por_articulos(self):
+        """
+        Prueba la lógica específica de 'validacion_subcategoria':
+        Una subcategoría sin descripción/video pero CON artículos válidos debería mostrarse.
+        """
+        sub_sin_desc = SubCategoria.objects.create(
+            nombre="Sin Descripcion",
+            slug="sin-desc",
+            categoria=self.categoria,
+            publico=True,
+            desc="" # Vacio
+        )
+        # Agregamos artículo para que pase la validación articulos.exists()
+        Articulo.objects.create(
+            titulo="Articulo Salvador",
+            subcategoria=sub_sin_desc,
+            tipo=self.tipo_video,
+            publico=True,
+            usuario=self.user
+        )
+        
+        url = reverse("N_categoria", args=[self.pagina_video.slug, self.categoria.id])
+        response = self.client.get(url)
+        self.assertContains(response, "Sin Descripcion")
+
+    # ---------------------------------------------------------------
+    # TEST: cargar_Psubcategorias
+    # ---------------------------------------------------------------
+
+    def test_subcategoria_filtra_por_tipo_pagina(self):
+        """
+        En la vista de subcategoría, solo deben verse los artículos 
+        que coinciden con el 'tipo' de la Pagina actual.
+        """
+        url = reverse("N_subcategoria", args=[self.pagina_video.slug, self.subcat_valida.slug])
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, 200)
+        # Debe ver el artículo tipo Video
+        self.assertContains(response, "Articulo Video")
+        # NO debe ver el artículo tipo Noticia (aunque esté en la misma subcategoría)
+        self.assertNotContains(response, "Articulo Noticia")
+
+    # ---------------------------------------------------------------
+    # TEST: cargar_Darticulo
+    # ---------------------------------------------------------------
+
+    def test_detalle_articulo_exito(self):
+        url = reverse("N_articulo", args=[self.pagina_video.slug, self.articulo_video.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Articulo Video")
+
+    def test_detalle_articulo_tipo_incorrecto(self):
+        """
+        Intentar ver un artículo de tipo 'Noticia' a través de una página de tipo 'Video' 
+        debe fallar (redirigir a inicio según el try/except de la vista).
+        """
+        # pagina_video es tipo Video, articulo_noticia es tipo Noticia
+        url = reverse("N_articulo", args=[self.pagina_video.slug, self.articulo_noticia.id])
+        response = self.client.get(url)
+        
+        # Al no encontrar el artículo con ese filtro de tipo, entra al except y redirige
+        self.assertRedirects(response, reverse("N_inicio"))
+        
+        
+        
+        
 # Create your tests here.
