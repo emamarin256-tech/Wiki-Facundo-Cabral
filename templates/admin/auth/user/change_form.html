@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls admin_modify %}
+
+{% block object-tools-items %}
+<li>
+    {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+    <a href="{% add_preserved_filters history_url %}" class="historylink">{% translate "History" %}</a>
+</li>
+{% if has_absolute_url %}
+<li><a href="{{ absolute_url }}" class="viewsitelink">{% translate "View on site" %}</a></li>
+{% endif %}
+{# Mostrar "Change password" sólo si no es el propio usuario #}
+{% if not original or original != request.user %}
+  {% url 'admin:auth_user_password_change' original.pk|admin_urlquote as password_url %}
+  <li><a href="{% add_preserved_filters password_url %}">{% translate "Change password" %}</a></li>
+{% endif %}
+{% endblock %}

@@ -1,20 +1,25 @@
 from django.shortcuts import redirect
 from django.contrib import messages
 
-class RedirectNoSuperuser:
+class RedirectNoStaff:
 
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        
+
         if request.path.startswith('/admin/'):
             user = request.user
-            
-            if not user.is_authenticated or not user.is_superuser:
-                messages.warning(request, "No tenés permiso para acceder al panel de administración.")
-                return redirect('N_inicio_sesion')  
+
+            if not user.is_authenticated or not (user.is_staff or user.is_superuser):
+                messages.warning(
+                    request,
+                    "No tenés permiso para acceder al panel de administración."
+                )
+                return redirect('N_inicio_sesion')
+
         return self.get_response(request)
+
 
 class RangeRequestMiddleware:
     

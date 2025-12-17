@@ -49,7 +49,7 @@ def crear_formulario_con_widgets(Modelo):
 # VISTAS
 # ==========================
 
-@group_required("Usuarios")
+@group_required("Usuarios", "Staff")
 def f_mantenimiento(request):
     try:
         Lista_modelos = lista_Modelos()
@@ -75,7 +75,7 @@ def f_mantenimiento(request):
         return redirect("N_inicio")
 
 
-@group_required("Usuarios")
+@group_required("Usuarios", "Staff")
 def f_mantenimientoB(request, modelo):
     Modelo = conseguir_modelos(modelo)
     if Modelo is None:
@@ -171,7 +171,7 @@ def f_mantenimientoB(request, modelo):
 
 
 @never_cache
-@group_required("Usuarios")
+@group_required("Usuarios", "Staff")
 def f_mantenimientoC(request, modelo, pk):
     Modelo = conseguir_modelos(modelo)
     if Modelo is None:
@@ -258,7 +258,7 @@ def f_mantenimientoC(request, modelo, pk):
 
 
 @never_cache
-@group_required("Usuarios")
+@group_required("Usuarios", "Staff")
 def crear(request, modelo):
     if str(modelo) == "Layout":
         return redirect("N_mantenimiento")
@@ -314,7 +314,7 @@ def crear(request, modelo):
 
 
 @never_cache
-@group_required("Usuarios")
+@group_required("Usuarios", "Staff")
 def eliminar_varios(request, modelo):
     Modelo = conseguir_modelos(modelo)
     if Modelo is None:

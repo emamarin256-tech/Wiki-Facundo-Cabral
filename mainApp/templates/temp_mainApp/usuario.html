@@ -12,11 +12,20 @@
             <h2>Super Usuario: {{ request.user.username }}</h2>
             <hr>
             <p class="p_user">
-                Como "Super Usuario" tienes todas las cualidades de un usuario normal a nivel página.
+                Como "Super Usuario" tienes todas las cualidades y permisos en el sistema.
             </p>
             <p class="p_user">
-                Lo que te hace distinto a un usuario normal es la capacidad de gestionar a los usuarios desde el
+                Podes gestionar la pagina completa su contenido, usuarios, y configuraciones de los mismos desde el
                 <a href="/admin/">panel de administración.</a>
+            </p>
+        
+        {% elif request.user.groups.all.0.name == "Staff" %}
+            <h2 class="h2_user">Staff: {{ request.user.username }}</h2>
+            <p class="p_info">Nombre completo: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+            <p class="p_info">{{ request.user.email }}</p>
+            <hr>
+            <p class="p_user">
+                Como "Staff" tienes la capacidad de gestionar usuarios y contenido desde el <a href="/admin/">panel de administración.</a>
             </p>
 
         {% elif request.user.groups.all.0.name == "Usuarios" %}

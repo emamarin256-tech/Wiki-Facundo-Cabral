@@ -54,7 +54,7 @@ def f_registro(request):
                 request,
                 
                 "Ya podés iniciar sesión como Ingresante. "
-                "Un miembro del staff deberá aprobar tu cuenta antes de poder editar contenido."
+                "Un miembro del staff deberá aprobar tu cuenta antes de poder acceder al mantenimiento del sitio"
             )
             return redirect("N_inicio_sesion")
 
