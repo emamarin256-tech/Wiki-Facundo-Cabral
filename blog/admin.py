@@ -8,7 +8,18 @@ from solo.admin import SingletonModelAdmin
 # -----------------------
 @admin.register(Layout)
 class SiteConfigAdmin(SingletonModelAdmin):
-    pass
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        if request.user.is_staff:
+            return True
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser or request.user.is_staff
+
+    def has_module_permission(self, request):
+        return request.user.is_superuser or request.user.is_staff
+
+
 
 class CategoriaAdmin(admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion",)
@@ -17,6 +28,16 @@ class CategoriaAdmin(admin.ModelAdmin):
         if not obj.usuario_id:
             obj.usuario_id = request.user.id
         obj.save()
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        if request.user.is_staff:
+            return True
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser or request.user.is_staff
+
+    def has_module_permission(self, request):
+        return request.user.is_superuser or request.user.is_staff
 
 
 class SubCategoriaAdmin(admin.ModelAdmin):
@@ -26,7 +47,16 @@ class SubCategoriaAdmin(admin.ModelAdmin):
         if not obj.usuario_id:
             obj.usuario_id = request.user.id
         obj.save()
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        if request.user.is_staff:
+            return True
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser or request.user.is_staff
 
+    def has_module_permission(self, request):
+        return request.user.is_superuser or request.user.is_staff
 class TipoAdmin(admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion",)
 
@@ -34,6 +64,17 @@ class TipoAdmin(admin.ModelAdmin):
         if not obj.usuario_id:
             obj.usuario_id = request.user.id
         obj.save()
+        
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        if request.user.is_staff:
+            return True
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser or request.user.is_staff
+
+    def has_module_permission(self, request):
+        return request.user.is_superuser or request.user.is_staff
 
 
 class ArticuloAdmin(admin.ModelAdmin):
@@ -43,6 +84,18 @@ class ArticuloAdmin(admin.ModelAdmin):
         if not obj.usuario_id:
             obj.usuario_id = request.user.id
         obj.save()
+        
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        if request.user.is_staff:
+            return True
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser or request.user.is_staff
+
+    def has_module_permission(self, request):
+        return request.user.is_superuser or request.user.is_staff
+    
     class Media:
         css = {
             'all': ('css/estilosAdmin.css',),

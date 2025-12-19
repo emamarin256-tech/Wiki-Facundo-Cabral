@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import AdminPasswordChangeForm
 from django.contrib.auth.models import Group, Permission
-
+from django.contrib.admin import SimpleListFilter
 from .models import Rol, PerfilUsuario
 
 User = get_user_model()
@@ -37,6 +37,20 @@ class RolAdmin(admin.ModelAdmin):
             return super().get_model_perms(request)
         return {}
 
+class RolListFilter(SimpleListFilter):
+    title = "Rol"
+    parameter_name = "rol"
+
+    def lookups(self, request, model_admin):
+        return [
+            (rol.pk, rol.nombre)
+            for rol in Rol.objects.all()
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(perfil__rol_id=self.value())
+        return queryset
 
 # -------------------------
 # Inline de PerfilUsuario (1:1) para editar/mostrar el rol dentro del User admin
@@ -162,12 +176,29 @@ class CustomUserAdmin(BaseUserAdmin):
         base = ("username", "email", "get_rol", "is_active")
         if request.user.is_superuser:
             return base + ("is_staff", "is_superuser")
+        
+        if request.user.is_staff:
+            return base + ("is_superuser",)
         return base
 
     def get_list_filter(self, request):
         if request.user.is_superuser:
-            return ("is_active", "is_staff", "is_superuser")
-        return ("is_active",)
+            return (
+                "is_active",
+                "is_staff",
+                "is_superuser",
+                RolListFilter,
+            )
+
+        if request.user.is_staff:
+            return (
+                "is_active",
+                "is_superuser",
+                RolListFilter,
+            )
+
+        return ()
+
 
     def get_rol(self, obj):
         try:
