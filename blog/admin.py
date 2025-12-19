@@ -1,7 +1,14 @@
 from django.contrib import admin
-from .models import Categoria, Articulo, SubCategoria, Tipo
+from .models import Categoria, Articulo, SubCategoria, Tipo, Layout
+from solo.admin import SingletonModelAdmin
 # Register your models here.
 
+# -----------------------
+# Layout admin
+# -----------------------
+@admin.register(Layout)
+class SiteConfigAdmin(SingletonModelAdmin):
+    pass
 
 class CategoriaAdmin(admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion",)

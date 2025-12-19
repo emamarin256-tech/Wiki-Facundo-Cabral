@@ -8,8 +8,8 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.contrib import messages
-from mainApp.models import Layout
-from mainApp.decorators import group_required
+from blog.models import Layout
+from mainApp.decorators import rol_required
 
 
 # ==========================
@@ -17,7 +17,7 @@ from mainApp.decorators import group_required
 # ==========================
 
 def conseguir_modelos(modelo):
-    apps_a_buscar = ["blog", "AppPagina", "mainApp"]
+    apps_a_buscar = ["blog", "AppPagina",]
     for app_label in apps_a_buscar:
         try:
             return apps.get_model(app_label, modelo)
@@ -28,7 +28,7 @@ def conseguir_modelos(modelo):
 
 def lista_Modelos():
     lista = []
-    for app_label in ["AppPagina", "blog", "mainApp"]:
+    for app_label in ["AppPagina", "blog",]:
         app_config = apps.get_app_config(app_label)
         lista.extend(app_config.get_models())
     return lista
@@ -49,7 +49,7 @@ def crear_formulario_con_widgets(Modelo):
 # VISTAS
 # ==========================
 
-@group_required("Usuarios", "Staff")
+@rol_required("Usuario", "Staff")
 def f_mantenimiento(request):
     try:
         Lista_modelos = lista_Modelos()
@@ -75,7 +75,7 @@ def f_mantenimiento(request):
         return redirect("N_inicio")
 
 
-@group_required("Usuarios", "Staff")
+@rol_required("Usuario", "Staff")
 def f_mantenimientoB(request, modelo):
     Modelo = conseguir_modelos(modelo)
     if Modelo is None:
@@ -171,7 +171,7 @@ def f_mantenimientoB(request, modelo):
 
 
 @never_cache
-@group_required("Usuarios", "Staff")
+@rol_required("Usuario", "Staff")
 def f_mantenimientoC(request, modelo, pk):
     Modelo = conseguir_modelos(modelo)
     if Modelo is None:
@@ -258,7 +258,7 @@ def f_mantenimientoC(request, modelo, pk):
 
 
 @never_cache
-@group_required("Usuarios", "Staff")
+@rol_required("Usuario", "Staff")
 def crear(request, modelo):
     if str(modelo) == "Layout":
         return redirect("N_mantenimiento")
@@ -314,7 +314,7 @@ def crear(request, modelo):
 
 
 @never_cache
-@group_required("Usuarios", "Staff")
+@rol_required("Usuario", "Staff")
 def eliminar_varios(request, modelo):
     Modelo = conseguir_modelos(modelo)
     if Modelo is None:

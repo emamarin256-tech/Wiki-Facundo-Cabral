@@ -1,40 +1,124 @@
 from django.contrib import admin
-from solo.admin import SingletonModelAdmin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.core.mail import send_mail
 from django.contrib.auth.forms import AdminPasswordChangeForm
-import secrets
+from django.contrib.auth.models import Group, Permission
 
-from .models import Layout
+from .models import Rol, PerfilUsuario
 
-# -----------------------
-# Layout admin
-# -----------------------
-@admin.register(Layout)
-class SiteConfigAdmin(SingletonModelAdmin):
-    pass
-
-
-class SafeAdminPasswordChangeForm(AdminPasswordChangeForm):
-    """Form de cambio de contraseña usado por el admin que elimina
-    la opción peligrosa de "contraseña no usable" (usable_password/usable_password).
-    Esto evita que alguien pueda deshabilitar su propia contraseña desde la UI.
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # eliminar el campo toggle que permite marcar la contraseña como no usable
-        self.fields.pop('usable_password', None)
-
-
-# -----------------------
-# Custom User admin
-# -----------------------
 User = get_user_model()
 
-# Asegurarse de desregistrar el admin original antes de registrar el personalizado
+# -------------------------
+# Ocultar Group y Permission del admin (no aparecen en sidebar)
+# -------------------------
+for model in (Group, Permission):
+    try:
+        admin.site.unregister(model)
+    except admin.sites.NotRegistered:
+        pass
+
+
+# -------------------------
+# RolAdmin: SOLO superusers pueden ver/gestionar el modelo Rol
+# (lo ocultamos para todos los staff)
+# -------------------------
+@admin.register(Rol)
+class RolAdmin(admin.ModelAdmin):
+    list_display = ("nombre", "descripcion")
+    search_fields = ("nombre",)
+
+    def has_module_permission(self, request):
+        # Solo superuser ve el módulo Rol en el admin.
+        return request.user.is_superuser
+
+    def get_model_perms(self, request):
+        # Oculta completamente el modelo del índice para no-superusers
+        if request.user.is_superuser:
+            return super().get_model_perms(request)
+        return {}
+
+
+# -------------------------
+# Inline de PerfilUsuario (1:1) para editar/mostrar el rol dentro del User admin
+# - Muestra el campo `rol` a staff y superusers.
+# - Solo superusers pueden crear/eliminar perfil / asignar cualquier rol.
+# - Staff pueden editar `rol` únicamente cuando el usuario objetivo NO es staff/superuser
+#   y no es el mismo staff (no pueden cambiar su propio rol).
+# -------------------------
+class PerfilUsuarioInline(admin.StackedInline):
+    model = PerfilUsuario
+    can_delete = False
+    extra = 0
+    fields = ("rol",)  # solo mostramos rol en el inline
+
+    def has_view_permission(self, request, obj=None):
+        # permitimos ver el inline a cualquier staff (y superusers)
+        return request.user.is_staff
+
+    def has_change_permission(self, request, obj=None):
+        # para entrar al inline (ver el formulario) requerimos is_staff
+        return request.user.is_staff
+
+    def has_add_permission(self, request, obj=None):
+        # Solo superusers pueden crear perfiles desde el admin
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Decidir cuándo el campo 'rol' es readonly:
+        - Superuser: nada readonly.
+        - Staff (no-superuser):
+            * Si estoy editando mi propio usuario => rol readonly (no puedo cambiar mi rol).
+            * Si el usuario objetivo es staff o superuser => rol readonly.
+            * Si el usuario objetivo es Usuario o Ingresante => editable.
+        - Si obj is None (creación) => readonly para staff (pero staff no puede añadir de todas formas).
+        """
+        if request.user.is_superuser:
+            return ()
+
+        # No staff (p. ej. ingresantes sin is_staff): no deberían ver el inline
+        if not request.user.is_staff:
+            return ("rol",)
+
+        # Si no hay usuario padre todavía (obj is None), no permitimos editar rol
+        if obj is None:
+            return ("rol",)
+
+        # Si el staff se está editando a sí mismo -> readonly
+        if getattr(obj, "pk", None) == getattr(request.user, "pk", None):
+            return ("rol",)
+
+        # Si el objetivo es staff o superuser -> readonly
+        if getattr(obj, "is_staff", False) or getattr(obj, "is_superuser", False):
+            return ("rol",)
+
+        # En cualquier otro caso (usuario normal / ingresante), permitir editar rol:
+        return ()
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Filtrar las opciones del dropdown 'rol' según quien edita:
+        - Superuser: todas las opciones.
+        - Staff: excluir el rol 'Staff' (no pueden asignar ese rol).
+        - Otros: queryset vacío (no deberían ver el inline).
+        """
+        if db_field.name == "rol":
+            if request.user.is_superuser:
+                kwargs["queryset"] = Rol.objects.all()
+            elif request.user.is_staff:
+                # permitimos que staff asigne solo 'Ingresante' y 'Usuario' (excluimos 'Staff')
+                kwargs["queryset"] = Rol.objects.exclude(nombre__in=["Staff"])
+            else:
+                kwargs["queryset"] = Rol.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+# -------------------------
+# Custom UserAdmin
+# -------------------------
 try:
     admin.site.unregister(User)
 except admin.sites.NotRegistered:
@@ -43,134 +127,190 @@ except admin.sites.NotRegistered:
 
 @admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
-    change_password_form = SafeAdminPasswordChangeForm
+    """
+    Reglas principales:
+    - Solo users con is_staff pueden entrar al admin (has_module_permission).
+    - Superuser: puede todo.
+    - Staff:
+      * ven inline PerfilUsuario y pueden editar campos personales.
+      * pueden editar rol de usuarios cuya rol ORIGINAL sea 'Usuario' o 'Ingresante' (no propio ni de otros staff/superusers).
+      * no pueden crear/eliminar usuarios ni cambiar flags is_staff/is_superuser.
+    """
+    inlines = (PerfilUsuarioInline,)
+    change_password_form = AdminPasswordChangeForm
+    filter_horizontal = ()
 
-    list_display = (
-        'username', 'email', 'is_active',
-        'is_staff', 'is_superuser', 'mostrar_grupos'
-    )
-    list_filter = ('groups', 'is_staff', 'is_superuser', 'is_active')
-    actions = ('aprobar_usuarios', 'resetear_password')
-
-    # Definir fieldsets explícitos para evitar referencias a campos que no existan
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Información personal', {'fields': ('first_name', 'last_name', 'email')}),
-        ('Estado', {'fields': ('is_active', 'groups')}),
-        ('Fechas importantes', {'fields': ('last_login', 'date_joined')}),
+        (None, {"fields": ("username",)}),
+        ("Información personal", {"fields": ("first_name", "last_name", "email")}),
+        ("Estado", {"fields": ("is_active",)}),
+        ("Fechas", {"fields": ("last_login", "date_joined")}),
     )
 
-    # -------------------
-    # Helpers
-    # -------------------
-    def mostrar_grupos(self, obj):
-        return ", ".join(g.name for g in obj.groups.all()) or "—"
-    mostrar_grupos.short_description = "Grupos"
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("username", "password1", "password2"),
+        }),
+    )
 
-    # -------------------
-    # Acciones de admin
-    # -------------------
-    def aprobar_usuarios(self, request, queryset):
-        """Mover usuarios de 'Ingresantes' a 'Usuarios'."""
-        g_ing, _ = Group.objects.get_or_create(name='Ingresantes')
-        g_usr, _ = Group.objects.get_or_create(name='Usuarios')
+    search_fields = ("username", "email")
+    ordering = ("username",)
 
-        count = 0
-        for u in queryset:
-            u.groups.remove(g_ing)
-            u.groups.add(g_usr)
-            u.save()
-            count += 1
+    # Mostrar columna de Rol
+    def get_list_display(self, request):
+        base = ("username", "email", "get_rol", "is_active")
+        if request.user.is_superuser:
+            return base + ("is_staff", "is_superuser")
+        return base
 
-        self.message_user(request, f"{count} usuario(s) aprobados.")
-    aprobar_usuarios.short_description = "Aprobar usuarios"
+    def get_list_filter(self, request):
+        if request.user.is_superuser:
+            return ("is_active", "is_staff", "is_superuser")
+        return ("is_active",)
 
-    def resetear_password(self, request, queryset):
-        """Resetear contraseñas. Si el actor no es superuser, no tocar staff ni superusers."""
-        original_count = queryset.count()
-        if not request.user.is_superuser:
-            queryset = queryset.filter(is_staff=False, is_superuser=False)
+    def get_rol(self, obj):
+        try:
+            perfil = getattr(obj, "perfil", None)
+            if not perfil:
+                perfil = PerfilUsuario.objects.select_related("rol").filter(user=obj).first()
+            if perfil and getattr(perfil, "rol", None):
+                return perfil.rol.nombre
+        except Exception:
+            pass
+        return "—"
+    get_rol.short_description = "Rol"
 
-        skipped = original_count - queryset.count()
-        updated = 0
+    # -------------------------
+    # Acceso al admin / vista
+    # -------------------------
+    def has_module_permission(self, request):
+        # Solo is_staff puede entrar al admin
+        return request.user.is_staff
 
-        for u in queryset:
-            nueva = secrets.token_urlsafe(10)
-            u.password = make_password(nueva)
-            u.save()
-            updated += 1
-            # Recomendación: enviar por email en vez de mostrar en pantalla
-            # send_mail('Tu nueva contraseña', f'Tu nueva contraseña: {nueva}', 'from@example.com', [u.email], fail_silently=True)
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_staff
 
-        msg = f"{updated} contraseña(s) reseteada(s)."
-        if skipped:
-            msg += f" Se omitieron {skipped} usuario(s) por permisos."
-        self.message_user(request, msg)
-    resetear_password.short_description = "Resetear contraseña"
-
-    # -------------------
-    # Seguridad en la UI
-    # -------------------
-    def get_readonly_fields(self, request, obj=None):
-        # Si el usuario se edita a sí mismo, los grupos no deben ser editables
-        if obj and obj == request.user:
-            return ('groups',)
-        return super().get_readonly_fields(request, obj)
-
-    def get_fieldsets(self, request, obj=None):
-        """Ajusta dinámicamente los fieldsets para ocultar campos sensibles
-        cuando corresponda (p. ej. grupos cuando el usuario se edite a sí mismo).
-        """
-        fieldsets = super().get_fieldsets(request, obj)
-        nuevos = []
-
-        for name, opts in fieldsets:
-            fields = list(opts.get('fields', ()))
-
-            # Nunca incluir 'is_staff' ni 'is_superuser' en los fieldsets visibles
-            for f in ('is_staff', 'is_superuser'):
-                if f in fields:
-                    fields.remove(f)
-
-            # Si se edita a sí mismo, ocultar grupos
-            if obj and obj == request.user and 'groups' in fields:
-                fields.remove('groups')
-
-            nuevos.append((name, {**opts, 'fields': tuple(fields)}))
-
-        return tuple(nuevos)
-
-    def get_form(self, request, obj=None, **kwargs):
-        """Remueve campos peligrosos del formulario y evita KeyError con pop(..., None)."""
-        form = super().get_form(request, obj, **kwargs)
-
-        # Si no es superuser, no permitimos ver permisos individuales
-        if not request.user.is_superuser:
-            form.base_fields.pop('user_permissions', None)
-
-        # Si el usuario se edita a sí mismo, ocultar groups en el form
-        if obj and obj == request.user:
-            form.base_fields.pop('groups', None)
-
-        return form
-
-    # -------------------
-    # Seguridad en el backend
-    # -------------------
-    def save_model(self, request, obj, form, change):
-        # Si el usuario se está editando a sí mismo, impedir cambios en grupos o permisos
-        if change and obj == request.user:
-            form.cleaned_data.pop('groups', None)
-            form.cleaned_data.pop('user_permissions', None)
-        super().save_model(request, obj, form, change)
-
-    def has_change_permission(self, request, obj=None):
-        # Un staff normal no puede editar superusers
-        if obj and getattr(obj, 'is_superuser', False) and not request.user.is_superuser:
-            return False
-        return super().has_change_permission(request, obj)
+    # -------------------------
+    # Permisos de add/change/delete
+    # -------------------------
+    def has_add_permission(self, request):
+        # Solo superuser crea usuarios desde admin
+        return request.user.is_superuser
 
     def has_delete_permission(self, request, obj=None):
-        if obj and getattr(obj, 'is_superuser', False) and not request.user.is_superuser:
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        # Superuser: todo
+        if request.user.is_superuser:
+            return True
+
+        # No staff -> no permisos de edición
+        if not request.user.is_staff:
             return False
-        return super().has_delete_permission(request, obj)
+
+        # changelist (obj is None): permitir ver lista
+        if obj is None:
+            return True
+
+        # Staff puede editarse a sí mismo
+        if obj.pk == request.user.pk:
+            return True
+
+        # Staff NO puede editar otros staff ni superusers
+        if getattr(obj, "is_staff", False) or getattr(obj, "is_superuser", False):
+            return False
+
+        # Staff puede editar usuarios normales
+        return True
+
+    # -------------------------
+    # Evitar que staff cambie flags sensibles
+    # -------------------------
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return ()
+        # Para staff, evitar que cambien estos flags desde el formulario
+        return ("is_staff", "is_superuser")
+
+    # -------------------------
+    # Mostrar inline de Perfil solo si quien accede es staff (o superuser)
+    # -------------------------
+    def get_inline_instances(self, request, obj=None):
+        inlines = []
+        for inline in super().get_inline_instances(request, obj):
+            if isinstance(inline, PerfilUsuarioInline):
+                if request.user.is_staff:
+                    inlines.append(inline)
+                # si no es staff, no añadimos el inline
+            else:
+                inlines.append(inline)
+        return inlines
+
+    # -------------------------
+    # Guardado seguro:
+    # - Evitar que staff promueva/demote flags 'is_staff' / 'is_superuser'.
+    # - Restaurar rol en save_formset cuando staff intenta cambiar algo que no puede.
+    # -------------------------
+    def save_model(self, request, obj, form, change):
+        if not request.user.is_superuser:
+            original = User.objects.filter(pk=getattr(obj, "pk", None)).first()
+            if original:
+                obj.is_staff = original.is_staff
+                obj.is_superuser = original.is_superuser
+            else:
+                obj.is_staff = False
+                obj.is_superuser = False
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        """
+        Protecciones adicionales en el inline PerfilUsuario:
+        - Si el editor NO es superuser, restauramos el rol en casos prohibidos:
+            * Si el usuario objetivo es staff o superuser -> no permitir cambio.
+            * Si el usuario objetivo es el propio staff -> no permitir cambio.
+          Si el objetivo es un usuario normal/ingresante, permitimos el cambio.
+        """
+        if formset.model is PerfilUsuario and not request.user.is_superuser:
+            for f in formset.forms:
+                # Si la forma no es válida o no tiene instancia, saltar
+                if not hasattr(f, "instance") or not f.instance:
+                    continue
+
+                instance = f.instance
+                # Si perfil no tiene pk aún (no existe), saltar (staff no puede crear perfiles)
+                if not getattr(instance, "pk", None):
+                    # for safety, prevent assignment
+                    try:
+                        instance.rol_id = None
+                    except Exception:
+                        pass
+                    continue
+
+                # obtener rol original
+                orig_rol_id = PerfilUsuario.objects.filter(pk=instance.pk).values_list("rol_id", flat=True).first()
+                # si no hay user_id, saltar
+                target_user = None
+                if getattr(instance, "user_id", None):
+                    target_user = User.objects.filter(pk=instance.user_id).first()
+
+                # Si el objetivo es el propio editor -> restaurar
+                if target_user and target_user.pk == request.user.pk:
+                    instance.rol_id = orig_rol_id
+                    continue
+
+                # Si el objetivo es staff o superuser -> restaurar
+                if target_user and (getattr(target_user, "is_staff", False) or getattr(target_user, "is_superuser", False)):
+                    instance.rol_id = orig_rol_id
+                    continue
+
+                # En cualquier otro caso (usuario normal/ingresante) permitimos que staff cambie el rol,
+                # siempre y cuando el nuevo rol NO sea 'Staff' (formfield ya evitó seleccionar 'Staff',
+                # pero defendemos en profundidad: si alguien forzara 'Staff' por POST, lo bloqueamos)
+                if instance.rol_id:
+                    rol_nombre = Rol.objects.filter(pk=instance.rol_id).values_list("nombre", flat=True).first()
+                    if rol_nombre == "Staff":
+                        instance.rol_id = orig_rol_id
+
+        return super().save_formset(request, form, formset, change)

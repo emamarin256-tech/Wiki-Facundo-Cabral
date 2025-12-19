@@ -11,9 +11,23 @@ from django.core.files import File
 import os
 import cv2
 from django.core.files.base import ContentFile
+from solo.models import SingletonModel
 # Create your models here.
 
+class Layout(SingletonModel):
 
+    class Meta:
+        verbose_name = " Layout"
+        verbose_name_plural = " Layout"
+
+
+    titulo = models.CharField(max_length=200, default="Mi sitio")
+    logo = models.ImageField(upload_to="images/", null=True, blank=True)
+
+    def __str__(self):
+        return "Layout"
+    
+    
 class Categoria(models.Model):
     nombre = models.CharField(max_length=50, verbose_name="Nombre")
     desc = models.CharField(max_length=255,verbose_name='Descripción')

@@ -150,7 +150,7 @@
                 </li>
               {% endif %}
               {% if request.user.is_authenticated %}
-                {% if request.user.groups.all.0.name == "Usuarios" or request.user.is_superuser or request.user.groups.all.0.name == "Staff"%}
+                {% if request.user.perfil.rol.nombre == "Usuario" or request.user.is_superuser or request.user.perfil.rol.nombre == "Staff"%}
                   <li>
                     <a href="{% url "N_mantenimiento" %}">Mantenimiento</a>
                   </li>

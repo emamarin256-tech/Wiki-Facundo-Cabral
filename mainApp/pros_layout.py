@@ -1,4 +1,4 @@
-from .models import Layout
+from blog.models import Layout
 
 def layout(request):
     layout=Layout.get_solo()

@@ -1,10 +1,32 @@
 
 from django.db import models
-from solo.models import SingletonModel
 
-class Layout(SingletonModel):
-    titulo = models.CharField(max_length=200, default="Mi sitio")
-    logo = models.ImageField(upload_to="images/", null=True, blank=True)
+
+
+# app: accounts / seguridad / usuarios (nombre a elección)
+
+
+class Rol(models.Model):
+    nombre = models.CharField(max_length=50, unique=True)
+    descripcion = models.TextField(blank=True)
 
     def __str__(self):
-        return "Layout"
+        return self.nombre
+
+from django.conf import settings
+
+
+class PerfilUsuario(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='perfil'
+    )
+    rol = models.ForeignKey(
+        Rol,
+        on_delete=models.PROTECT,
+        related_name='usuarios'
+    )
+
+    def __str__(self):
+        return f'{self.user.username} - {self.rol.nombre}'

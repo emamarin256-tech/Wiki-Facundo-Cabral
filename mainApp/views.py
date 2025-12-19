@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from mainApp.forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth.models import Group
+from .models import Rol, PerfilUsuario
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 
@@ -42,13 +42,14 @@ def f_registro(request):
     if request.method == "POST":
         reg = RegisterForm(request.POST)
         if reg.is_valid():
-            # Guarda el nuevo usuario
             user = reg.save()
 
-            # 🔹 Asigna automáticamente el grupo "Ingresantes"
-            grupo_ingresante, _ = Group.objects.get_or_create(name='Ingresantes')
-            user.groups.add(grupo_ingresante)
-            user.save()
+            rol_ingresante = Rol.objects.get(nombre='Ingresante')
+            PerfilUsuario.objects.create(
+                user=user,
+                rol=rol_ingresante
+            )
+
 
             messages.success(
                 request,
