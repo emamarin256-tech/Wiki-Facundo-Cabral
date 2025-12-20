@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.admin import SimpleListFilter
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from .models import Rol, PerfilUsuario
 from .admin_utils import DenyRedirectAdminMixin
 User = get_user_model()
@@ -302,8 +303,39 @@ class CustomUserAdmin(DenyRedirectAdminMixin, BaseUserAdmin):
             else:
                 inlines.append(inline)
         return inlines
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
 
-    # -------------------------
+        if request.user.is_staff and not request.user.is_superuser:
+            request.GET = request.GET.copy()
+            for key in ("is_staff", "is_staff__exact"):
+                request.GET.pop(key, None)
+
+        return qs
+
+
+
+    def changelist_view(self, request, extra_context=None):
+        if request.user.is_staff and not request.user.is_superuser:
+            forbidden = {"is_staff", "is_staff__exact"}
+
+            if forbidden.intersection(request.GET):
+                messages.error(
+                    request,
+                    "No tienes permiso para aplicar ese filtro."
+                )
+
+                params = request.GET.copy()
+                for f in forbidden:
+                    params.pop(f, None)
+                params["e"] = "1"
+
+                return HttpResponseRedirect(
+                    f"{request.path}?{params.urlencode()}"
+                )
+
+        return super().changelist_view(request, extra_context)
+
     # Guardado seguro:
     # - Evitar que staff promueva/demote flags 'is_staff' / 'is_superuser'.
     # - Restaurar rol en save_formset cuando staff intenta cambiar algo que no puede.
