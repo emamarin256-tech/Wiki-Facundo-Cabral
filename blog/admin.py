@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Categoria, Articulo, SubCategoria, Tipo, Layout
+from mainApp.admin_utils import DenyRedirectAdminMixin
 from solo.admin import SingletonModelAdmin
 # Register your models here.
 
@@ -7,7 +8,7 @@ from solo.admin import SingletonModelAdmin
 # Layout admin
 # -----------------------
 @admin.register(Layout)
-class SiteConfigAdmin(SingletonModelAdmin):
+class SiteConfigAdmin(DenyRedirectAdminMixin, SingletonModelAdmin):
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
             return True
@@ -21,7 +22,7 @@ class SiteConfigAdmin(SingletonModelAdmin):
 
 
 
-class CategoriaAdmin(admin.ModelAdmin):
+class CategoriaAdmin(DenyRedirectAdminMixin, admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion",)
 
     def save_model(self, request, obj, form, change):
@@ -40,7 +41,7 @@ class CategoriaAdmin(admin.ModelAdmin):
         return request.user.is_superuser or request.user.is_staff
 
 
-class SubCategoriaAdmin(admin.ModelAdmin):
+class SubCategoriaAdmin(DenyRedirectAdminMixin, admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion",)
 
     def save_model(self, request, obj, form, change):
@@ -57,7 +58,7 @@ class SubCategoriaAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return request.user.is_superuser or request.user.is_staff
-class TipoAdmin(admin.ModelAdmin):
+class TipoAdmin(DenyRedirectAdminMixin, admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion",)
 
     def save_model(self, request, obj, form, change):
@@ -77,7 +78,7 @@ class TipoAdmin(admin.ModelAdmin):
         return request.user.is_superuser or request.user.is_staff
 
 
-class ArticuloAdmin(admin.ModelAdmin):
+class ArticuloAdmin(DenyRedirectAdminMixin, admin.ModelAdmin):
     readonly_fields = ("usuario", "creacion", "ultima_modificacion")
 
     def save_model(self, request, obj, form, change):

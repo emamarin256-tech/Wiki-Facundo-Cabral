@@ -4,8 +4,10 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import AdminPasswordChangeForm
 from django.contrib.auth.models import Group, Permission
 from django.contrib.admin import SimpleListFilter
+from django.shortcuts import redirect
+from django.contrib import messages
 from .models import Rol, PerfilUsuario
-
+from .admin_utils import DenyRedirectAdminMixin
 User = get_user_model()
 
 # -------------------------
@@ -36,6 +38,28 @@ class RolAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return super().get_model_perms(request)
         return {}
+    # 👇 ESTE MÉTODO DEBE ESTAR DENTRO DE LA CLASE
+    def _deny_and_redirect(self, request):
+        messages.error(
+            request,
+            "No tienes permiso para acceder a esta sección."
+        )
+        return redirect("/admin/")
+
+    def changelist_view(self, request, extra_context=None):
+        if not request.user.is_superuser:
+            return self._deny_and_redirect(request)
+        return super().changelist_view(request, extra_context)
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        if not request.user.is_superuser:
+            return self._deny_and_redirect(request)
+        return super().change_view(request, object_id, form_url, extra_context)
+
+    def delete_view(self, request, object_id, extra_context=None):
+        if not request.user.is_superuser:
+            return self._deny_and_redirect(request)
+        return super().delete_view(request, object_id, extra_context)
 
 class RolListFilter(SimpleListFilter):
     title = "Rol"
@@ -140,7 +164,7 @@ except admin.sites.NotRegistered:
 
 
 @admin.register(User)
-class CustomUserAdmin(BaseUserAdmin):
+class CustomUserAdmin(DenyRedirectAdminMixin, BaseUserAdmin):
     """
     Reglas principales:
     - Solo users con is_staff pueden entrar al admin (has_module_permission).

@@ -1,12 +1,13 @@
 from django.contrib import admin
 from .models import Pagina
+from mainApp.admin_utils import DenyRedirectAdminMixin
 # Register your models here.
 
 #config panel
 Titulo = "Wiki Facundo cabral"
 Subtitulo = "Panel de gestión"
 
-class PaginaAdmin(admin.ModelAdmin):
+class PaginaAdmin(DenyRedirectAdminMixin, admin.ModelAdmin):
     
     readonly_fields = ("usuario", "creacion", "modificacion")
 
@@ -20,6 +21,11 @@ class PaginaAdmin(admin.ModelAdmin):
             return True
         if request.user.is_staff:
             return True
+    def has_add_permission(self, request):
+        return request.user.is_superuser or request.user.is_staff
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser or request.user.is_staff
     def has_view_permission(self, request, obj=None):
         return request.user.is_superuser or request.user.is_staff
 
