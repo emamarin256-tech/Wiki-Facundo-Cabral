@@ -444,9 +444,9 @@ class PaginaViewsTest(TestCase):
         url = reverse("N_inicio")
         response = self.client.get(url)
 
-        self.assertEqual(response.context["pag"], self.pagina_inicio)
-        self.assertEqual(response.context["titulo"], "Inicio")
-        self.assertTrue(response.context["pag_inicio"])
+        self.assertEqual(response.context["v_pag"], self.pagina_inicio)
+        self.assertEqual(response.context["v_titulo"], "Inicio")
+        self.assertTrue(response.context["v_pag_inicio"])
 
     # --------------------------------------------------
     # Tests vista cargar_url()

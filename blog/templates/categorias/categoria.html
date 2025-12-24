@@ -1,14 +1,14 @@
 {% extends "layouts/layout.html" %}
 
-{% block titulo %}{{v_pagina}}-{{v_categoria.nombre}}{% endblock %}
+{% block titulo %}{{v_cat_pagina}}-{{v_categoria.nombre}}{% endblock %}
 
 {% block contenido %}
-<h1 class="titulo">{{v_pagina}} en {{v_categoria.nombre}}</h1>
+<h1 class="titulo">{{v_cat_pagina}} en {{v_categoria.nombre}}</h1>
 <p>{{v_categoria.desc}}</p>
-{% if v_subcategorias %}
-{% include "procesar_subcategorias.html" with lista_art=v_subcategorias %}
-{% elif vb_articulos %}
-{% include "procesar_articulos.html" with lista_art=vb_articulos %}
+{% if v_cat_subcategorias %}
+{% include "procesar_subcategorias.html" with lista_art=v_cat_subcategorias %}
+{% elif v_cat_articulos %}
+{% include "procesar_articulos.html" with lista_art=v_cat_articulos %}
 {% endif %}
 
 {% endblock contenido %}

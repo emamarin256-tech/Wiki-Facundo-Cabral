@@ -44,11 +44,11 @@
       <ul>
         {% if v_categoria.nombre %}
           <li>
-            <span>{{ v_pagina }} en {{ v_categoria.nombre }}</span>
+            <span>{{ v_cat_pagina }} en {{ v_categoria.nombre }}</span>
           </li>
-        {% elif v_subcategoriaaa.nombre %}
+        {% elif v_subcategoria.nombre %}
           <li>
-            <span>{{ v_Pagina_Nombre }} en {{ v_subcategoriaaa.nombre }}</span>
+            <span>{{ v_subcat_pagina }} en {{ v_subcategoria.nombre }}</span>
           </li>
         {% elif v_articulo.nombre %}
           <li>
@@ -59,10 +59,10 @@
             <span>{{ v_articulo.tipo }}: {{ v_articulo.titulo }}</span>
           </li>
         {% endif %}
-        {% for p in pags %}
+        {% for p in V_paginas %}
           <li>
             {% if p.2 == "" %}
-              {% if pag_inicio %}
+              {% if v_pag_inicio %}
                 <a class="actual" href="{% url 'N_inicio' %}">{{ p.1 }}</a>
               {% else %}
                 <a href="{% url 'N_inicio' %}">{{ p.1 }}</a>

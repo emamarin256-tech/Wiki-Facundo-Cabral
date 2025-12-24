@@ -16,14 +16,6 @@ from mainApp.decorators import rol_required
 # FUNCIONES AUXILIARES
 # ==========================
 
-def conseguir_modelos(modelo):
-    apps_a_buscar = ["blog", "AppPagina",]
-    for app_label in apps_a_buscar:
-        try:
-            return apps.get_model(app_label, modelo)
-        except LookupError:
-            continue
-    return None
 
 
 def lista_Modelos():
@@ -34,124 +26,98 @@ def lista_Modelos():
     return lista
 
 
-def crear_formulario_con_widgets(Modelo):
-    from django_select2.forms import Select2MultipleWidget
-    widgets = {}
-    for field in Modelo._meta.get_fields():
-        if isinstance(field, models.TextField):
-            widgets[field.name] = CKEditorWidget()
-        elif isinstance(field, models.ManyToManyField):
-            widgets[field.name] = Select2MultipleWidget()
-    return modelform_factory(Modelo, fields="__all__", widgets=widgets)
-
-
 # ==========================
 # VISTAS
 # ==========================
+import logging
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import DatabaseError
+
+from mantenimiento import services, constants
+from blog.models import Layout  # si lo necesitás solo para get_solo, lo resolvemos con services
+
+logger = logging.getLogger(__name__)
 
 @rol_required("Usuario", "Staff")
 def f_mantenimiento(request):
     try:
-        Lista_modelos = lista_Modelos()
+        modelos = services.list_models()
         lista_modelos = []
         lay = None
 
-        for modelo in Lista_modelos:
-            if modelo.__name__ == "Layout":
-                lay = Layout.get_solo()
-            else:
+        # Intentar obtener Layout de forma segura
+        try:
+            LayoutModel = services.get_model_by_name("Layout")
+            # Llamada a get_solo puede provocar DatabaseError si no hay DB lista
+            try:
+                lay = LayoutModel.get_solo()
+            except AttributeError:
+                # Modelo no es Singleton o no tiene get_solo
+                lay = None
+            except DatabaseError:
+                logger.exception("Error DB al intentar Layout.get_solo()")
+                lay = None
+
+        except LookupError:
+            # No existía Layout en las apps configuradas
+            lay = None
+
+        for modelo in modelos:
+            if modelo._meta.model_name != "layout":
                 lista_modelos.append(modelo.__name__)
 
         response = render(request, "mantenimiento/mantenimiento.html", {
             "lista_modelos": lista_modelos,
             "layo": lay
         })
+
+        # Consumir mensajes (si querés)
         storage = messages.get_messages(request)
         storage.used = True
         return response
 
-    except Exception as e:
-        messages.error(request, "Ocurrió un error al cargar el mantenimiento.")
+    except DatabaseError as e:
+        logger.exception("Error de base de datos en f_mantenimiento: %s", e)
+        messages.error(request, "Ocurrió un error al cargar el mantenimiento (DB).")
         return redirect("N_inicio")
 
 
+
+
+# mantenimiento/views.py (fragmento)
+import logging
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.db import DatabaseError
+
+from mantenimiento import services, constants
+
+logger = logging.getLogger(__name__)
+
 @rol_required("Usuario", "Staff")
 def f_mantenimientoB(request, modelo):
-    Modelo = conseguir_modelos(modelo)
-    if Modelo is None:
+    # Intentamos resolver el modelo; si no existe, redirect con mensaje
+    try:
+        Modelo = services.get_model_by_name(modelo)
+    except LookupError:
         messages.error(request, f"El modelo '{modelo}' no existe.")
         return redirect("N_mantenimiento")
 
+    # Prohibir acceso a modelos especiales
+    if Modelo._meta.model_name in constants.MODELOS_ESPECIALES:
+        messages.error(request, f"No está permitido gestionar '{modelo}'.")
+        return redirect("N_mantenimiento")
+
+    # Parámetros GET
+    search_query = request.GET.get("q", "").strip()
+    sort_field_raw = request.GET.get("sort", "").strip()
+    sort_order = request.GET.get("order", "asc").strip().lower()
+
     try:
-        if modelo == "Layout":
-            return redirect("N_mantenimiento")
-
-        # Parámetros GET
-        search_query = request.GET.get("q", "").strip()
-        sort_field_raw = request.GET.get("sort", "").strip()
-        sort_order = request.GET.get("order", "asc").strip().lower()
-
-        # Queryset base
-        instancias = Modelo.objects.all()
-
-        # FILTRO DE BÚSQUEDA: solo 'nombre' o 'titulo' si existen
-        if search_query:
-            filtro_q = Q()
-            posibles_campos = ["nombre", "titulo"]
-            for campo in posibles_campos:
-                if campo in [f.name for f in Modelo._meta.get_fields()]:
-                    filtro_q |= Q(**{f"{campo}__istartswith": search_query})
-            if filtro_q.children:
-                instancias = instancias.filter(filtro_q)
-
-        # --- Construir allowed_fields SIEMPRE con el fallback solicitado ---
-        allowed_fields = []
-        for campo in Modelo._meta.fields:
-            tipo = campo.get_internal_type()
-            if tipo == "CharField":
-                # Sólo incluir 'nombre' o 'titulo' entre los CharField
-                if campo.name in ("nombre", "titulo"):
-                    allowed_fields.append(campo.name)
-            elif tipo in (
-                "DateField", "DateTimeField",
-                "IntegerField", "FloatField",
-                "BooleanField","ForeignKey"
-            ):
-                allowed_fields.append(campo.name)
-
-        # Validar sort_order
-        if sort_order not in ("asc", "desc"):
-            if request.GET.get("order") not in (None, ""):
-                messages.warning(request, f"Orden '{request.GET.get('order')}' no válido. Usando 'asc' por defecto.")
-            sort_order = "asc"
-
-        # Validar y aplicar sort_field
-        campo_mostrado = None
-        if sort_field_raw:
-            if sort_field_raw not in allowed_fields:
-                messages.warning(request, f"El campo '{sort_field_raw}' no es válido para ordenar. Se ignorará el orden.")
-                sort_field_raw = ""
-            else:
-                campo_para_ordenar = f"-{sort_field_raw}" if sort_order == "desc" else sort_field_raw
-                instancias = instancias.order_by(campo_para_ordenar)
-                campo_mostrado = sort_field_raw
-
-        # Obtener verbose_name del campo_mostrado (si aplica)
-        campo_mostrado_verbose = None
-        if campo_mostrado:
-            for campo in Modelo._meta.fields:
-                if campo.name == campo_mostrado:
-                    campo_mostrado_verbose = campo.verbose_name
-                    break
-
-        # Preparar 'campos' para el template
-        campos_para_template = []
-        mapa_verbose = {f.name: f.verbose_name for f in Modelo._meta.fields}
-        for nombre in allowed_fields:
-            campos_para_template.append({
-                "name": nombre,
-                "verbose": mapa_verbose.get(nombre, nombre.replace("_", " ").capitalize())
-            })
+        instancias, campo_mostrado, campo_mostrado_verbose, campos_para_template = \
+            services.build_queryset_and_metadata(Modelo, search_query, sort_field_raw, sort_order)
 
         return render(request, "mantenimiento/mantenimientoB.html", {
             "instancias": instancias,
@@ -163,86 +129,75 @@ def f_mantenimientoB(request, modelo):
             "campo_mostrado_verbose": campo_mostrado_verbose,
             "campos": campos_para_template,
         })
-
-    except Exception as e:
-        messages.error(request, f"Ocurrió un error al cargar los datos de {modelo}. ({e})")
+    except (ValidationError, DatabaseError) as e:
+        logger.exception("Error al cargar datos para %s: %s", modelo, e)
+        messages.error(request, f"Ocurrió un error al cargar los datos de {modelo}.")
         return redirect("N_mantenimiento")
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.db import DatabaseError, transaction
+from django import forms
+
+from mantenimiento import services, constants
 
 @never_cache
 @rol_required("Usuario", "Staff")
 def f_mantenimientoC(request, modelo, pk):
-    Modelo = conseguir_modelos(modelo)
-    if Modelo is None:
+    try:
+        Modelo = services.get_model_by_name(modelo)
+    except LookupError:
         messages.error(request, f"El modelo '{modelo}' no existe.")
         return redirect("N_mantenimiento")
 
-    try:
-        instancia = get_object_or_404(Modelo, pk=pk)
-    except Exception:
-        messages.error(
-            request, f"No se encontró la instancia seleccionada de {modelo}.")
-        return redirect("N_mantenimientoB", modelo=modelo)
+    instancia = get_object_or_404(Modelo, pk=pk)
 
-    Lista_modelos = lista_Modelos()
-    lista_modelos = [{"name": m.__name__} for m in Lista_modelos]
+    # Lista de modelos para el sidebar
+    lista_modelos = [{"name": m.__name__} for m in services.list_models()]
 
-    # widgets dinámicos
-    widgets = {}
-    for field in Modelo._meta.get_fields():
-        if isinstance(field, models.TextField):
-            widgets[field.name] = CKEditorWidget()
-
-    Formulario = modelform_factory(Modelo, fields="__all__", widgets=widgets)
+    # Crear formulario con widgets dinámicos
+    Formulario = services.create_modelform_with_widgets(Modelo)
 
     try:
         if request.method == "POST":
             if request.POST.get("accion") == "eliminar":
                 instancia.delete()
-                messages.success(
-                    request, f"Se eliminó correctamente {str(instancia)}.")
+                messages.success(request, f"Se eliminó correctamente {str(instancia)}.")
                 return redirect("N_mantenimientoB", modelo=modelo)
 
             form = Formulario(request.POST, request.FILES, instance=instancia)
-
             if form.is_valid():
-                instancia_guardada = form.save(commit=False)
+                with transaction.atomic():
+                    instancia_guardada = form.save(commit=False)
 
-                # Mantiene o asigna el usuario
-                if hasattr(instancia_guardada, 'usuario'):
-                    instancia_guardada.usuario = getattr(
-                        instancia, 'usuario', request.user)
+                    # Mantener o asignar usuario si el modelo tiene ese campo
+                    field_names = [f.name for f in Modelo._meta.fields]
+                    if 'usuario' in field_names:
+                        instancia_guardada.usuario = getattr(instancia, 'usuario', request.user)
 
-                instancia_guardada.save()
-                form.save_m2m()
+                    instancia_guardada.save()
+                    form.save_m2m()
 
-                if request.POST.get("accion") == "guardar":
-                    messages.success(
-                        request, f"Se guardó correctamente {str(instancia)}.")
-                    return redirect("N_mantenimientoB", modelo=modelo)
-
-                elif request.POST.get("accion") == "guardaryseguir":
-                    messages.success(
-                        request, f"Se guardó correctamente {str(instancia)}.")
+                messages.success(request, f"Se guardó correctamente {str(instancia)}.")
+                if request.POST.get("accion") == "guardaryseguir":
                     return redirect("N_mantenimientoC", modelo=modelo, pk=pk)
-
+                return redirect("N_mantenimientoB", modelo=modelo)
             else:
-                messages.warning(
-                    request, "Por favor revisa los datos ingresados.")
+                messages.warning(request, "Por favor revisa los datos ingresados.")
         else:
             form = Formulario(instance=instancia)
             # Mostrar el usuario actual si el modelo lo tiene
-            if hasattr(Modelo, 'usuario') or 'usuario' in [f.name for f in Modelo._meta.get_fields()]:
+            field_names = [f.name for f in Modelo._meta.fields]
+            if 'usuario' in field_names:
                 form.fields['usuario'] = forms.CharField(
                     label="Usuario",
                     required=False,
                     disabled=True,
-                    initial=getattr(instancia.usuario, 'username', '') if hasattr(
-                        instancia, 'usuario') else ''
+                    initial=getattr(instancia.usuario, 'username', '') if getattr(instancia, 'usuario', None) else ''
                 )
 
-        template = "mantenimiento/mantenimientoC_layout.html" if modelo == "Layout" else "mantenimiento/mantenimientoC.html"
+        template = "mantenimiento/mantenimientoC_layout.html" if Modelo._meta.model_name == "layout" else "mantenimiento/mantenimientoC.html"
         return render(request, template, {
             "form": form,
             "modelo": Modelo.__name__,
@@ -250,52 +205,47 @@ def f_mantenimientoC(request, modelo, pk):
             "lista_m": lista_modelos,
         })
 
-    except Exception as e:
-        messages.error(
-            request, f"Ocurrió un error al procesar la edición de {modelo}.")
-        raise
+    except DatabaseError as e:
+        logger.exception("DB error editing %s pk=%s: %s", modelo, pk, e)
+        messages.error(request, f"Ocurrió un error al procesar la edición de {modelo}.")
         return redirect("N_mantenimientoB", modelo=modelo)
 
 
 @never_cache
 @rol_required("Usuario", "Staff")
 def crear(request, modelo):
-    if str(modelo) == "Layout":
-        return redirect("N_mantenimiento")
-
-    Modelo = conseguir_modelos(modelo)
-    if Modelo is None:
+    try:
+        Modelo = services.get_model_by_name(modelo)
+    except LookupError:
         messages.error(request, "El modelo especificado no existe.")
         return redirect("N_mantenimiento")
 
-    try:
-        Formulario = modelform_factory(Modelo, fields="__all__")
+    if Modelo._meta.model_name in constants.MODELOS_ESPECIALES:
+        messages.error(request, "No está permitido crear instancias de ese modelo.")
+        return redirect("N_mantenimiento")
 
+    Formulario = services.create_modelform_with_widgets(Modelo)
+
+    try:
         if request.method == 'POST':
             form = Formulario(request.POST, request.FILES)
             if form.is_valid():
                 instancia = form.save(commit=False)
-                
-                # Asegurarse de asignar usuario
-                if 'usuario' in [f.name for f in Modelo._meta.fields]:
+                field_names = [f.name for f in Modelo._meta.fields]
+                if 'usuario' in field_names:
                     instancia.usuario = request.user
-                
                 instancia.save()
                 form.save_m2m()
 
-
                 accion = request.POST.get('accion')
                 if accion == 'guardar':
-                    messages.success(
-                        request, f"Se guardó correctamente {Modelo.__name__}.")
+                    messages.success(request, f"Se guardó correctamente {Modelo.__name__}.")
                     return redirect('N_mantenimientoB', modelo=modelo)
                 elif accion == 'guardaryseguir':
-                    messages.success(
-                        request, f"Se guardó correctamente {Modelo.__name__}. ¡Continúa editando!")
+                    messages.success(request, f"Se guardó correctamente {Modelo.__name__}. ¡Continúa editando!")
                     return redirect('N_crear', modelo=modelo)
             else:
-                messages.warning(
-                    request, "Por favor revisa los datos ingresados.")
+                messages.warning(request, "Por favor revisa los datos ingresados.")
         else:
             form = Formulario()
 
@@ -305,36 +255,43 @@ def crear(request, modelo):
             'form': form,
             'descripcion_modelo': descripcion_modelo,
         })
-
-    except Exception as e:
-        messages.error(
-            request, f"Ocurrió un error al crear un nuevo {modelo}.")
-        raise
+    except DatabaseError as e:
+        logger.exception("DB error creating %s: %s", modelo, e)
+        messages.error(request, f"Ocurrió un error al crear un nuevo {modelo}.")
         return redirect("N_mantenimiento")
 
+
+from django.db import DatabaseError
 
 @never_cache
 @rol_required("Usuario", "Staff")
 def eliminar_varios(request, modelo):
-    Modelo = conseguir_modelos(modelo)
-    if Modelo is None:
+    try:
+        Modelo = services.get_model_by_name(modelo)
+    except LookupError:
         messages.error(request, "Modelo no encontrado.")
         return redirect("N_mantenimiento")
 
-    try:
-        if request.method == "POST":
-            ids = request.POST.getlist("seleccionados")
-            if ids:
-                eliminados = Modelo.objects.filter(pk__in=ids)
-                cantidad = eliminados.count()
-                eliminados.delete()
-                messages.success(
-                    request, f"Se eliminaron {cantidad} {modelo}(s) correctamente.")
-            else:
-                messages.warning(
-                    request, "No seleccionaste ningún elemento para eliminar.")
-    except Exception as e:
-        messages.error(
-            request, f"Ocurrió un error al eliminar los elementos de {modelo}.")
+    if request.method == "POST":
+        ids = request.POST.getlist("seleccionados")
+        if not ids:
+            messages.warning(request, "No seleccionaste ningún elemento para eliminar.")
+            return redirect("N_mantenimientoB", modelo=modelo)
+
+        # Validar y convertir ids a enteros
+        try:
+            ids_clean = [int(i) for i in ids]
+        except ValueError:
+            messages.error(request, "IDs inválidos.")
+            return redirect("N_mantenimientoB", modelo=modelo)
+
+        try:
+            eliminados_qs = Modelo.objects.filter(pk__in=ids_clean)
+            cantidad = eliminados_qs.count()
+            eliminados_qs.delete()
+            messages.success(request, f"Se eliminaron {cantidad} {modelo}(s) correctamente.")
+        except DatabaseError as e:
+            logger.exception("Error DB al eliminar varios de %s: %s", modelo, e)
+            messages.error(request, f"Ocurrió un error al eliminar elementos de {modelo}.")
 
     return redirect("N_mantenimientoB", modelo=modelo)

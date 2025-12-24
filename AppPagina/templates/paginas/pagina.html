@@ -1,8 +1,8 @@
 {% extends "layouts/layout.html" %}
 {% block titulo %}
-    {{ titulo }}
+    {{ v_titulo }}
 {% endblock titulo %}
 {% block contenido %}
-    <h1 class="titulo">{{ pag.titulo }}</h1>
-    <div class="conte">{{ pag.contenido|safe }}</div>
+    <h1 class="titulo">{{ v_pag.titulo }}</h1>
+    <div class="conte">{{ v_pag.contenido|safe }}</div>
 {% endblock contenido %}

@@ -35,7 +35,7 @@ def validacion_subcategoria(subcategoria, pagina):
 # ------------------------------
 def cargar_Pcategorias(request, Pagina_slug, Categoria_id):
     try:
-        pagina_n = Pagina.objects.get(slug=Pagina_slug)
+        N_pagina = Pagina.objects.get(slug=Pagina_slug)
         categoria = Categoria.objects.get(id=Categoria_id)
     except (Pagina.DoesNotExist, Categoria.DoesNotExist):
         messages.error(request, "No se encontro esa página.")
@@ -44,34 +44,34 @@ def cargar_Pcategorias(request, Pagina_slug, Categoria_id):
     sub_categoriaA = SubCategoria.objects.filter(categoria__id=Categoria_id, publico=True)
 
     if sub_categoriaA.exists():
-        sub_categoriaB = [sub for sub in sub_categoriaA if validacion_subcategoria(sub, pagina_n)]
+        sub_categoriaB = [sub for sub in sub_categoriaA if validacion_subcategoria(sub, N_pagina)]
 
         if not sub_categoriaB:
-            if pagina_n.contenido:
+            if N_pagina.contenido:
                 messages.error(request, f"No se han cargado elementos en {categoria.nombre}")             
-                return redirect("N_pagina", pagina_n.slug)
+                return redirect("N_pagina", N_pagina.slug)
             else:
                 messages.error(request, f"No se han cargado elementos en {categoria.nombre}")
                 return redirect("N_inicio")
 
         return render(request, 'categorias/categoria.html', {
             'v_categoria': categoria,
-            'v_pagina': pagina_n.titulo,
-            'v_subcategorias': sub_categoriaB,
+            'v_cat_pagina': N_pagina.titulo,
+            'v_cat_subcategorias': sub_categoriaB,
         })
 
-    elif Articulo.objects.filter(categoria__id=Categoria_id, tipo=pagina_n.tipo).exists():
-        vb_articulos = Articulo.objects.filter(categoria__id=Categoria_id, tipo=pagina_n.tipo, publico=True)
+    elif Articulo.objects.filter(categoria__id=Categoria_id, tipo=N_pagina.tipo).exists():
+        v_cat_articulos = Articulo.objects.filter(categoria__id=Categoria_id, tipo=N_pagina.tipo, publico=True)
         return render(request, 'categorias/categoria.html', {
             'v_categoria': categoria,
-            'v_pagina': pagina_n.titulo,
-            'vb_articulos': vb_articulos,
+            'v_cat_pagina': N_pagina.titulo,
+            'v_cat_articulos': v_cat_articulos,
         })
 
     else:
         messages.error(request, f"No se han cargado elementos en {categoria.nombre}")
-        if pagina_n.contenido:
-            return redirect("N_pagina", pagina_n.slug)
+        if N_pagina.contenido:
+            return redirect("N_pagina", N_pagina.slug)
         return redirect("N_inicio")
 
 
@@ -89,9 +89,9 @@ def cargar_Psubcategorias(request, Pagina_slug, SubCategoria_slug):
     articulos = Articulo.objects.filter(subcategoria__slug=SubCategoria_slug, tipo=pagina.tipo, publico=True)
 
     return render(request, "subcategorias/subcategoria.html", {
-        "v_subcategoriaaa": subcategoria,
-        "v_sart": articulos,
-        "v_Pagina_Nombre": pagina.titulo,
+        "v_subcategoria": subcategoria,
+        "v_subcat_art": articulos,
+        "v_subcat_pagina": pagina.titulo,
     })
 
 

@@ -11,8 +11,8 @@ def cargar_url(request,slug):
         return redirect("N_inicio")
     else:
         return render(request,'paginas/pagina.html',{
-            'titulo':cargar_url_paginas.titulo,
-            'pag': cargar_url_paginas})
+            'v_titulo':cargar_url_paginas.titulo,
+            'v_pag': cargar_url_paginas})
         
 
 
@@ -20,7 +20,7 @@ def inicio(request):
     
     cargar_url_paginas = get_object_or_404(Pagina, es_inicio=True)
     return render(request,'paginas/pag_inicio.html',{
-        'titulo':cargar_url_paginas.titulo,
-        'pag': cargar_url_paginas,
-        'pag_inicio': True}
+        'v_titulo':cargar_url_paginas.titulo,
+        'v_pag': cargar_url_paginas,
+        'v_pag_inicio': True}
         )

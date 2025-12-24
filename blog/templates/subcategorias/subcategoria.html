@@ -1,56 +1,56 @@
 {% extends "layouts/layout.html" %}
 {% load filtro_yt %}
-{% block titulo %}{{ v_Pagina_Nombre }} - {{ v_subcategoriaaa.nombre }}{% endblock %}
+{% block titulo %}{{ v_subcat_pagina }} - {{ v_subcategoria.nombre }}{% endblock %}
 {% block contenido %}
   <div class="video-container">
     <div class="video-info">
-      <h1 class="titulo">{{ v_subcategoriaaa.nombre }}</h1>
-      {% if v_subcategoriaaa.creacion %}<p class="fecha">{{ v_subcategoriaaa.creacion }}</p>{% endif %}
-      {% if v_subcategoriaaa.desc %}<p class="descrip">{{ v_subcategoriaaa.desc }}</p>{% endif %}
+      <h1 class="titulo">{{ v_subcategoria.nombre }}</h1>
+      {% if v_subcategoria.creacion %}<p class="fecha">{{ v_subcategoria.creacion }}</p>{% endif %}
+      {% if v_subcategoria.desc %}<p class="descrip">{{ v_subcategoria.desc }}</p>{% endif %}
     </div>
-    {% if v_subcategoriaaa.video_url %}
+    {% if v_subcategoria.video_url %}
       <div class="video-box">
         <iframe width="480"
                 height="360"
-                src="https://www.youtube.com/embed/{{ v_subcategoriaaa.video_url|youtube_id }}"
+                src="https://www.youtube.com/embed/{{ v_subcategoria.video_url|youtube_id }}"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
                 allowfullscreen>
         </iframe>
       </div>
-    {% elif v_subcategoriaaa.video_file %}
+    {% elif v_subcategoria.video_file %}
       <div class="video-container-a">
         <video class="video-articulo-a"
                width="480"
                height="360"
                controls
                preload="metadata">
-          <source src="{{ v_subcategoriaaa.video_file.url }}" type="video/mp4">
+          <source src="{{ v_subcategoria.video_file.url }}" type="video/mp4">
           Tu navegador no soporta la reproducción de video.
         </video>
       </div>
     {% endif %}
   </div>
-  {% if v_sart %}
+  {% if v_subcat_art %}
     <div class="volver-header">
-      <h2>{{ v_Pagina_Nombre }} en {{ v_subcategoriaaa.nombre }}</h2>
-      {% if v_subcategoriaaa.categoria %}
+      <h2>{{ v_subcat_pagina }} en {{ v_subcategoria.nombre }}</h2>
+      {% if v_subcategoria.categoria %}
         <a class="volver volver-top-b"
-           href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoriaaa.categoria.id %}">
-          ← Volver a {{ v_subcategoriaaa.categoria.nombre }}
+           href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoria.categoria.id %}">
+          ← Volver a {{ v_subcategoria.categoria.nombre }}
         </a>
       {% endif %}
     </div>
-    {% include "procesar_articulos.html" with lista_art=v_sart %}
+    {% include "procesar_articulos.html" with lista_art=v_subcat_art %}
   {% else %}
     <br>
   {% endif %}
   <div class="art_categorias">
-    {% if v_subcategoriaaa.categoria %}
+    {% if v_subcategoria.categoria %}
       <a class="volver"
-         href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoriaaa.categoria.id %}">
-        ← Volver a {{ v_subcategoriaaa.categoria.nombre }}
+         href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoria.categoria.id %}">
+        ← Volver a {{ v_subcategoria.categoria.nombre }}
       </a>
     {% endif %}
   </div>

@@ -320,10 +320,6 @@ class CustomUserAdmin(DenyRedirectAdminMixin, BaseUserAdmin):
             forbidden = {"is_staff", "is_staff__exact"}
 
             if forbidden.intersection(request.GET):
-                messages.error(
-                    request,
-                    "No tienes permiso para aplicar ese filtro."
-                )
 
                 params = request.GET.copy()
                 for f in forbidden:
