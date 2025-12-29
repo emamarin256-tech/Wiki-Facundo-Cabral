@@ -1,19 +1,14 @@
-# AppPagina/tests.py
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-
-
+from django.contrib.messages import get_messages
 from blog.models import Tipo
 from AppPagina.models import Pagina
 
 
-# -------------------------------------------------------
-# Tests originales (ligeros) — adaptados y preservados
-# -------------------------------------------------------
 class PaginaModelTest(TestCase):
 
     def setUp(self):
@@ -49,7 +44,7 @@ class PaginaModelTest(TestCase):
         self.assertEqual(str(self.pagina), "Prueba")
 
     def test_get_absolute_url(self):
-        # Algunos objetos pagina pueden ser la página de inicio y no tener slug.
+        
         if self.pagina.slug:
             url = reverse("N_pagina", args=[self.pagina.slug])
             self.assertIn(self.pagina.slug, url)
@@ -58,52 +53,7 @@ class PaginaModelTest(TestCase):
             self.assertEqual(url, "/")
 
 
-class PaginaViewsTest(TestCase):
 
-    def setUp(self):
-        self.user = get_user_model().objects.create_user(
-            username="tester",
-            password="testpass123"
-        )
-
-        self.tipo_inicio = Tipo.objects.create(
-            nombre="inicio",
-            slug="inicio"
-        )
-
-        self.pagina = Pagina.objects.create(
-            titulo="Inicio",
-            contenido="Contenido",
-            tipo=self.tipo_inicio,
-            usuario=self.user,
-            publico=True,
-            es_inicio=True,
-        )
-
-    def test_vista_inicio_carga_correctamente(self):
-        url = reverse("N_inicio")
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Inicio")
-
-    def test_vista_detalle_por_slug(self):
-        # Si la página creada en setUp es la página de inicio, crear una página adicional para esta prueba
-        if not self.pagina.slug:
-            pagina_detalle = Pagina.objects.create(
-                titulo="Detalle",
-                contenido="Contenido detalle",
-                tipo=self.tipo_inicio,
-                usuario=self.user,
-                publico=True,
-                es_inicio=False,
-            )
-        else:
-            pagina_detalle = self.pagina
-
-        url = reverse("N_pagina", args=[pagina_detalle.slug])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, pagina_detalle.contenido)
 
 
 class PaginaURLsTest(TestCase):
@@ -116,10 +66,6 @@ class PaginaURLsTest(TestCase):
         self.assertEqual(detalle, "/slug-ejemplo/")
 
 
-# -------------------------------------------------------
-# Tests ampliados para cubrir la lógica compleja del modelo
-# (clean() / save() — unicidad de inicio, slugs, títulos, orden)
-# -------------------------------------------------------
 class PaginaModelFullTest(TestCase):
     def setUp(self):
         self.User = get_user_model()
@@ -141,7 +87,7 @@ class PaginaModelFullTest(TestCase):
         self.assertEqual(p.orden, 0)
 
     def test_marcar_otra_pagina_como_inicio_desmarca_la_anterior_y_reasigna_slug_y_orden(self):
-        # Primera página marcada como inicio
+        
         p1 = Pagina.objects.create(
             titulo="Página Uno",
             contenido="Contenido",
@@ -155,7 +101,7 @@ class PaginaModelFullTest(TestCase):
         self.assertEqual(p1.slug, "")
         self.assertEqual(p1.orden, 0)
 
-        # Crear una segunda página
+        
         p2 = Pagina.objects.create(
             titulo="Página Dos",
             contenido="Contenido 2",
@@ -165,24 +111,23 @@ class PaginaModelFullTest(TestCase):
             es_inicio=False,
         )
         p2.refresh_from_db()
-        # ahora marcamos p2 como inicio (simulando edición)
+        
         p2.es_inicio = True
         p2.save()
 
-        # refrescar instancias desde la DB
+        
         p1.refresh_from_db()
         p2.refresh_from_db()
 
-        # p2 ahora debe ser la página de inicio
+        
         self.assertTrue(p2.es_inicio)
         self.assertEqual(p2.slug, "")
         self.assertEqual(p2.orden, 0)
 
-        # p1 debe haber sido desmarcada y recibir un slug y orden incrementado por la lógica del modelo
+        
         self.assertFalse(p1.es_inicio)
         self.assertNotEqual(p1.slug, "")
         self.assertEqual(p1.slug, slugify(p1.titulo))
-        # dado que el modelo incrementa orden en 1 para la página desplazada:
         self.assertEqual(p1.orden, 1)
 
     def test_al_crear_varias_paginas_inicio_el_ultimo_se_queda_como_inicio(self):
@@ -204,7 +149,6 @@ class PaginaModelFullTest(TestCase):
         )
         p1.refresh_from_db()
         p2.refresh_from_db()
-        # El último creado marcado como inicio debe ser el único con es_inicio True
         self.assertFalse(p1.es_inicio)
         self.assertTrue(p2.es_inicio)
         self.assertEqual(p2.slug, "")
@@ -229,10 +173,8 @@ class PaginaModelFullTest(TestCase):
         )
         p1.refresh_from_db()
         p2.refresh_from_db()
-        # el segundo debe haber sido renombrado a "Mismo Titulo (1)" por la lógica de clean()
         self.assertNotEqual(p1.titulo, p2.titulo)
         self.assertEqual(p2.titulo, "Mismo Titulo (1)")
-        # y el slug del segundo corresponde al titulo modificado
         expected_slug_p2 = slugify(p2.titulo)
         self.assertEqual(p2.slug, expected_slug_p2)
 
@@ -256,7 +198,6 @@ class PaginaModelFullTest(TestCase):
         p1.refresh_from_db()
         p2.refresh_from_db()
         self.assertEqual(p1.slug, "prueba")
-        # El segundo título fue renombrado a "Prueba (1)", por lo tanto su slug debería contener "prueba"
         self.assertNotEqual(p1.slug, p2.slug)
         self.assertEqual(p2.slug, "prueba-1")
 
@@ -272,7 +213,6 @@ class PaginaModelFullTest(TestCase):
         self.assertEqual(str(p), "Mi Titulo")
 
     def test_ordering_por_orden_y_creacion(self):
-        # Crear varias páginas con distintos valores de orden
         a = Pagina.objects.create(
             titulo="A",
             contenido="x",
@@ -300,9 +240,7 @@ class PaginaModelFullTest(TestCase):
             orden=3,
             es_inicio=False,
         )
-        # Según Meta.ordering = ["orden", "-creacion"]
         titulos_in_order = list(Pagina.objects.values_list("titulo", flat=True))
-        # Debe empezar por la de menor orden (B)
         self.assertEqual(titulos_in_order[0], "B")
 
 class PaginaAdditionalTests(TestCase):
@@ -337,7 +275,6 @@ class PaginaAdditionalTests(TestCase):
             orden=10,
         )
         original_slug = p.slug
-        # Llamar save varias veces
         p.save()
         p.save()
         p.refresh_from_db()
@@ -348,7 +285,6 @@ class PaginaAdditionalTests(TestCase):
         debe o bien resolver el conflicto (modificando el slug) o lanzar IntegrityError.
         Este test acepta ambas opciones como válidas.
         """
-        # Crear la primera con slug explícito
         p1 = Pagina.objects.create(
             titulo='Primera',
             contenido='x',
@@ -358,8 +294,6 @@ class PaginaAdditionalTests(TestCase):
             orden=5,
             slug='slug-duplicado'
         )
-
-        # Intentar crear otra con el mismo slug explícito
         p2 = Pagina(
             titulo='Segunda',
             contenido='y',
@@ -369,18 +303,13 @@ class PaginaAdditionalTests(TestCase):
             orden=6,
             slug='slug-duplicado'
         )
-        p2.save()
+        try:
+            p2.save()
+        except IntegrityError:
+            return
         self.assertNotEqual(p2.slug, p1.slug, "El segundo objeto terminó con el mismo slug; se esperaba resolución o error.")
-        self.assertTrue(p1.slug, "slug-duplicado")
-        self.assertTrue(p2.slug, "slug-duplicado-1")
-
-from django.test import TestCase
-from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.contrib.messages import get_messages
-
-from blog.models import Tipo
-from AppPagina.models import Pagina
+        self.assertEqual(p1.slug, "slug-duplicado")
+        self.assertEqual(p2.slug, "slug-duplicado-1")
 
 
 class PaginaViewsTest(TestCase):
@@ -396,7 +325,6 @@ class PaginaViewsTest(TestCase):
             slug="general"
         )
 
-        # Página de inicio
         self.pagina_inicio = Pagina.objects.create(
             titulo="Inicio",
             contenido="Contenido inicio",
@@ -406,7 +334,6 @@ class PaginaViewsTest(TestCase):
             es_inicio=True,
         )
 
-        # Página normal con contenido
         self.pagina_contenido = Pagina.objects.create(
             titulo="Página con contenido",
             contenido="Texto visible",
@@ -416,7 +343,6 @@ class PaginaViewsTest(TestCase):
             es_inicio=False,
         )
 
-        # Página sin contenido
         self.pagina_sin_contenido = Pagina.objects.create(
             titulo="Página vacía",
             contenido="",
@@ -426,9 +352,6 @@ class PaginaViewsTest(TestCase):
             es_inicio=False,
         )
 
-    # --------------------------------------------------
-    # Tests vista inicio()
-    # --------------------------------------------------
 
     def test_vista_inicio_responde_200(self):
         url = reverse("N_inicio")
@@ -447,10 +370,6 @@ class PaginaViewsTest(TestCase):
         self.assertEqual(response.context["v_pag"], self.pagina_inicio)
         self.assertEqual(response.context["v_titulo"], "Inicio")
         self.assertTrue(response.context["v_pag_inicio"])
-
-    # --------------------------------------------------
-    # Tests vista cargar_url()
-    # --------------------------------------------------
 
     def test_cargar_url_con_contenido_responde_200(self):
         url = reverse("N_pagina", args=[self.pagina_contenido.slug])
@@ -484,3 +403,4 @@ class PaginaViewsTest(TestCase):
         url = reverse("N_pagina", args=["slug-inexistente"])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+

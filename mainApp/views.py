@@ -45,9 +45,9 @@ def f_registro(request):
             user = reg.save()
 
             rol_ingresante = Rol.objects.get(nombre='Ingresante')
-            PerfilUsuario.objects.create(
+            PerfilUsuario.objects.get_or_create(
                 user=user,
-                rol=rol_ingresante
+                defaults={'rol': rol_ingresante}
             )
 
 

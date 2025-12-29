@@ -14,14 +14,14 @@ class MainappConfig(AppConfig):
             Rol.objects.get_or_create(nombre='Usuario')
             Rol.objects.get_or_create(nombre='Staff')
         except (OperationalError, ProgrammingError):
-            # Las tablas aún no existen (migraciones)
+            
             pass
 
-        # IMPORTANTE: registrar las señales
+        
         try:
-            from . import signals  # carga el archivo signals.py y conecta los receivers
+            from . import signals  
         except Exception:
-            # evitar fallos en migraciones o entornos incompletos
+            
             pass
 
 

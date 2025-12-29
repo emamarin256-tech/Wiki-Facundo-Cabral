@@ -42,7 +42,7 @@ def assign_staff_role_to_superuser(sender, instance, created, **kwargs):
     except Exception:
         return
 
-    perfil, _ = PerfilUsuario.objects.get_or_create(user=instance)
+    perfil, _ = PerfilUsuario.objects.get_or_create(user=instance, defaults={'rol': staff_rol})
     if perfil.rol != staff_rol:
         perfil.rol = staff_rol
         perfil.save(update_fields=['rol'])
@@ -50,3 +50,27 @@ def assign_staff_role_to_superuser(sender, instance, created, **kwargs):
     if not instance.is_staff:
         instance.is_staff = True
         instance.save(update_fields=['is_staff'])
+
+
+@receiver(post_save, sender=User)
+def create_profile_on_user_create(sender, instance, created, **kwargs):
+    """
+    Si se crea un User, asegurar que exista un PerfilUsuario asociado.
+    Asigna el rol por defecto 'Ingresante' si está disponible, sino usa el primer rol.
+    """
+    if not created:
+        return
+
+    try:
+        # Intentar obtener rol por defecto 'Ingresante'
+        try:
+            default_rol = Rol.objects.get(nombre='Ingresante')
+        except Rol.DoesNotExist:
+            default_rol = Rol.objects.first()
+
+        if default_rol is None:
+            return
+
+        PerfilUsuario.objects.get_or_create(user=instance, defaults={'rol': default_rol})
+    except Exception:
+        return
