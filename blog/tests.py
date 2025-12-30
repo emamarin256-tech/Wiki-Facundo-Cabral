@@ -6,7 +6,7 @@ import numpy as np
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from django.test import TestCase, override_settings, Client
+from django.test import RequestFactory, TestCase, override_settings, Client
 from django.urls import reverse
 from AppPagina.models import Pagina
 from .models import Categoria, SubCategoria, Articulo, Tipo
@@ -447,6 +447,50 @@ class BlogViewsTest(TestCase):
         self.assertRedirects(response, reverse("N_inicio"))
         
         
+# ==========================
+# TEST CONTEXT PROCESSOR
+# ==========================
+class LayoutContextProcessorTest(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_layout_context_processor_ok(self):
+        from blog.pros_layout import layout as layout_cp
+
+        request = self.factory.get("/")
+        ctx = layout_cp(request)
+
+        self.assertIn("V_titulo", ctx)
+        self.assertIn("V_logo", ctx)
         
+class CategoriasContextProcessorTest(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_categorias_context_processor_ok(self):
+        from blog.pros_categorias import C_obtener_paginas as categorias_cp
+
+        request = self.factory.get("/")
+        ctx = categorias_cp(request)
+
+        self.assertIn("V_categorias", ctx)
         
+
+class SubcategoriasContextProcessorTest(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_subcategorias_context_processor_ok(self):
+        from blog.pros_subcategorias import SC_obtener_paginas as subcategorias_cp
+
+        request = self.factory.get("/")
+        ctx = subcategorias_cp(request)
+
+        self.assertIn("V_subcategorias", ctx)     
+        
+
+
 

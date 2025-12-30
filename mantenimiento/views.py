@@ -105,9 +105,8 @@ def f_mantenimientoB(request, modelo):
         messages.error(request, f"El modelo '{modelo}' no existe.")
         return redirect("N_mantenimiento")
 
-    # Prohibir acceso a modelos especiales
+    # Como hay 1 solo layout, redirigimos a el panel de mantenimiento
     if Modelo._meta.model_name in constants.MODELOS_ESPECIALES:
-        messages.error(request, f"No está permitido gestionar '{modelo}'.")
         return redirect("N_mantenimiento")
 
     # Parámetros GET
@@ -162,6 +161,11 @@ def f_mantenimientoC(request, modelo, pk):
     try:
         if request.method == "POST":
             if request.POST.get("accion") == "eliminar":
+                # Proteger singleton Layout: no permitir eliminar desde la vista
+                if Modelo._meta.model_name == "layout":
+                    messages.error(request, "No se puede eliminar la instancia de Layout.")
+                    return redirect("N_mantenimientoB", modelo=modelo)
+
                 instancia.delete()
                 messages.success(request, f"Se eliminó correctamente {str(instancia)}.")
                 return redirect("N_mantenimientoB", modelo=modelo)
@@ -221,7 +225,7 @@ def crear(request, modelo):
         return redirect("N_mantenimiento")
 
     if Modelo._meta.model_name in constants.MODELOS_ESPECIALES:
-        messages.error(request, "No está permitido crear instancias de ese modelo.")
+        messages.error(request, "Solo puede haber una instancia de ese modelo.")
         return redirect("N_mantenimiento")
 
     Formulario = services.create_modelform_with_widgets(Modelo)

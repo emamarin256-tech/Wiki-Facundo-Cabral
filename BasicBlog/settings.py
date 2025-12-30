@@ -76,7 +76,7 @@ TEMPLATES = [
                 'AppPagina.context_processors.obtener_paginas',
                 'blog.pros_categorias.C_obtener_paginas',
                 'blog.pros_subcategorias.SC_obtener_paginas',
-                'mainApp.pros_layout.layout',
+                'blog.pros_layout.layout',
 
             ],
         },

@@ -23,8 +23,8 @@
   </head>
   <body>
     <header>
-      {% if l_logo %}<img src="{{ l_logo.url }}">{% endif %}
-      {% if l_titulo %}<h1>{{ l_titulo }}</h1>{% endif %}
+      {% if V_logo %}<img src="{{ V_logo.url }}">{% endif %}
+      {% if V_titulo %}<h1>{{ V_titulo }}</h1>{% endif %}
       {% if request.resolver_match.url_name in "N_mantenimiento N_mantenimientoB N_mantenimientoC N_crear" %}
         <h4>Modo Mantenimiento Usuario: {{ user }}</h4>
       {% endif %}
