@@ -1,15 +1,12 @@
-from unittest.mock import patch
-
-from django.test import TestCase, Client, RequestFactory
+from django.test import TestCase, Client
 from django.urls import reverse
-from django.db import DatabaseError
 from django.contrib.messages import get_messages
-
 from mantenimiento import services
 from blog.models import Categoria, Layout, Articulo
 from mainApp.models import Rol, PerfilUsuario
 from django.contrib.auth import get_user_model
-
+from django.db.models.signals import post_save
+import mainApp.signals as msignals
 User = get_user_model()
 
 
@@ -111,4 +108,103 @@ class ViewsMaintenanceLayoutTest(TestCase):
         self.client.post(url, {'seleccionados': [c1.pk, c2.pk]})
 
         self.assertFalse(Categoria.objects.exists())
+
+
+class RolRequiredDecoratorTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        
+        
+        try:
+            post_save.disconnect(msignals.create_profile_on_user_create, sender=User)
+        except Exception:
+            pass
+        try:
+            post_save.disconnect(msignals.assign_staff_role_to_superuser, sender=User)
+        except Exception:
+            pass
+        try:
+            post_save.disconnect(msignals.sync_is_staff_with_rol, sender=PerfilUsuario)
+        except Exception:
+            pass
+
+        
+        cls.rol_usuario = Rol.objects.create(nombre='Usuario')
+        cls.rol_otro = Rol.objects.create(nombre='Otro')
+        
+        Rol.objects.get_or_create(nombre='Staff')
+
+        
+        cls.no_perfil_user = User.objects.create_user(username='noperfil_test', password='pwd1')
+        cls.user_otro = User.objects.create_user(username='otro_test', password='pwd2')
+        cls.user_allowed = User.objects.create_user(username='allowed_test', password='pwd3')
+        cls.superuser = User.objects.create_superuser(username='admin_test', password='adminpwd', email='admin@example.com')
+
+        
+        
+        PerfilUsuario.objects.update_or_create(user=cls.user_otro, defaults={'rol': cls.rol_otro})
+        PerfilUsuario.objects.update_or_create(user=cls.user_allowed, defaults={'rol': cls.rol_usuario})
+        
+        staff_rol, _ = Rol.objects.get_or_create(nombre='Staff')
+        PerfilUsuario.objects.update_or_create(user=cls.superuser, defaults={'rol': staff_rol})
+
+    @classmethod
+    def tearDownClass(cls):
+        
+        try:
+            post_save.connect(msignals.create_profile_on_user_create, sender=User)
+        except Exception:
+            pass
+        try:
+            post_save.connect(msignals.assign_staff_role_to_superuser, sender=User)
+        except Exception:
+            pass
+        try:
+            post_save.connect(msignals.sync_is_staff_with_rol, sender=PerfilUsuario)
+        except Exception:
+            pass
+
+        super().tearDownClass()
+
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('N_mantenimiento')  
+
+    def test_unauthenticated_redirects_to_login_with_next(self):
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 302)
+        login_url = reverse('N_inicio_sesion')
+        self.assertIn(login_url, resp['Location'])
+        self.assertIn('next=', resp['Location'])
+
+    def test_user_without_perfil_redirects_to_inicio_and_shows_message(self):
+        self.client.login(username='noperfil_test', password='pwd1')
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp['Location'], reverse('N_inicio'))
+        msgs = list(get_messages(resp.wsgi_request))
+        self.assertTrue(any('espera' in str(m).lower() or 'aceptado' in str(m).lower() for m in msgs),
+                        f"Mensajes esperados, pero recibió: {[str(m) for m in msgs]}")
+
+    def test_user_with_disallowed_role_redirects_and_shows_no_permission_message(self):
+        self.client.login(username='otro_test', password='pwd2')
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp['Location'], reverse('N_inicio'))
+        msgs = list(get_messages(resp.wsgi_request))
+        self.assertTrue(any('no tienes permiso' in str(m).lower() or 'permiso' in str(m).lower() for m in msgs),
+                        f"Mensajes esperados, pero recibió: {[str(m) for m in msgs]}")
+
+    def test_user_with_allowed_role_gets_200(self):
+        self.client.login(username='allowed_test', password='pwd3')
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.wsgi_request.user.username, 'allowed_test')
+
+    def test_superuser_gets_200(self):
+        self.client.login(username='admin_test', password='adminpwd')
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp.wsgi_request.user.is_superuser)
+
 

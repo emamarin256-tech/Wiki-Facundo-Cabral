@@ -30,9 +30,6 @@ class ModelsTest(TestCase):
             self.rol.delete()
 
 
-
-User = get_user_model()
-
 class ViewsTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -75,7 +72,7 @@ class ViewsTest(TestCase):
         resp = self.client.get(self.f_cerrar, follow=True)
         self.assertFalse('_auth_user_id' in self.client.session)
 
-User = get_user_model()
+
 
 class UsuarioViewTest(TestCase):
     def setUp(self):
@@ -96,7 +93,7 @@ class UsuarioViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 
-User = get_user_model()
+
 
 class MiddlewareTest(TestCase):
     def setUp(self):
@@ -136,8 +133,6 @@ class MiddlewareTest(TestCase):
         self.assertEqual(resp['Accept-Ranges'], 'bytes')
 
 
-
-User = get_user_model()
 
 class SignalsTest(TestCase):
     @classmethod
