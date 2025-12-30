@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from .models import Rol, PerfilUsuario
+from .admin_forms import CustomAdminPasswordChangeForm
 from .admin_utils import DenyRedirectAdminMixin
 User = get_user_model()
 
@@ -162,15 +163,16 @@ class CustomUserAdmin(DenyRedirectAdminMixin, BaseUserAdmin):
       * no pueden crear/eliminar usuarios ni cambiar flags is_staff/is_superuser.
     """
     inlines = (PerfilUsuarioInline,)
-    change_password_form = AdminPasswordChangeForm
+    change_password_form = CustomAdminPasswordChangeForm
     filter_horizontal = ()
 
     fieldsets = (
-        (None, {"fields": ("username",)}),
+        (None, {"fields": ("username", "password")}),
         ("Información personal", {"fields": ("first_name", "last_name", "email")}),
         ("Estado", {"fields": ("is_active",)}),
         ("Fechas", {"fields": ("last_login", "date_joined")}),
     )
+
 
     add_fieldsets = (
         (None, {
@@ -263,10 +265,18 @@ class CustomUserAdmin(DenyRedirectAdminMixin, BaseUserAdmin):
 
 
     def get_readonly_fields(self, request, obj=None):
+        
+        if obj and obj.pk == request.user.pk:
+            return ("is_active",)
+
+        
         if request.user.is_superuser:
             return ()
+
         
-        return ("is_staff", "is_superuser")
+        return ("is_staff", "is_superuser", "is_active")
+
+
 
 
     def get_inline_instances(self, request, obj=None):
