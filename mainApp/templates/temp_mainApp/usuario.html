@@ -16,8 +16,9 @@
             </p>
             <p class="p_user">
                 Podes gestionar la pagina completa su contenido, usuarios, y configuraciones de los mismos desde el
-                <a href="/admin/">panel de administración.</a>
+                <a href="/admin/">panel de administración</a>. También accede al <a href="{% url "N_mantenimiento" %}">modo mantenimiento</a>.
             </p>
+
         
         {% elif request.user.perfil.rol.nombre == "Staff" %}
             <h2 class="h2_user">Staff: {{ request.user.username }}</h2>
@@ -25,7 +26,10 @@
             <p class="p_info">{{ request.user.email }}</p>
             <hr>
             <p class="p_user">
-                Como "Staff" tienes la capacidad de gestionar usuarios y contenido desde el <a href="/admin/">panel de administración.</a>
+                Como "Staff" tienes la capacidad de gestionar usuarios y contenido desde el <a href="/admin/">panel de administración</a>.
+            </p>
+            <p class="p_user">
+                También editar la estructura de la página desde el <a href="{% url "N_mantenimiento" %}">modo mantenimiento</a>.
             </p>
 
         {% elif request.user.perfil.rol.nombre == "Usuario" %}
@@ -34,9 +38,9 @@
             <p class="p_info">{{ request.user.email }}</p>
             <hr>
             <p class="p_user">
-                Como "Usuario" tienes la capacidad de editar la estructura de la página desde el modo mantenimiento.
+                Como "Usuario" tienes la capacidad de editar la estructura de la página desde el <a href="{% url "N_mantenimiento" %}">modo mantenimiento</a>.
             </p>
-
+            
         {% else %}
             <h2>Ingresante: {{ request.user.username }}</h2>
             <p class="p_info">
