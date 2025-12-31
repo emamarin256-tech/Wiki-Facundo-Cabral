@@ -5,7 +5,7 @@ from ckeditor.fields import RichTextField
 from embed_video.fields import EmbedVideoField
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.files import File
 import os
@@ -23,7 +23,18 @@ class Layout(SingletonModel):
 
     titulo = models.CharField(max_length=200, default="Mi sitio")
     logo = models.ImageField(upload_to="images/", null=True, blank=True)
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = type(self).objects.filter(pk=self.pk).first()
+            if old:
+                # Si había logo y ahora no → borrar archivo
+                if old.logo and not self.logo:
+                    borrar_fieldfile(old.logo)
+                # Si cambió el archivo → borrar el anterior
+                elif old.logo and self.logo and old.logo.name != self.logo.name:
+                    borrar_fieldfile(old.logo)
 
+        super().save(*args, **kwargs)
     def __str__(self):
         return "Layout"
     
@@ -92,6 +103,22 @@ class SubCategoria(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+        if self.pk:
+            old = type(self).objects.filter(pk=self.pk).first()
+            if old:
+                
+                if getattr(old, 'imagen', None) and not getattr(self, 'imagen', None):
+                    borrar_fieldfile(old.imagen)
+                
+                elif getattr(old, 'imagen', None) and getattr(self, 'imagen', None) and old.imagen.name != self.imagen.name:
+                    borrar_fieldfile(old.imagen)
+
+                
+                if getattr(old, 'video_file', None) and not getattr(self, 'video_file', None):
+                    borrar_fieldfile(old.video_file)
+                elif getattr(old, 'video_file', None) and getattr(self, 'video_file', None) and old.video_file.name != self.video_file.name:
+                    borrar_fieldfile(old.video_file)
+
         super().save(*args, **kwargs)
     
     def clean(self):
@@ -135,14 +162,6 @@ class Tipo(models.Model):
         return f"{self.nombre}"
 
 
-
-
-
-
-
-
-
-
 class Articulo(models.Model):
     titulo = models.CharField(max_length=100,verbose_name='Título')
     contenido = RichTextField(max_length=1000, verbose_name="Contenido")
@@ -171,6 +190,21 @@ class Articulo(models.Model):
         while Articulo.objects.filter(titulo=self.titulo).exclude(pk=self.pk).exists():
             self.titulo = f"{base_titulo} ({counter})"
             counter += 1
+        if self.pk:
+            old = type(self).objects.filter(pk=self.pk).first()
+            if old:
+                
+                if getattr(old, 'imagen', None) and not getattr(self, 'imagen', None):
+                    borrar_fieldfile(old.imagen)
+                elif getattr(old, 'imagen', None) and getattr(self, 'imagen', None) and old.imagen.name != self.imagen.name:
+                    borrar_fieldfile(old.imagen)
+
+                
+                if getattr(old, 'video_file', None) and not getattr(self, 'video_file', None):
+                    borrar_fieldfile(old.video_file)
+                elif getattr(old, 'video_file', None) and getattr(self, 'video_file', None) and old.video_file.name != self.video_file.name:
+                    borrar_fieldfile(old.video_file)
+
         super().save(*args, **kwargs)
     
     def __str__(self):     
@@ -215,5 +249,34 @@ def generar_miniatura_video_articulo(sender, instance, created, **kwargs):
 def generar_miniatura_video_subcategoria(sender, instance, created, **kwargs):
     if instance.usar_miniatura and instance.video_file and not instance.imagen:
         crear_miniatura_video(instance)   
-            
+#endregion
+
+# region fun_borrar_imagenes
+
+
+def borrar_fieldfile(fieldfile):
+    """
+    Borra un FieldFile (ImageField/FileField) de forma segura.
+    delete(save=False) usa el storage configurado (funciona con S3, GCS, local, etc).
+    """
+    try:
+        if fieldfile and getattr(fieldfile, "name", None):
+            fieldfile.delete(save=False)
+    except Exception:
+        # no romper el flujo por un fallo al borrar; opcional: loggear aquí
+        pass
+
+@receiver(post_delete, sender=Articulo)
+def borrar_archivos_articulo_al_eliminar(sender, instance, **kwargs):
+    borrar_fieldfile(getattr(instance, 'imagen', None))
+    borrar_fieldfile(getattr(instance, 'video_file', None))
+
+@receiver(post_delete, sender=SubCategoria)
+def borrar_archivos_subcategoria_al_eliminar(sender, instance, **kwargs):
+    borrar_fieldfile(getattr(instance, 'imagen', None))
+    borrar_fieldfile(getattr(instance, 'video_file', None))
+
+@receiver(post_delete, sender=Layout)
+def borrar_logo_layout_al_eliminar(sender, instance, **kwargs):
+    borrar_fieldfile(getattr(instance, 'logo', None))
 #endregion
