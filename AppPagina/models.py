@@ -1,5 +1,5 @@
 from django.db import models
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
@@ -19,7 +19,7 @@ def _generate_unique_slug(model, base_slug, exclude_pk=None):
 
 class Pagina(models.Model):
     titulo = models.CharField(verbose_name=("Título"), max_length=50)
-    contenido = RichTextField(verbose_name="contenido",blank=True, null=True)
+    contenido = CKEditor5Field('Contenido', config_name='default', blank=True, null=True)
     orden=models.IntegerField(default=0,verbose_name="Orden", validators=[MinValueValidator(0)] )
     slug = models.SlugField(unique=True, max_length=150, verbose_name="URL_SLUG", blank=True, help_text="Si se deja vacío, se generará automáticamente a partir del título.")
     publico = models.BooleanField(verbose_name="Publicado")

@@ -1,0 +1,27 @@
+
+.ck.ck-reset.ck-editor.ck-rounded-corners{
+    width: 924.211px !important ;
+}
+
+.django-ckeditor-widget {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+.ck-editor__editable {
+    min-height: 400px;
+  }
+
+ .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused),
+ .ck.ck-editor__main > .ck-editor__editable.ck-focused {
+
+  background-color: rgb(188, 159, 78) !important;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  width: 924.211px !important;
+  max-height: 400px !important;
+  overflow: scroll;
+  padding: 0px 12px !important;
+  zoom: 0.973;
+  margin: 0px;
+}
+

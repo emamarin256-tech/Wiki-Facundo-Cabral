@@ -109,20 +109,32 @@ def build_queryset_and_metadata(Modelo, search_query: str, sort_field_raw: str, 
 
 def create_modelform_with_widgets(Modelo):
     from django.forms import modelform_factory
+    from django_ckeditor_5.widgets import CKEditor5Widget
+    from django_select2.forms import Select2MultipleWidget
+
     widgets = {}
-    try:
-        from django_select2.forms import Select2MultipleWidget
-    except ImportError:
-        Select2MultipleWidget = None
+
+
+
+    
 
     for field in Modelo._meta.get_fields():
-        if getattr(field, "get_internal_type", lambda: "")() == "TextField":
-            try:
-                from ckeditor.widgets import CKEditorWidget
-                widgets[field.name] = CKEditorWidget()
-            except ImportError:
-                pass
+        # TextField → CKEditor 5
+        if (
+            getattr(field, "get_internal_type", lambda: "")() == "TextField"
+            and CKEditor5Widget is not None
+        ):
+            widgets[field.name] = CKEditor5Widget(
+                config_name="default"  # o el config que tengas definido
+            )
+
+        # ManyToMany → Select2
         elif getattr(field, "many_to_many", False) and Select2MultipleWidget is not None:
             widgets[field.name] = Select2MultipleWidget()
 
-    return modelform_factory(Modelo, fields="__all__", widgets=widgets)
+    return modelform_factory(
+        Modelo,
+        fields="__all__",
+        widgets=widgets
+    )
+

@@ -342,11 +342,13 @@ footer {
 }
 
 hr {
-  grid-column: 1 / -1;
-  display: block;
-  width: 100%;
-  margin: 10px auto;
-  border: 1px solid #826846;
+  height: 1px !important;
+  font-size: 0px !important;
+  background-color: rgb(74, 74, 74)  !important;
+  display: block !important;
+  width: 100% !important ;
+  margin: 10px auto !important;
+  border: 1px solid #826846 !important;
 }
 /* #endregion */
 
@@ -642,92 +644,30 @@ video::-webkit-media-controls-enclosure {
   height: fit-content;
 }
 
+.contART{
+  display: block;
+  padding: 10px;
+  background-color: rgb(249, 224, 155);
+  border-bottom: 1px soLid rgb(181, 133, 2);
+  border-radius: 8px;
+  height: fit-content;
+}
+
+
+
 #tablaf {
   width: fit-content;
 }
 
 /* #endregion */
 
-/* #region ckeditor */
-.django-ckeditor-widget {
-  border: 2px solid #3498db;
-  border-radius: 5px;
-  width: 100%;
-}
-/* --- Ajuste para que el editor CKEditor Tamaño y posición --- */
-.editor-ck {
-  grid-column: 1 / -1;
-  width: 100%;
-  display: block;
-}
+  /* #region ckeditor */
+  .django-ckeditor-widget {
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    width: 100%;
+  }
 
-.editor-ck .django-ckeditor-widget,
-.editor-ck .cke,
-.editor-ck .cke_inner,
-.editor-ck .cke_top,
-.editor-ck .cke_contents,
-.editor-ck .cke_bottom {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-.editor-ck iframe {
-  width: 100% !important;
-  min-height: 400px;
-  box-sizing: border-box !important;
-}
-
-.editor-ck {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-#cke_id_contenido .cke_toolbox {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: center !important;
-  align-content: flex-start !important;
-  column-gap: 4px !important;
-  row-gap: 2px !important;
-  padding: 2px !important;
-  box-sizing: border-box !important;
-}
-
-#cke_id_contenido .cke_toolbox .cke_toolbar {
-  display: inline-flex !important;
-  flex: 0 0 auto !important;
-  margin: 0 !important;
-  white-space: nowrap !important;
-  padding: 0 !important;
-}
-
-#cke_id_contenido .cke_toolbox .cke_toolbar,
-#cke_id_contenido .cke_toolbox .cke_toolbar * {
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  transition: none !important;
-  transform: none !important;
-}
-
-#cke_id_contenido .cke_toolbox .cke_button {
-  min-width: 22px !important;
-  min-height: 22px !important;
-  padding: 0 4px !important;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-#cke_id_contenido .cke_toolbox {
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.cke_combo_open {
-  opacity: 0 !important;
-}
 /* #endregion */
 
 /* #region especfico */

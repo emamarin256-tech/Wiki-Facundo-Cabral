@@ -29,6 +29,7 @@ urlpatterns = [
     path('',include('mainApp.urls')),
     path('',include('AppPagina.urls')),
     path("", include('blog.urls')),
+    path("ckeditor5/", include("django_ckeditor_5.urls")),
 ]
 
 #IMAGENES

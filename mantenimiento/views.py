@@ -1,7 +1,6 @@
 from django.db.models import Q
 from django.apps import apps
 from django.forms import modelform_factory
-from ckeditor.widgets import CKEditorWidget
 from django.views.decorators.cache import never_cache
 from django.shortcuts import render, get_object_or_404, redirect
 from django import forms

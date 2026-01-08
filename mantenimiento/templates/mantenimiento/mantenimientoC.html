@@ -43,7 +43,7 @@
             {% endwith %}
           </div>
         {% elif campo.name == 'desc' or campo.name == 'contenido' %}
-          <div class="editor-ck">{{ campo }}</div>
+          {% if modelo == 'Articulo' %}<div class="editor-art">{{ campo }}</div>{% else %}<div class="editor-ck">{{ campo }}</div>{% endif %}
         {% elif campo.name == "video_file" %}
           {% with file=instancia|attr:campo.name %}
             {% if file %}

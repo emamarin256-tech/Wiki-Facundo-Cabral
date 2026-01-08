@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ckeditor',
-    'ckeditor_uploader',
+    'django_ckeditor_5',
     'mainApp',
     'AppPagina.apps.ApppaginaConfig',
     'blog',
@@ -128,9 +127,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
 
 
 # media
@@ -142,25 +138,38 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CKEDITOR_CONFIGS = {
+# --- Reemplazar tu bloque CKEDITOR_CONFIGS / CKEDITOR_UPLOAD_PATH por este ---
+
+CKEDITOR_5_CONFIGS = {
     'default': {
+        
         'toolbar': [
-            { 'name': 'document', 'items': ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },
-            { 'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
-            { 'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt'] },
-            { 'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
-            { 'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-            { 'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize'] },
-            { 'name': 'colors', 'items': ['TextColor', 'BGColor'] },
-            { 'name': 'insert', 'items': ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Link', 'Unlink', 'Anchor'] },
-            { 'name': 'tools', 'items': ['Maximize', 'ShowBlocks', '-', 'About'] }
-        ],
-        'extraPlugins': ','.join(['colorbutton', 'font', 'justify', 'pastefromword']),
+            'heading', '|',
+            'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|',
+            'fontFamily', 'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+            'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|',
+            'alignment', '|',
+            'link', 'imageUpload', 'insertTable', 'blockQuote', 'horizontalLine', 'specialCharacters', '|',
+            'undo', 'redo', '|', 'sourceEditing'
+        ] ,
+        
+        'image': {
+            'toolbar': ['imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side'],
+        },
         'height': 500,
         'width': '100%',
-        'bodyClass': 'mi-editor',
-        'contentsCss': ['/static/css/estilosck.css'],
+
     }
 }
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_5_UPLOAD_PATH = "uploads/"  
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"  
+CKEDITOR_5_ALLOW_ALL_FILE_TYPES = False
+CKEDITOR_5_UPLOAD_FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf']
+from django.conf import settings
+# Busca directamente la carpeta dentro de tu estructura de archivos
+CKEDITOR_5_CUSTOM_CSS = "css/estilosck.css"
+
+
+
+# CKEDITOR_5_USER_LANGUAGE = True

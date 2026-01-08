@@ -1,7 +1,7 @@
 import subprocess
 from django.db import models
 from django.contrib.auth.models import User
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 from embed_video.fields import EmbedVideoField
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
@@ -164,7 +164,7 @@ class Tipo(models.Model):
 
 class Articulo(models.Model):
     titulo = models.CharField(max_length=100,verbose_name='Título')
-    contenido = RichTextField(max_length=1000, verbose_name="Contenido")
+    contenido = CKEditor5Field('Contenido', config_name='default')
     imagen = models.ImageField(verbose_name="Miniatura", upload_to="thumbnails/", blank=True, null="True")
     usar_miniatura = models.BooleanField(default=False,verbose_name="¿Usar miniatura?", help_text="Si marcás esto, indicarás si la miniatura que tenés cargada se verá o no. Si no hay una miniatura cargada, el sistema intentará obtenerla del vídeo después de guardar.")
     video_url = EmbedVideoField(blank=True, null=True,verbose_name="Video (URLS)")
