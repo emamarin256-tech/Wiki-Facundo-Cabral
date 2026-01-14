@@ -23,7 +23,6 @@
                 {% endif %}
                 <div class="campo-form">
                     {{ campo.label_tag }}
-                    {# Manejo similar a mantenimientoC.html: botones Crear / Ver para FK & M2M #}
                     {% if campo|es_manytomany %}
                         <div class="manytomany-campo">
                             {{ campo }}

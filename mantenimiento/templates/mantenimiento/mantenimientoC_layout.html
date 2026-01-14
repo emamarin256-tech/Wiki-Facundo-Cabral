@@ -1,7 +1,7 @@
 {% extends "layouts/layout.html" %}
 {% load filtro %}
 {% block contenido %}
-  <h1>Editar {{ modelo }}: {{ instancia.nombre }}</h1>
+  <h1 class="titulo">Editar {{ modelo }}: {{ instancia.nombre }}</h1>
   <form method="post" enctype="multipart/form-data" class="form-editar">
     {% csrf_token %}
     {{ form.media }}

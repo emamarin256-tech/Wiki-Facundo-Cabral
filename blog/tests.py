@@ -445,7 +445,84 @@ class BlogViewsTest(TestCase):
         url = reverse("N_articulo", args=[self.pagina_video.slug, self.articulo_noticia.id])
         response = self.client.get(url)
         self.assertRedirects(response, reverse("N_inicio"))
-        
+
+    def test_categoria_no_publica_redirige(self):
+        """
+        Si la categoría no es pública, intentar cargar su página debe redirigir a inicio.
+        """
+        # Marcar la categoría como no pública y guardar
+        self.categoria.publico = False
+        self.categoria.save()
+
+        url = reverse("N_categoria", args=[self.pagina_video.slug, self.categoria.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("N_inicio"))
+
+    def test_subcategoria_con_categoria_no_publica_redirige(self):
+        """
+        Si la categoría padre de la subcategoría no es pública, la vista de subcategoría debe impedir el acceso.
+        """
+        # Marcar la categoría como no pública
+        self.categoria.publico = False
+        self.categoria.save()
+
+        url = reverse("N_subcategoria", args=[self.pagina_video.slug, self.subcat_valida.slug])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("N_inicio"))
+
+    def test_articulo_con_categoria_no_publica_redirige(self):
+        """
+        Si la categoría del artículo no es pública, aunque el artículo sea público,
+        la vista de detalle debe impedir el acceso.
+        """
+        # Marcar la categoría como no pública
+        self.categoria.publico = False
+        self.categoria.save()
+
+        url = reverse("N_articulo", args=[self.pagina_video.slug, self.articulo_video.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("N_inicio"))
+
+    def test_listar_articulos_excluye_categoria_no_publica(self):
+        """listar_articulos debe devolver sólo artículos cuya categoría sea pública."""
+        cat_pub = Categoria.objects.create(nombre="CatPub", publico=True)
+        cat_priv = Categoria.objects.create(nombre="CatPriv", publico=False)
+        Articulo.objects.create(titulo="ArtPub", publico=True, categoria=cat_pub, usuario=self.user)
+        Articulo.objects.create(titulo="ArtPriv", publico=True, categoria=cat_priv, usuario=self.user)
+
+        qs = Articulo.objects.filter(publico=True, categoria__publico=True)
+        titulos = [a.titulo for a in qs]
+
+        self.assertIn("ArtPub", titulos)
+        self.assertNotIn("ArtPriv", titulos)
+
+
+    def test_validacion_subcategoria_falla_si_categoria_no_publica(self):
+        """
+        validacion_subcategoria debe considerar la visibilidad del padre:
+        si la categoría padre NO es pública, la subcategoría no debe contarse como válida
+        aunque la subcategoria sea pública o tenga artículos en esa categoría.
+        """
+        # usamos la página y tipo ya creados en setUp (self.pagina_video / self.user)
+        pagina = self.pagina_video
+        # categoría no pública asociada a la página
+        cat = Categoria.objects.create(nombre="CatNoPub", publico=False)
+        cat.paginas.add(pagina)
+
+        sub = SubCategoria.objects.create(nombre="SubConPadreNoPub", categoria=cat, publico=True)
+        Articulo.objects.create(
+            titulo="ArtEnSub",
+            subcategoria=sub,
+            categoria=cat,
+            tipo=pagina.tipo,
+            publico=True,
+            usuario=self.user
+        )
+
+        from .views import validacion_subcategoria
+        self.assertFalse(validacion_subcategoria(sub, pagina))
+
+
         
 # ==========================
 # TEST CONTEXT PROCESSOR

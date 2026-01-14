@@ -3,9 +3,9 @@
 {% load embed_video_tags %}
 {% block contenido %}
   {% if modelo == 'Articulo' %}
-    <h1>Editar {{ modelo }}: {{ instancia.titulo }}</h1>
+    <h1 class="titulo">Editar {{ modelo }}: {{ instancia.titulo }}</h1>
   {% else %}
-    <h1>Editar {{ modelo }}: {{ instancia.nombre }}</h1>
+    <h1 class="titulo">Editar {{ modelo }}: {{ instancia.nombre }}</h1>
   {% endif %}
   <h4>{{ instancia.descripcion_modelo }}</h4>
   {% if form.non_field_errors %}
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const btnEliminar = document.querySelector('button[name="accion"][value="eliminar"]');
   if (btnEliminar) {
     btnEliminar.addEventListener("click", function(event) {
-      const confirmado = confirm("¿Estás seguro que querés eliminar este artículo?");
+      const confirmado = confirm("¿Estás seguro que querés eliminar este artículo? Se eliminarán todas las dependencias asociadas.");
       if (!confirmado) {
         event.preventDefault(); // cancela el envío del formulario
       }

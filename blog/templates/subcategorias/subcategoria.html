@@ -38,7 +38,7 @@
       {% if v_subcategoria.categoria %}
         <a class="volver volver-top-b"
            href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoria.categoria.id %}">
-          ← Volver a {{ v_subcategoria.categoria.nombre }}
+          ← Volver
         </a>
       {% endif %}
     </div>
@@ -50,7 +50,7 @@
     {% if v_subcategoria.categoria %}
       <a class="volver"
          href="{% url "N_categoria" request.resolver_match.kwargs.Pagina_slug v_subcategoria.categoria.id %}">
-        ← Volver a {{ v_subcategoria.categoria.nombre }}
+        ← Volver
       </a>
     {% endif %}
   </div>

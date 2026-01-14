@@ -107,7 +107,7 @@ nav ul li span {
   display: flex;
   align-items: center;
   height: 40px;
-  padding: 0 15px;
+  padding: 2px 15px;
   color: rgb(249, 136, 155);
   text-decoration: none;
   text-shadow: 0.5px 0.5px 0px rgb(48, 26, 17);
@@ -168,6 +168,22 @@ nav ul li:hover .menu_desplegable {
   border: 3px solid #341a00;
   border-color: #ff9999;
 }
+
+/* lista desplegable */
+ul.menu_desplegable {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 9999;      /* más alto que el header/otros */
+  overflow: visible;  /* que no lo recorte */
+}
+
+/* si el enlace debe sobresalir al hacer hover */
+ul.menu_desplegable li a:hover {
+  position: relative;
+  z-index: 10000;
+}
+
 .solo_vista {
   cursor: default;
 }
@@ -202,6 +218,9 @@ nav ul li:hover .menu_desplegable {
   margin-bottom: 10px;
   margin-top: 0px;
   cursor: default;
+  white-space: normal; /* permite saltos de línea */
+  overflow-wrap: anywhere; /* rompe palabras muy largas sin espacios */
+  word-break: break-word; /* compatibilidad adicional */
 }
 
 .art_item {
@@ -217,27 +236,24 @@ nav ul li:hover .menu_desplegable {
   height: fit-content;
 }
 .art_img {
+  float: none;
+  flex: 0 0 150px;
   max-width: 150px;
-  width: 100%;
-  height: 80%;
-  float: right;
+  width: 150px;
+  height: auto;
   overflow: hidden;
-  border-radius: 5px;
-  transition: 0.5s;
 }
 
 .art_img img {
-  max-width: 150px;
   width: 100%;
-  height: 80%;
+  height: auto;
   object-fit: cover;
   display: block;
 }
-.art_img:hover {
-  transform: scale(1.05);
-}
+
 .art_datos {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   padding-left: 15px;
   display: flex;
   flex-direction: column;
@@ -245,24 +261,34 @@ nav ul li:hover .menu_desplegable {
 
 .enlace {
   display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.enlace a {
-  font-size: 30px;
-  text-decoration: none;
-  color: inherit;
-  margin-bottom: 5px;
-  text-decoration-color: #ff9999;
-  transition: 0.3s;
-}
+
 .enlace p {
+  margin: 0;
   font-size: 30px;
+  flex: 0 0 auto;
+  min-width: 0;
+  color: rgb(45, 45, 45);
+  white-space: normal;
   margin-right: 8px;
+}
+
+.enlace a {
+  margin: 0;
+  font-size: 30px;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
   text-decoration: none;
-  color: inherit;
-  margin-bottom: 5px;
-  text-decoration-color: #ff9999;
+  color: rgb(249, 136, 155);
+  text-shadow: 1px 0.5px 0px rgb(48, 26, 17);
   transition: 0.3s;
 }
+
 .enlace a:hover {
   text-shadow: 0.5px 0.5px 0px rgb(245, 119, 140);
   text-decoration-line: underline;
@@ -270,6 +296,12 @@ nav ul li:hover .menu_desplegable {
   text-decoration-style: solid;
   text-decoration-thickness: 3px;
   text-underline-offset: 10px;
+}
+
+.art_datos h2,
+.art_datos p {
+  width: auto !important;
+  max-width: 100%;
 }
 .art_contenido_p {
   display: inline-block;
@@ -297,6 +329,9 @@ p {
   margin-bottom: 5px;
   text-decoration-color: #ff9999;
   transition: 0.3s;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .subcategoria:hover {
@@ -344,7 +379,7 @@ footer {
 hr {
   height: 1px !important;
   font-size: 0px !important;
-  background-color: rgb(74, 74, 74)  !important;
+  background-color: rgb(74, 74, 74) !important;
   display: block !important;
   width: 100% !important ;
   margin: 10px auto !important;
@@ -617,14 +652,22 @@ video::-webkit-media-controls-enclosure {
   margin: auto 0;
 }
 .art_1_info a {
-  color: lightcoral !important;
-  text-shadow: 1px 1px 0px rgb(48, 26, 17);
-  text-decoration: none;
-  font-size: 18px;
-  background-color: rgba(255, 208, 146, 0.664);
-  padding: 3px;
-  border-radius: 0.3rem;
-  transition: 0.5s;
+    color: lightcoral !important;
+    text-shadow: 1px 1px 0px rgb(48, 26, 17);
+    text-decoration: none;
+    font-size: 18px;
+    background-color: rgba(255, 208, 146, 0.664);
+    padding: 3px;
+    margin-right: 5px;
+    transition: 0.5s;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    word-break: break-word;
+    display: inline-block;
+    border-radius: 10px;
+    overflow: hidden;
+    background-clip: padding-box;
 }
 .art_1_info a:hover {
   text-decoration: none;
@@ -644,7 +687,7 @@ video::-webkit-media-controls-enclosure {
   height: fit-content;
 }
 
-.contART{
+.contART {
   display: block;
   padding: 10px;
   background-color: rgb(249, 224, 155);
@@ -653,20 +696,18 @@ video::-webkit-media-controls-enclosure {
   height: fit-content;
 }
 
-
-
 #tablaf {
   width: fit-content;
 }
 
 /* #endregion */
 
-  /* #region ckeditor */
-  .django-ckeditor-widget {
-    border: 2px solid #3498db;
-    border-radius: 5px;
-    width: 100%;
-  }
+/* #region ckeditor */
+.django-ckeditor-widget {
+  border: 2px solid #3498db;
+  border-radius: 5px;
+  width: 100%;
+}
 
 /* #endregion */
 
@@ -863,6 +904,9 @@ video::-webkit-media-controls-enclosure {
 }
 .modelo-nombre {
   font-size: 19px;
+  white-space: normal;       
+  overflow-wrap: anywhere;   
+  word-break: break-word;    
 }
 .modelo-item {
   display: flex;
@@ -1665,3 +1709,77 @@ input[type="checkbox" i] {
 }
 
 /* #endregion */
+
+.art_img {
+  float: none;
+  flex: 0 0 150px;
+  max-width: 150px;
+  width: 150px;
+  height: auto;
+  overflow: hidden;
+  transition: 0.3s;
+  border-radius: 0.3rem;
+}
+.art_img:hover{
+  transform: scale(1.05);
+}
+
+.art_img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.art_datos {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.enlace {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.enlace p {
+  margin: 0;
+  font-size: 30px;
+  flex: 0 0 auto;
+  min-width: 0;
+  color: rgb(45, 45, 45);
+  white-space: normal;
+  margin-right: 8px;
+}
+
+.enlace a {
+  margin: 0;
+  font-size: 30px;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-decoration: none;
+  color: rgb(249, 136, 155);
+  text-shadow: 1px 0.5px 0px rgb(48, 26, 17);
+  transition: 0.3s;
+}
+
+.enlace a:hover {
+  text-shadow: 0.5px 0.5px 0px rgb(245, 119, 140);
+  text-decoration-line: underline;
+  text-decoration-color: #ff9999;
+  text-decoration-style: solid;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 10px;
+}
+
+.art_datos h2,
+.art_datos p {
+  width: auto !important;
+  max-width: 100%;
+}

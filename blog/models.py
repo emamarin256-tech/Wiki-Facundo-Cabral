@@ -134,10 +134,8 @@ class SubCategoria(models.Model):
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True,max_length=150,help_text="Si se deja vacío, se generará automáticamente a partir del nombre.")
-    publico = models.BooleanField(default=True)
     creacion = models.DateTimeField(auto_now_add=True)
     usuario = models.ForeignKey(User, verbose_name="Usuario",editable=False ,on_delete=models.CASCADE,null=True)
-    
     descripcion_modelo = """Los tipos relacionan las páginas con los artículos"""
     class Meta:
         verbose_name = "Tipo"

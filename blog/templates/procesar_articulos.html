@@ -2,7 +2,7 @@
     <article class="art_item">
         {% if art.usar_miniatura %}
             <div class="art_img">
-                <a href="{% url "N_articulo" request.resolver_match.kwargs.Pagina_slug art.id %}">
+                <a class="art_img_b" href="{% url "N_articulo" request.resolver_match.kwargs.Pagina_slug art.id %}">
                     {% if art.imagen %}
                         <img src="{{ art.imagen.url }}" alt="{{ art.titulo }}">
                     {% elif art.video_url %}
@@ -26,7 +26,6 @@
             {% endfor %}
         </div>
         <span>{{ art.creacion }}</span>
-        <br>
     </div>
 </article>
 {% endfor %}
