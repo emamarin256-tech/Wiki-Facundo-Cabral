@@ -1,0 +1,494 @@
+[
+{
+  "model": "blog.layout",
+  "pk": 1,
+  "fields": {
+    "titulo": "Wiki | Facundo Cabral",
+    "logo": "images/Facundoysara.jfif"
+  }
+},
+{
+  "model": "blog.subcategoria",
+  "pk": 9,
+  "fields": {
+    "nombre": "Entre dios y el diablo",
+    "desc": "Confía en tí y esa energía te llevará al amor, que te confirmará que estás en contacto con Dios, que no es ni bueno ni malo, que son inventos de los humanos, que es lisa y llanamente Dios, es decir el padre de todo, por eso hace lo que quiere.",
+    "categoria": 3,
+    "slug": "entre-dios-y-el-diablo",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/JblNWi5ceOc?si=TZSoN9cboWYJMnUN",
+    "video_file": "",
+    "publico": true,
+    "creacion": "2025-09-30T18:53:38.343Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "blog.subcategoria",
+  "pk": 11,
+  "fields": {
+    "nombre": "Lima 1987",
+    "desc": "En 1987 llega al país un \"anónimo cantante\" argentino para la promoción de su \"primer cassette\".  Precedido de la fama de la otrora inmortal Mercedes Sosa y Atahualpa Yupanqui, Facundo llega a Lima para abrirse un espacio y posicionar su nombre.",
+    "categoria": 1,
+    "slug": "lima-1987",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/R7f0zavaF4k?si=3_2Ga7sMtgMgD-A6",
+    "video_file": "",
+    "publico": true,
+    "creacion": "2025-10-24T22:10:45.443Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "blog.subcategoria",
+  "pk": 12,
+  "fields": {
+    "nombre": "Quito 2004",
+    "desc": "Recital grabado en Quito en 2004 durante las celebraciones de la Semana de la Comunidad Andina, la Fiesta de Bolívar, organizada por el Parlamento Andino en coordinación con los municipios de Guayaquil, Quito y Cuenca.",
+    "categoria": 1,
+    "slug": "quito-2004",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/iNHMFcJB214?si=dEPKy96bi4AWpA79",
+    "video_file": "",
+    "publico": true,
+    "creacion": "2025-10-24T22:47:22.741Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "blog.subcategoria",
+  "pk": 16,
+  "fields": {
+    "nombre": "Ferrocabral 2",
+    "desc": "Hoy 9 de Julio, a 11 años de la \"mudanza\" de Facundo, lo recordamos parafraseando lo que alguna vez nos dijo acerca de la muerte: \"...no lo perdimos, quien murió se nos adelantó, porque para allá vamos todos, y lo mejor de él, su amor, vivirá en nosotros\"",
+    "categoria": 3,
+    "slug": "ferrocabral-2",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://www.youtube.com/watch?v=bz5mcagAK6Y&list=RDbz5mcagAK6Y&start_radio=1",
+    "video_file": "",
+    "publico": true,
+    "creacion": "2026-01-15T00:01:19.929Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "blog.subcategoria",
+  "pk": 17,
+  "fields": {
+    "nombre": "Entrevista a Facundo Cabral, Jesús Quintero - Facundo Cabral",
+    "desc": "Jesús Quintero fue un periodista, director y presentador de radio y televisión en España. Su programa El perro verde se caracterizaba por la sobriedad del conductor: con intervenciones mínimas, dejaba que fuera el invitado el protagonista.",
+    "categoria": 13,
+    "slug": "entrevista-a-facundo-cabral-jesus-quintero-facundo-cabral",
+    "imagen": "thumbnails/17_thumb.jpg",
+    "usar_miniatura": true,
+    "video_url": null,
+    "video_file": "videos/Entrevista_a_Facundo_Cabral__Jesús_Quintero_-_Facundo_Cabral720P_HD.mp4",
+    "publico": true,
+    "creacion": "2026-01-15T19:19:20.058Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 5,
+  "fields": {
+    "titulo": "Vuele bajo",
+    "contenido": "<div style=\"margin-left:auto; margin-right:auto\">\r\n<p style=\"text-align:center\">No crezca mi ni&ntilde;o, no crezca jam&aacute;s<br />\r\nLos grandes al mundo le hacen mucho mal<br />\r\n<br />\r\nEl hombre ambiciona cada d&iacute;a m&aacute;s<br />\r\nY pierde el camino por querer volar<br />\r\n<br />\r\nVuele bajo porque abajo<br />\r\nEsta la verdad<br />\r\nEsto es algo que los hombres<br />\r\nNo aprenden jam&aacute;s<br />\r\n<br />\r\nPor correr el hombre no puede pensar<br />\r\nQue ni el mismo sabe para adonde va<br />\r\n<br />\r\nSigue siendo ni&ntilde;o y en paz dormir&aacute;s<br />\r\nSin guerras ni maquinas de calcular<br />\r\n<br />\r\nVuele bajo...(estibo)<br />\r\n<br />\r\nDios quiera que el hombre pudiera volver<br />\r\nA ser ni&ntilde;o un d&iacute;a para comprender<br />\r\n<br />\r\nQue esta equivocado si piensa encontrar<br />\r\nCon una escopeta la felicidad</p>\r\n</div>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/npniCOMhYkc?si=KoUY06vq3LXevDn8",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 11,
+    "tipo": 1,
+    "creacion": "2025-09-17T19:08:31.744Z",
+    "ultima_modificacion": "2025-10-24T22:41:20.569Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 6,
+  "fields": {
+    "titulo": "No estas deprimido, estas distraído",
+    "contenido": "<p>No estamos deprimidos sino distra&iacute;dos de la vida que nos puebla y nos rodea con millones de propuestas. Si estuvi&eacute;ramos atentos al presente, que es donde sucede la vida porque el pasado fue y el futuro nunca ser&aacute;, vivir&iacute;amos esta vida como lo que es: una aventura constante. Por eso debemos estar siempre atentos porque todo sucede a cada instante.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/vpkPykEEjnQ?si=MnQQpViJUq_LiL8H",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 4,
+    "subcategoria": null,
+    "tipo": 2,
+    "creacion": "2025-09-17T19:21:48.622Z",
+    "ultima_modificacion": "2025-12-03T18:27:25.508Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 16,
+  "fields": {
+    "titulo": "No soy de aquí ni soy de allá",
+    "contenido": "<p>Me gusta el sol, Alicia y las palomas el buen cigarro y la guitarra espa&ntilde;ola saltar paredes y abrir las ventanas y cuando llora un mujer. Me gusta el vino tanto como las flores y los conejos, y los viejos pastores el pan casero y la voz de Dolores y el mar moj&aacute;ndome los pies. No soy de aqu&iacute;, ni soy de all&aacute; no tengo edad, ni porvenir y ser feliz es mi color de identidad. Despu&eacute;s de andar las maravillas del mundo no hay nada como regresar a la patria y compartir la libertad que mi gente tan cara tuvo que pagar.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/OJyOgv5zhKs?si=2scNY3zIlFOnZNTW",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 1,
+    "subcategoria": 11,
+    "tipo": 1,
+    "creacion": "2025-10-24T22:20:16.776Z",
+    "ultima_modificacion": "2025-10-24T22:20:16.776Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 17,
+  "fields": {
+    "titulo": "Entrevista en Lima (1987)",
+    "contenido": "<p>&quot;Estamos trabajando en lo que va a ser un pulm&oacute;n para latino am&eacute;rica.&quot;</p>\r\n\r\n<p>&quot;Estamos teniendo datos de sobra de que indudablemente las fuerzas armadas van a dejar de ser el c&aacute;ncer de la humanidad.&quot;</p>\r\n\r\n<p>&quot;La canci&oacute;n siempre es un adelanto de lo que el pueblo quiere, sale adelante el poeta, propone, el pueblo concreta, y esa es parte de nuestra tarea.&quot;<br />\r\nSon algunas de las frases dichas por Facundo en esta entrevista, que se centra en un debate humanista, sobre el futuro de las sociedades y el despertar de la conciencia de los pueblos de la tierra.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/sJ5UyKYgqUQ?si=4-0uSpuquLKNU6Q2",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 1,
+    "subcategoria": 11,
+    "tipo": 3,
+    "creacion": "2025-10-24T22:25:11.312Z",
+    "ultima_modificacion": "2025-10-24T22:34:26.377Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 18,
+  "fields": {
+    "titulo": "Me dijeron por ahí",
+    "contenido": "<p>[Letra] : Dice el gaucho de La Pampa donde comenc&eacute; a cantar, que cuando el caballo es de uno no lo tenemos que atar. Una tarde Mexicana me dijo Laura Esquivel, a la mesa y al cama s&oacute;lo se llama una vez. En la Sierra Tarahumara a una ni&ntilde;a le escuch&eacute;, pa&#39; que voy a tener hambre si no tengo que comer. Al costado de Florencia un Jesuita me ense&ntilde;&oacute;, que es mejor que uno no pida aquello que nunca dio. Los gitanos de Sevilla nunca dejan de cantar, que es mejor gastarse andando que cuidarse en un lugar. Por el mundo caminado he podido comprobar que el que facilmente halaga facilmente insultar&aacute;. Dicen los hombres Barbados del desierto del N&eacute;guev, que aunque uno est&eacute; dormido no deja de amanecer. En la India milenaria de los viejos aprend&iacute;, que s&oacute;lo aqu&eacute;l que ha vivido tiene derecho a morir. Por el tiempo que he vivido yo les puedo asegurar, que el amor nunca se muere s&oacute;lo cambia de lugar.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/y1SewJfWjuQ?si=svMCgNi9_AcnncSp",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 1,
+    "subcategoria": 12,
+    "tipo": 1,
+    "creacion": "2025-10-24T23:04:47.798Z",
+    "ultima_modificacion": "2025-10-24T23:16:47.428Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 19,
+  "fields": {
+    "titulo": "Este es un nuevo día",
+    "contenido": "<p>Este es un nuevo d&iacute;a para empezar de nuevo para buscar al &aacute;ngel que me crece los sue&ntilde;os. Para cantar para re&iacute;r para volver a ser feliz. En este nuevo d&iacute;a yo dejar&eacute; al espejo y tratar&eacute; de ser por fin un hombre nuevo. De cara al sol caminar&eacute; y con la luna volar&eacute;.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/HBzb2TJ4hio?si=0yZlzUYOjrBD_ibS",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 1,
+    "subcategoria": 12,
+    "tipo": 1,
+    "creacion": "2025-10-24T23:05:39.652Z",
+    "ultima_modificacion": "2025-10-24T23:05:39.652Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 20,
+  "fields": {
+    "titulo": "La libertad",
+    "contenido": "<p>&nbsp;</p>\r\n\r\n<p>&quot;Como no tengo una mujer vivo con todas y como no tengo una casa vivo en el mundo. No necesito automovil ni yate porque lo tienen mis amigos, es decir, soy un vagabundo first class. No tengo que preocuparme por los pobres porque para eso est&aacute; la iglesia, ni preocuparme por los ricos porque para eso est&aacute; el gobierno. Nadie me obliga a ir de compras o de vacaciones, no tengo que estar atento ni a la bolsa de Hong Kong ni a la moda de Par&iacute;s. Lo que quiere decir que encontr&eacute; el secreto, tener menos para tenerme m&aacute;s.&quot;</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/3pIqdzEvgnU?si=jq3jxMZrk-csDgAa",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 1,
+    "subcategoria": 12,
+    "tipo": 3,
+    "creacion": "2025-10-24T23:08:38.231Z",
+    "ultima_modificacion": "2025-10-24T23:08:38.231Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 21,
+  "fields": {
+    "titulo": "Tío Pedro",
+    "contenido": "<p>Mon&oacute;logo de humor de Facundo Cabral durante las celebraciones de la Semana de la Comunidad Andina en Quito, Ecuador (2004).</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/MWDZxPYj5ec?si=T4g1k5i-v7UTSTVH",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 1,
+    "subcategoria": 12,
+    "tipo": 3,
+    "creacion": "2025-10-24T23:09:35.668Z",
+    "ultima_modificacion": "2025-10-24T23:09:35.668Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 22,
+  "fields": {
+    "titulo": "Entre dios y el Diablo",
+    "contenido": "<p>Material extradio del canal: &quot; johnconnor4376 &quot;</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/spHk7yEnJRM?si=XDq-CdtQj8H0Fu-8",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 9,
+    "tipo": 1,
+    "creacion": "2025-10-24T23:31:40.016Z",
+    "ultima_modificacion": "2025-10-24T23:34:11.773Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 23,
+  "fields": {
+    "titulo": "Jesús a vuelto a la Tierra",
+    "contenido": "<p>Material extraido del canal:&nbsp; &quot; laloescalante2897 &quot;</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/ZszwkkAfo7M?si=mqtZeVscet99bgS_",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 9,
+    "tipo": 1,
+    "creacion": "2025-10-24T23:33:39.668Z",
+    "ultima_modificacion": "2025-10-24T23:33:39.668Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 24,
+  "fields": {
+    "titulo": "Los hijos del padre de la flor",
+    "contenido": "<p>Material extraido del canal de Youtube:&nbsp; &quot; @estudioplatea01 &quot;</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/Eax818Wodys?si=nv0nKcc0p7ptZDnu",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 9,
+    "tipo": 1,
+    "creacion": "2025-10-25T01:08:57.755Z",
+    "ultima_modificacion": "2025-10-25T01:08:57.755Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 27,
+  "fields": {
+    "titulo": "Levántate y Anda",
+    "contenido": "<p>&quot;Levantate y anda. Deja la cama donde te duermes con la multitud, y sal a caminar por ti mismo, es decir por lo &uacute;nico verdadero, es decir por la vida. Entonces, despierto, bendecir&aacute;s a todos con tu alegr&iacute;a. Deja la parasitaria tribuna y entra a la cancha a jugar tu partido, deja de complicarte y complicar, detente y comprobar&aacute;s que el sentido de la vida est&aacute; en ella misma. Puedes llamar a cada cosa como quieras, pero todas las cosas, principalmente las que ni vemos ni siquiera sospechamos, conforman este luminoso misterio que llamamos vida.&quot; Un texto de Facundo Cabral, narrado con su propia voz.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/9AjJRlvs78E?si=pnmh7ER12ONB94X3",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 4,
+    "subcategoria": null,
+    "tipo": 2,
+    "creacion": "2025-12-03T18:26:47.703Z",
+    "ultima_modificacion": "2025-12-03T18:26:47.703Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 28,
+  "fields": {
+    "titulo": "Algunas Anécdotas y Muchas Reflexiones",
+    "contenido": "<p>Facundo nos lleva en un viaje hacia el autoconocimiento y la reflexi&oacute;n a trav&eacute;s de sus pensamientos y an&eacute;cdotas personales, como lo fueron su encuentro con dos de las figuras m&aacute;s influyentes en su vida: la Madre Teresa de Calcuta y Jorge Luis Borges. En este audiolibro, Facundo nos muestra c&oacute;mo la vida puede ser una fuente constante de inspiraci&oacute;n y aprendizaje, invit&aacute;ndonos a reflexionar sobre nuestra propia existencia.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/jaDd8HNGs2c?si=eaS788Z8ZiOjh8J8",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 4,
+    "subcategoria": null,
+    "tipo": 2,
+    "creacion": "2025-12-03T18:30:36.912Z",
+    "ultima_modificacion": "2025-12-03T18:30:36.912Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 29,
+  "fields": {
+    "titulo": "Partida (Corre, Corre Jesús)",
+    "contenido": "<p>Introducción al disco, y la popular canción \"Corre, Corre Jesús\"</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/_8PxpazxwkQ?si=mwqprZ6Q4SJTD6qS",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 1,
+    "creacion": "2026-01-09T21:03:41.879Z",
+    "ultima_modificacion": "2026-01-15T01:18:32.511Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 30,
+  "fields": {
+    "titulo": "Estaciones de la Fama y el Amor (Después de Todo y Antes que Nada)",
+    "contenido": "<p>Segunda sección del disco, luego de la introducción.</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/_hToT_EFrbA?si=XlSyBd9yPkbR88Or",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 1,
+    "creacion": "2026-01-09T21:05:34.896Z",
+    "ultima_modificacion": "2026-01-15T01:18:16.535Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 31,
+  "fields": {
+    "titulo": "Estación del pueblo",
+    "contenido": "<p>Pequeño monólogo luego de \"Estaciones de la Fama y el Amor (Después de Todo y Antes que Nada)\"</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/RfqGAG2iPC8?si=vx6xioRtDQyeUim1",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 3,
+    "creacion": "2026-01-09T21:09:29.536Z",
+    "ultima_modificacion": "2026-01-15T01:19:39.527Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 32,
+  "fields": {
+    "titulo": "Estación del Encuentro (Si el Hombre es lo que Ama)",
+    "contenido": "<p style=\"text-align:center;\">Si el hombre es lo que ama Si el hombre es lo que ama Yo soy entre muchas cosas Los duendes de la guitarra, los fantasmas de la copla El vino con los amigos, las madrugadas con lluvia Las mañanas de mi madre y la tarde en la llanura Si el hombre es lo que ama Si el hombre es lo que ama Yo soy entre muchas cosas La primavera en el sur, los caballos, las gaviotas La esperanza que me empuja a vivir todos los días El horizonte, el sol y la invencible alegría El señor no te preguntará qué hiciste con el dinero Sino qué hiciste con la alegría inevitable para vivir Si al hombre se lo conoce Si al hombre se lo conoce Por todo aquello que ama A mí me conocerán por el fuego y la montaña Por el invicto silencio, por la libertad sagrada Por la sublime locura de hacer lo que tengo ganas Si al hombre se lo conoce Si al hombre se le conoce Por todo aquello que ama A mí me conocerán por la magia de la pampa Por Atahualpa Yupanqui, la milonga y Néstor Feria Más nunca sabrán de mí, tanto como por Teresa Sí, señor Gracias</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/4-C0XD9p2EA?si=8eNISbRSgqp9E92m",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 1,
+    "creacion": "2026-01-09T21:15:18.585Z",
+    "ultima_modificacion": "2026-01-15T01:40:33.903Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 33,
+  "fields": {
+    "titulo": "Estación de la Paz y la Soledad",
+    "contenido": "<p>Monologo en Ferrocabral 2</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/QlZN_giVjsI?si=R0u87TYBPfU4i9vs",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 3,
+    "creacion": "2026-01-15T01:24:39.937Z",
+    "ultima_modificacion": "2026-01-15T01:35:28.079Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 34,
+  "fields": {
+    "titulo": "Tren Fantasma (Por Hombre)",
+    "contenido": "<p>Canción \"Por hombre\" entre un breve monólogo</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/AoCIGJBvy-k?si=T9iOMG_pWHeGX3yy",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 1,
+    "creacion": "2026-01-15T01:27:49.720Z",
+    "ultima_modificacion": "2026-01-15T01:31:22.541Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 35,
+  "fields": {
+    "titulo": "Plaza de Mayo y Estación de la Ignorancia (Este es un Nuevo Día)",
+    "contenido": "<p><span style=\"color:rgb(31,31,31);\">A través de la metáfora del amanecer y el <strong>nuevo día</strong>, Cabral nos recuerda que siempre hay una oportunidad para la redención y la felicidad, independientemente de las circunstancias pasadas. La canción es un himno a la resiliencia humana y a la capacidad de reinventarse a uno mismo.</span></p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/EFu6jlRq-pY?si=RnF2Y3XKuSlChwVe",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 1,
+    "creacion": "2026-01-15T01:29:52.489Z",
+    "ultima_modificacion": "2026-01-15T01:29:52.489Z"
+  }
+},
+{
+  "model": "blog.articulo",
+  "pk": 36,
+  "fields": {
+    "titulo": "Estación de La Recoleta y Chacarita (Valía La Pena)",
+    "contenido": "<p>Canción \"Valía la Pena\" entre un breve monólogo. Cierre del disco</p>",
+    "imagen": "",
+    "usar_miniatura": true,
+    "video_url": "https://youtu.be/sCnI3airMXE?si=mgSgy01VVIdGYE76",
+    "video_file": "",
+    "publico": true,
+    "usuario": 1,
+    "categoria": 3,
+    "subcategoria": 16,
+    "tipo": 1,
+    "creacion": "2026-01-15T01:34:10.110Z",
+    "ultima_modificacion": "2026-01-15T01:34:10.110Z"
+  }
+}
+]

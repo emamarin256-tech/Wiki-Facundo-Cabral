@@ -1,0 +1,60 @@
+[
+{
+  "model": "blog.categoria",
+  "pk": 1,
+  "fields": {
+    "nombre": "Shows",
+    "desc": "Shows grabados en vivo, de Facundo Cabral",
+    "creacion": "2025-09-03T18:03:49.756Z",
+    "publico": true,
+    "usuario": 1,
+    "paginas": [
+      21,
+      3
+    ]
+  }
+},
+{
+  "model": "blog.categoria",
+  "pk": 3,
+  "fields": {
+    "nombre": "Álbumes",
+    "desc": "Discos producidos de Facundo Cabral",
+    "creacion": "2025-09-05T19:34:22.827Z",
+    "publico": true,
+    "usuario": 1,
+    "paginas": [
+      21,
+      3
+    ]
+  }
+},
+{
+  "model": "blog.categoria",
+  "pk": 4,
+  "fields": {
+    "nombre": "Audiolibros",
+    "desc": "Contenido subido a las redes sociales de Facundo Cabral",
+    "creacion": "2025-09-05T19:43:40.149Z",
+    "publico": true,
+    "usuario": null,
+    "paginas": [
+      4
+    ]
+  }
+},
+{
+  "model": "blog.categoria",
+  "pk": 13,
+  "fields": {
+    "nombre": "Otros",
+    "desc": "Aquí podrás encontrar material extraído de programas de televisión, casetes y demás filmaciones.",
+    "creacion": "2026-01-15T18:56:26.462Z",
+    "publico": true,
+    "usuario": 1,
+    "paginas": [
+      3
+    ]
+  }
+}
+]

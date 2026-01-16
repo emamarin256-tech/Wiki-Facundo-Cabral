@@ -1,0 +1,32 @@
+[
+{
+  "model": "blog.tipo",
+  "pk": 1,
+  "fields": {
+    "nombre": "Cancion",
+    "slug": "canciones",
+    "creacion": "2025-09-15T23:21:11.729Z",
+    "usuario": null
+  }
+},
+{
+  "model": "blog.tipo",
+  "pk": 2,
+  "fields": {
+    "nombre": "Libro",
+    "slug": "libros",
+    "creacion": "2025-09-16T19:44:16.069Z",
+    "usuario": null
+  }
+},
+{
+  "model": "blog.tipo",
+  "pk": 3,
+  "fields": {
+    "nombre": "Monologo/Entrevista",
+    "slug": "monologos-entrevistas",
+    "creacion": "2025-09-16T19:44:50.906Z",
+    "usuario": null
+  }
+}
+]

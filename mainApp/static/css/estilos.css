@@ -585,7 +585,9 @@ video::-webkit-media-controls-enclosure {
   margin-bottom: 8px;
   color: #333;
 }
-
+p.descrip{
+  padding: 4px;
+}
 .video-info .titulo {
   margin-top: 0px;
   display: inline-block;

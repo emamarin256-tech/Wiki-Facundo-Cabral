@@ -1,0 +1,82 @@
+[
+{
+  "model": "AppPagina.pagina",
+  "pk": 3,
+  "fields": {
+    "titulo": "Monólogos/Entrevistas",
+    "contenido": "<p>&nbsp;</p>",
+    "orden": 3,
+    "slug": "monologos-entrevistas",
+    "publico": true,
+    "tipo": 3,
+    "es_inicio": false,
+    "creacion": "2025-09-05T19:11:26.095Z",
+    "modificacion": "2026-01-08T23:52:47.226Z",
+    "usuario": null
+  }
+},
+{
+  "model": "AppPagina.pagina",
+  "pk": 4,
+  "fields": {
+    "titulo": "Libros",
+    "contenido": "<h2 style=\"text-align:center\">En esta secci&oacute;n enontraras las obras literarias de Facundo Cabral tanto en formato &quot;Audiolibro&quot; (Categoria: &quot;Audiolibro&quot;) y en formato PDF</h2>\r\n\r\n<h2>Obra literaria</h2>\r\n\r\n<p>De su obra literaria, Cabral mencion&oacute; en alguna ocasi&oacute;n que hab&iacute;a escrito alrededor de 22 libros &quot;sin t&iacute;tulos y sin autor&quot;, que eran considerados por &eacute;l como textos manuscritos que se editaban y se imprim&iacute;an. Tambi&eacute;n afirmaba que exist&iacute;an traducciones en&nbsp;chino mandar&iacute;n&nbsp;o&nbsp;japon&eacute;s.​ Por ello, la siguiente es una lista incompleta de sus obras en el campo literario.</p>\r\n\r\n<ul>\r\n\t<li>Para&iacute;so a la deriva <a href=\"https://www.folkloretradiciones.com.ar/literatura/Paraiso%20a%20la%20deriva.pdf\" style=\"text-decoration:none;\">(Disponible pdf)</a></li>\r\n\t<li>Conversaciones con Facundo Cabral</li>\r\n\t<li>Mi Abuela y Yo</li>\r\n\t<li>Salmos</li>\r\n\t<li>Borges y Yo</li>\r\n\t<li>Ayer So&ntilde;&eacute; que Pod&iacute;a y Hoy Puedo 1&nbsp;<a href=\"https://labiblioteca.mx/llyfrgell/0678.pdf\" style=\"text-decoration:none;\">(Disponible pdf)</a></li>\r\n\t<li>Ayer So&ntilde;&eacute; que Pod&iacute;a y Hoy Puedo 2</li>\r\n\t<li>Cuaderno de Facundo</li>\r\n\t<li>Algunas An&eacute;cdotas y Muchas Reflexiones (Disponible Audiolibro)</li>\r\n\t<li>No Est&aacute;s Deprimido, Est&aacute;s Distra&iacute;do (Disponible Audiolibro)</li>\r\n\t<li>Los Papeles de Cabral</li>\r\n\t<li>Lev&aacute;ntate y Anda (Disponible Audiolibro)</li>\r\n\t<li>La Magia de Cabral <a href=\"http://www.facundocabral.info/archivos/lamagiadecabral.pdf\" style=\"text-decoration:none;\">(Disponible pdf)</a></li>\r\n\t<li>Mi Encuentro Con Facundo Cabral</li>\r\n\t<li>Terriblemente Solo, Maravillosamente Libre</li>\r\n</ul>",
+    "orden": 4,
+    "slug": "libros",
+    "publico": true,
+    "tipo": 2,
+    "es_inicio": false,
+    "creacion": "2025-09-05T19:13:21.020Z",
+    "modificacion": "2025-12-04T01:06:58.452Z",
+    "usuario": null
+  }
+},
+{
+  "model": "AppPagina.pagina",
+  "pk": 21,
+  "fields": {
+    "titulo": "Canciones",
+    "contenido": "<p>&nbsp;</p>",
+    "orden": 2,
+    "slug": "canciones",
+    "publico": true,
+    "tipo": 1,
+    "es_inicio": false,
+    "creacion": "2025-10-20T19:41:26.812Z",
+    "modificacion": "2026-01-09T00:28:59.928Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "AppPagina.pagina",
+  "pk": 33,
+  "fields": {
+    "titulo": "Sobre Facundo",
+    "contenido": "<p><strong>Rodolfo Enrique Cabral Camiña</strong> (La Plata, 22 de mayo de 1937 – Ciudad de Guatemala, 9 de julio de 2011), conocido artísticamente como <strong>Facundo Cabral</strong>, y en sus comienzos como <i>El Indio Gasparino</i>, fue un <strong>cantautor, poeta y escritor argentino</strong>.&nbsp;</p><figure class=\"image image-style-side\"><img style=\"aspect-ratio:243/208;\" src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmDR6zaYcKQF07AlIcfAW43pB1yYO-XauFDg&amp;s\" alt=\"Instituto Nacional de la Música - INAMU | 🎶Facundo Cabral🎶 Se cumplen 87  años del nacimiento del cantautor, poeta y filósofo Facundo Cabral. ⠀ En su  trayectoria grabó más de 30... | Instagram\" width=\"243\" height=\"208\"></figure><p>Algunas de sus canciones trascendieron a nivel hispanoamericano, como <i>No soy de aquí ni soy de allá</i>. Su obra combinaba crítica social, sátira, misticismo, cristianismo, anarquismo, optimismo, hedonismo y libertad. En sus canciones y relatos citaba a figuras como Jesús, Atahualpa Yupanqui, Krishnamurti, Borges, Whitman y Teresa de Calcuta, entre otros.</p><p>Cabral se definía más como un <strong>juglar</strong> —artista ambulante que ofrecía música, teatro o literatura a cambio de dinero— que como trovador o contador de historias. En sus recitales revelaba aspectos personales de su vida, como que no tenía hogar y viajaba constantemente de hotel en hotel, autodefiniéndose como “vagabundo first class”.</p><p>Fue asesinado en Ciudad de Guatemala el 9 de julio de 2011 por sicarios que lo confundieron con un empresario vinculado al narcotráfico. La Unesco lo había declarado en 1996 “Mensajero mundial de la paz” y también fue nominado al Premio Nobel de la Paz en 2008.</p><hr><h2>Biografía</h2><p>Gran parte de su biografía fuera de la carrera artística fue narrada por él mismo. Sus shows incluían anécdotas de su infancia, viajes por el mundo y encuentros con personajes históricos como Eva Perón, Madre Teresa de Calcuta, Borges o Marc Chagall.</p><p>Muchos entendieron que estos relatos podían contener grados de ficción. Por ejemplo, el cantante Alberto Cortez, quien realizó giras con Cabral, escribió que “fue un personaje controversial que se inventó a sí mismo”.</p><hr><h2>Infancia</h2><p>Según Cabral, un día antes de su nacimiento su padre abandonó el hogar. Su madre y seis hermanos vivían en la casa del abuelo paterno, quien expulsó al resto de la familia. Cabral nació en La Plata y pasó sus primeros años en Berisso, trasladándose luego con su madre y hermanos hacia Tierra del Fuego.</p><p>A los 9 años escapó de su hogar con la intención de conocer al presidente Juan Domingo Perón. Tras una larga travesía, logró encontrarse con Perón y Eva Duarte en La Plata, quienes lo escucharon y ayudaron a conseguir trabajo para su madre, permitiendo que su familia se trasladara a Tandil.</p><p>Durante su infancia se convirtió en marginal, siendo encerrado en un reformatorio debido a su alcoholismo desde los 9 años. A los 14 fue preso por su carácter violento. En la cárcel, un sacerdote jesuita llamado Simón le enseñó a leer y escribir, lo acercó a la literatura universal y lo impulsó a completar su educación primaria y secundaria en apenas tres años. Antes de cumplir su condena, Cabral escapó de la prisión y continuó su formación con ayuda de este sacerdote y un vagabundo que le introdujo a la religión, aunque siempre declarándose <strong>librepensador</strong>.</p><hr><h2>Trayectoria artística</h2><p>Cabral comenzó a cantar en Tandil con paisanos y la familia Techeiro. En 1954 un vagabundo le recitó el sermón de la montaña, lo que lo inspiró a escribir su primera canción de cuna, <i>Vuele bajo</i>.</p><p>En 1959 ya tocaba la guitarra y cantaba música folclórica. Admiraba a Atahualpa Yupanqui y se trasladó a Mar del Plata, donde comenzó a trabajar en hoteles cantando. Su primer nombre artístico fue <i>El Indio Gasparino</i>, pero posteriormente adoptó su apellido verdadero.</p><p>En 1970 grabó <i>No soy de aquí ni soy de allá</i>, que lo consagró y lo hizo conocido internacionalmente. Grabó en nueve idiomas junto a artistas como Alberto Cortez, Julio Iglesias, Pedro Vargas y Neil Diamond.</p><p>Durante la dictadura militar argentina (1976-1983), Cabral era considerado un cantautor de protesta, lo que lo obligó a exiliarse en México. Se estima que recorrió 165 países durante su carrera.</p><p>En 1984 regresó a Argentina con gran reconocimiento, ofreciendo recitales en el Estadio Luna Park y otros grandes escenarios. Se presentó en giras internacionales junto a Alberto Cortez y otros artistas, mezclando humor, poesía y música.</p><h2>Discografía (selección)</h2><h4>La gran mayoria disponibles en las redes de Facundo Cabral y aqui!</h4><p><strong>Solista:</strong><br>1971: <i>Facundo el creador</i><br>1972: <i>En vivo Teatro Embassy</i><br>1972: <i>Facundo Cabral con Waldo de los Ríos</i><br>1984: <i>Pateando tachos</i><br>1984: <i>Ferrocabral</i><br>1985: <i>Cabralgando (en vivo)</i><br>1986: <i>Entre Dios y el Diablo</i><br>1986: <i>Vuele bajo (en vivo)</i><br>1993: <i>El oficio de cantor</i><br>1994: <i>Recuerdos de oro</i><br>2008: <i>Antología 1 y 2</i><br>2010: <i>El trovador</i>, <i>Bicentenario</i></p><p><strong>Con otros artistas:</strong><br>1994: <i>Lo Cortez no quita lo Cabral, vol. I</i> (en vivo) – con Alberto Cortez<br>1995: <i>Lo Cortez no quita lo Cabral, vol. II</i> (en vivo) – con Alberto Cortez<br>1998: <i>América canta en vivo</i> – con Andrés Jiménez<br>2012: <i>En medio de los hombres</i> – con Litto Nebbia</p><hr><h2>Muerte</h2><p>Realizó sus últimos conciertos en América Central, presentándose en Ciudad de Guatemala el 5 de julio de 2011. Su último concierto fue en Quetzaltenango, cerrando con la canción <i>No soy de aquí ni soy de allá</i>.</p><p>El 9 de julio de 2011 fue asesinado en Ciudad de Guatemala en un atentado aparentemente dirigido al empresario Henry Fariñas, confundido por los sicarios. Fariñas resultó herido, mientras Cabral falleció. Posteriormente, se determinó que el asesinato estaba vinculado a disputas entre pandillas centroamericanas.</p><hr><h2>Pensamiento espiritual, estético y político</h2><p>Influido por figuras como Jesús, Lao-Tsé, Chuang Tzu, Osho, Krishnamurti, Buda Gautama, Schopenhauer, San Francisco de Asís, Gandhi y Teresa de Calcuta, predicó el misticismo, la desaparición del ego y la autorrealización de la conciencia humana.</p><p>En literatura, admiró a Borges y Walt Whitman, con quienes mantuvo conversaciones filosóficas. Su carrera artística reflejó crítica social sin perder el humor. Nunca militó en movimientos políticos, pero defendió el pacifismo y se definió como “violentamente pacifista” y “vagabundo first class”, identificándose con un anarquismo filosófico y contemplativo.</p><hr><h2>Reconocimientos</h2><ul><li data-list-item-id=\"ed0ccd6e542f04adee96a197ffaa404bb\">Ciudadano Ilustre de la Ciudad de Buenos Aires.</li><li data-list-item-id=\"e0294b1524977b06294edc070fe0c7035\">Premio Konex - Diploma al Mérito como uno de los 5 mejores baladistas de Argentina (1985).</li><li data-list-item-id=\"e13b01e39765c0b95037006c0984f973e\">Declarado “Mensajero Mundial de la Paz” por la UNESCO (1996).</li><li data-list-item-id=\"e0dda6713029d6ceb66e9b08603918ae1\">Propuesto para el Premio Nobel de la Paz.</li><li data-list-item-id=\"e908696c673f057c29f2128671013ab09\">Miembro honorario de Amnistía Internacional.</li><li data-list-item-id=\"e834001feb391bedc4afd786c73fb6b14\">Memorándum de su muerte en los Premios Grammy 2012.</li></ul><hr>",
+    "orden": 1,
+    "slug": "sobre-facundo-1",
+    "publico": true,
+    "tipo": null,
+    "es_inicio": false,
+    "creacion": "2025-10-24T19:32:01.402Z",
+    "modificacion": "2026-01-06T02:37:28.704Z",
+    "usuario": 1
+  }
+},
+{
+  "model": "AppPagina.pagina",
+  "pk": 34,
+  "fields": {
+    "titulo": "Inicio",
+    "contenido": "<h4 style=\"text-align:center\"><img alt=\"Facundo Cabral, a 10-años de su trágica muerte- Grupo Milenio\" src=\"https://www.milenio.com/uploads/media/2021/07/06/foto-rostro-cabral-especial.jpeg\" style=\"float:left; height:200px; margin:0px 15px; width:269px\" />&quot;Si la vida es un viaje, la obra de Facundo Cabral es el mapa que nos gu&iacute;a hacia la libertad y la plenitud&quot;. En este museo virtual, abrimos las puertas a un universo de palabras, melod&iacute;as y reflexiones que definieron a uno de los trovadores m&aacute;s entra&ntilde;ables de la cultura latinoamericana. M&aacute;s que un sitio web, este es un homenaje a un hombre que recorri&oacute; el mundo con una guitarra y una filosof&iacute;a, convirtiendo cada escenario en una c&aacute;tedra de vida.&nbsp;</h4>\r\n\r\n<p>Aqu&iacute;, la vasta creaci&oacute;n de Cabral se despliega para ser explorada, disfrutada y recordada. Podr&aacute;s sumergirte en las distintas facetas de su legado:</p>\r\n\r\n<ul>\r\n\t<li><strong>Canciones:</strong>&nbsp;Desde la ic&oacute;nica &quot;No soy de aqu&iacute; ni soy de all&aacute;&quot; hasta sus m&aacute;s profundas baladas, descubre la discograf&iacute;a que lo consagr&oacute; como un mensajero de paz y esperanza.</li>\r\n\t<li><strong>Libros:</strong>&nbsp;Explora los textos y reflexiones que comparti&oacute; a lo largo de su carrera, un testimonio de su sabidur&iacute;a y su eterna b&uacute;squeda de la felicidad.</li>\r\n\t<li><strong>Shows y giras:</strong>&nbsp;Revive los momentos m&aacute;s memorables de sus conciertos, donde combinaba m&uacute;sica, humor y poes&iacute;a para conectar con su p&uacute;blico.</li>\r\n\t<li><strong>El legado:</strong>&nbsp;Conoce los hitos de su vida, los reconocimientos que recibi&oacute;, y el impacto perdurable de su obra en quienes lo escucharon.</li>\r\n</ul>\r\n\r\n<p>A trav&eacute;s de la Fundaci&oacute;n Facundo Cabral, buscamos mantener viva la memoria de este esp&iacute;ritu libre y difundir su mensaje a las nuevas generaciones. Te invitamos a recorrer cada sala de este museo virtual, a escuchar sus audios, a leer sus cuadernos y a dejarte inspirar por el hombre que nos ense&ntilde;&oacute; que &quot;cada cantor es un soldado menos&quot;.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Si deseas aportar contenido, puedes escribirnos a <strong>wikifacundocabral25@gmail.com</strong>.<br />\r\nSi ya est&aacute;s registrado y quer&eacute;s colaborar en la edici&oacute;n o mantenimiento de la p&aacute;gina, env&iacute;anos tu <strong>usuario registrado</strong> para poder <strong>verificar tu identidad y autorizarte como colaborador</strong>.</p>\r\n\r\n<p>&iexcl;Saludos, hermanos!</p>",
+    "orden": 0,
+    "slug": "",
+    "publico": true,
+    "tipo": null,
+    "es_inicio": true,
+    "creacion": "2025-12-04T00:19:06.701Z",
+    "modificacion": "2025-12-30T20:55:07.431Z",
+    "usuario": 1
+  }
+}
+]
