@@ -2,6 +2,8 @@
 
 Aplicación web en Django creada originalmente para gestionar contenido sobre Facundo Cabral (canciones, entrevistas, shows y libros). Funciona como plantilla genérica: puede usarse con datos de prueba relacionados a Facundo o con cualquier otro contenido (crear fixtures o administrar datos desde el panel de mantenimiento).
 
+### Requisito recomendado: Python 3.13+
+
 ## Características
 - Registro e inicio de sesión.
 - Sistema de roles y permisos: **ingresante**, **usuario**, **staff** (y **superuser**).
@@ -28,7 +30,10 @@ Aplicación web en Django creada originalmente para gestionar contenido sobre Fa
 ## Robustez
 - Manejo de errores con página 404, mensajes y redirecciones.
 - Tests: ~82 tests que cubren la mayoría de funcionalidades.
-
+```bash
+# Luego de la instalación corre los tests 
+python manage.py test
+```
 ## Instalación (plantilla genérica)
 ```bash
 # si quieres usar un ambiente (Opcional):
@@ -39,6 +44,8 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
+# Finalmente ejecuta el servidor
+python manage.py runserver
 ```
 
 
@@ -60,6 +67,9 @@ python manage.py loaddata blog/fixtures/01_Tipo.json
 python manage.py loaddata AppPagina/fixtures/02_Pagina.json
 python manage.py loaddata blog/fixtures/03_Categoria.json
 python manage.py loaddata blog/fixtures/04_blog_resto.json
+
+# Finalmente ejecuta el servidor
+python manage.py runserver
 ```
 
 
