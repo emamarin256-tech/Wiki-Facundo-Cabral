@@ -1,6 +1,6 @@
 # Wiki-Facundo-Cabral
 
-Aplicación web en Django creada originalmente para gestionar contenido sobre Facundo Cabral (canciones, entrevistas, shows y libros). Funciona como plantilla genérica: puede usarse con datos de prueba relacionados a Facundo o con cualquier otro contenido (crear fixtures o administrar datos desde el panel de mantenimiento).
+Aplicación web en Django para la gestión colaborativa de contenido, con sistema de roles para colaboradores del sitio, panel de mantenimiento personalizado y soporte multimedia. Funciona como plantilla genérica reutilizable, con datos de ejemplo basados en Facundo Cabral.
 
 ### Requisito recomendado: Python 3.13+
 
