@@ -2,7 +2,7 @@
 
 Aplicación web en Django para la gestión colaborativa de contenido, con sistema de roles para colaboradores del sitio, panel de mantenimiento personalizado y soporte multimedia. Funciona como plantilla genérica reutilizable, con datos de ejemplo basados en Facundo Cabral.
 
-### Requisito recomendado: Python 3.13+
+### Requisito recomendado: Python 3.12
 
 ## Características
 - Registro e inicio de sesión.
