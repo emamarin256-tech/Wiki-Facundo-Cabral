@@ -27,6 +27,12 @@ Aplicación web en Django para la gestión colaborativa de contenido, con sistem
 - Videos vía URL (django-embed-video) o archivo (FileField).
 - Miniatura automática a partir del video (URL o archivo) o manual mediante un archivo cargado.
 
+## Pequeñas funcionalidades
+- **Página de inicio:** si este campo está marcado, la página utiliza un slug vacío y actúa como punto de redirección.
+- **Slug automático:** generado a partir del título si se deja vacío.
+- **Manejo de duplicados:** control de duplicados en título y slug.
+
+
 ## Robustez
 - Manejo de errores con página 404, mensajes y redirecciones.
 - Tests: ~82 tests que cubren la mayoría de funcionalidades.
@@ -50,8 +56,20 @@ python manage.py runserver
 
 
 ## Instalación (datos de prueba)
-Descarga y pega la carpeta "media" en la raiz del repositorio:
 
+Si no quieres crear datos manualmente, puedes instalar datos de prueba.
+
+Incluye páginas, categorías, artículos, etc., y **3 usuarios** para probar el sistema de roles:
+
+### Usuarios
+#### **Nombre de usuario:** *Rol* 
+- **Dueño:** *Superuser*  
+- **colaborador1:** *Usuario*  
+- **colaborador1:** *Usuario*  
+
+**Contraseña para todos los usuarios:** `test1234`
+
+Descarga y pega la carpeta **media** en la raíz del repositorio:  
 https://drive.google.com/drive/folders/1zVN4iIBDji1cN3BNWlWZu-Qo8pXVDz5o?usp=drive_link
 
 ```bash
@@ -71,6 +89,11 @@ python manage.py loaddata blog/fixtures/04_blog_resto.json
 # Finalmente ejecuta el servidor
 python manage.py runserver
 ```
+
+## Accesos principales
+- **Inicio de sesión / registro:** desde el menú desplegable de usuario.
+- **Panel de mantenimiento:** disponible para usuarios con rol distinto de ingresante; accesible desde el menú desplegable o la página de usuario.
+- **Panel de administración Django (`/admin`):** solo para staff y superuser; accesible vía `/admin` o desde la página de usuario.
 
 
 ### Proyecto finalizado. No se aceptan Pull Requests externos.
