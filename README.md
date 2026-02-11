@@ -50,6 +50,7 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
+python manage.py collectstatic
 # Finalmente ejecuta el servidor
 python manage.py runserver
 ```
@@ -85,6 +86,7 @@ python manage.py loaddata blog/fixtures/01_Tipo.json
 python manage.py loaddata AppPagina/fixtures/02_Pagina.json
 python manage.py loaddata blog/fixtures/03_Categoria.json
 python manage.py loaddata blog/fixtures/04_blog_resto.json
+python manage.py collectstatic
 
 # Finalmente ejecuta el servidor
 python manage.py runserver
